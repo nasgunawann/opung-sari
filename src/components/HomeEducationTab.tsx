@@ -1,17 +1,35 @@
 import React, { useState } from 'react';
-import { CheckCircle2, HelpCircle, Check, X, Leaf, RefreshCw } from 'lucide-react';
+import {
+  CheckCircle2,
+  HelpCircle,
+  Check,
+  X,
+  Leaf,
+  RefreshCw,
+  Wallet,
+  ArrowDownToLine,
+  Coins,
+} from 'lucide-react';
 import { QUIZ_QUESTIONS, WASTE_CATEGORIES } from '../data/initialData';
+import { Student } from '../types';
 import confetti from 'canvas-confetti';
 import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
 
 interface HomeEducationTabProps {
+  currentStudent: Student;
+  studentsList: Student[];
+  onSelectStudent: (student: Student) => void;
+  onOpenWithdrawal: () => void;
   onGoToIoTBin: () => void;
   onAddPoints: (pts: number) => void;
-  userPoints: number;
 }
 
 export const HomeEducationTab: React.FC<HomeEducationTabProps> = ({
+  currentStudent,
+  studentsList,
+  onSelectStudent,
+  onOpenWithdrawal,
   onAddPoints,
 }) => {
   const [currentQuizIdx, setCurrentQuizIdx] = useState(0);
@@ -24,6 +42,18 @@ export const HomeEducationTab: React.FC<HomeEducationTabProps> = ({
   });
 
   const currentQuiz = QUIZ_QUESTIONS[currentQuizIdx];
+
+  const currentRank = studentsList && currentStudent
+    ? [...studentsList].sort((a, b) => b.points - a.points).findIndex((s) => s.id === currentStudent.id) + 1
+    : 1;
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
 
   const handleAnswerQuiz = (optIndex: number) => {
     if (hasAnswered) return;
@@ -55,15 +85,80 @@ export const HomeEducationTab: React.FC<HomeEducationTabProps> = ({
   };
 
   return (
-    <div className="w-full space-y-6 pb-24 pt-2 md:px-4">
+    <div className="w-full space-y-4 pb-24 pt-1 md:px-4">
+      {/* SECTION 0: Student Fintech Wallet Card */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 text-white shadow-md p-4 sm:p-5">
+        {/* Subtle background ambient glows */}
+        <div className="pointer-events-none absolute -right-6 -top-6 w-36 h-36 rounded-full bg-white/10 blur-xl" />
+        <div className="pointer-events-none absolute -left-8 -bottom-8 w-32 h-32 rounded-full bg-emerald-400/15 blur-lg" />
+
+        {/* Top Bar: Profile & Switcher */}
+        <div className="relative flex items-center justify-between gap-2">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="relative shrink-0">
+              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl border border-white/25 shadow-inner">
+                {currentStudent?.avatar || '👨‍🎓'}
+              </div>
+              <span className="absolute -bottom-1 -right-1 px-1.5 py-0.2 bg-amber-400 text-amber-950 rounded-full text-[9px] font-black shadow-xs border border-white/80">
+                Lv.{currentStudent?.level ?? 1}
+              </span>
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5 min-w-0">
+                <h2 className="text-sm sm:text-base font-extrabold text-white truncate tracking-tight">
+                  {currentStudent?.name || 'Siswa'}
+                </h2>
+                <span className="text-xs font-bold text-emerald-200/80 shrink-0">
+                  #{currentRank}
+                </span>
+              </div>
+              <p className="text-xs text-emerald-100/80 font-medium truncate">
+                {currentStudent?.className || '-'}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Middle: Saldo Hero Display */}
+        <div className="relative mt-4">
+          <div className="flex items-center gap-1.5 text-emerald-100/80 text-[11px] font-bold uppercase tracking-wider">
+            <Wallet size={13} className="opacity-90" />
+            <span>Saldo Tabungan</span>
+          </div>
+          <div className="text-2xl sm:text-3xl font-black tracking-tight text-white mt-0.5">
+            {formatCurrency(currentStudent?.balanceRp ?? 0)}
+          </div>
+        </div>
+
+        {/* Bottom Bar: Points Badge & Tarik Button */}
+        <div className="relative mt-4 pt-3 border-t border-white/15 flex items-center justify-between gap-2">
+          {/* Points Pill */}
+          <div className="inline-flex items-center gap-1.5 bg-black/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
+            <Coins size={14} className="text-amber-300" />
+            <span className="text-xs font-bold text-white">
+              {currentStudent?.points ?? 0} <span className="text-emerald-200 text-[11px] font-semibold">poin</span>
+            </span>
+          </div>
+
+          {/* Action Button */}
+          <button
+            onClick={onOpenWithdrawal}
+            className="flex items-center gap-1.5 bg-white hover:bg-emerald-50 active:scale-95 text-emerald-900 font-extrabold text-xs px-3.5 py-1.5 rounded-xl shadow-xs transition-all cursor-pointer"
+          >
+            <ArrowDownToLine size={13} className="text-emerald-700" />
+            <span>Tarik Saldo</span>
+          </button>
+        </div>
+      </div>
+
       {/* SECTION 1: Tantangan Harian (Primary Focus) */}
       <section>
-        <div className="flex items-center gap-2 mb-3 px-1">
-          <CheckCircle2 size={24} className="text-primary" />
-          <h2 className="text-lg font-bold text-foreground">Tantangan Harian</h2>
+        <div className="flex items-center gap-2 mb-2 px-1">
+          <CheckCircle2 size={18} className="text-primary" />
+          <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">Tantangan Harian</h2>
         </div>
         
-        <div className="space-y-3">
+        <div className="space-y-2">
           {[
             { id: 'quest1', pts: 10, title: 'Bawa Tempat Minum Sendiri', icon: '💧', bg: 'bg-blue-50', border: 'border-blue-100' },
             { id: 'quest2', pts: 15, title: 'Setor Sampah ke IoT Tong', icon: '♻️', bg: 'bg-emerald-50', border: 'border-emerald-100' },
@@ -73,23 +168,23 @@ export const HomeEducationTab: React.FC<HomeEducationTabProps> = ({
             return (
               <Card 
                 key={q.id} 
-                className={`cursor-pointer transition-all active:scale-[0.98] ${isDone ? 'bg-muted opacity-60' : 'bg-card'}`}
+                className={`cursor-pointer transition-all active:scale-[0.99] border ${isDone ? 'bg-muted/40 opacity-70 border-border/50' : 'bg-card border-border'}`}
                 onClick={() => toggleQuest(q.id, q.pts)}
               >
-                <CardContent className="p-4 flex items-center gap-4">
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-2xl ${isDone ? 'bg-background' : q.bg} border ${q.border}`}>
+                <CardContent className="p-2.5 px-3 flex items-center gap-3">
+                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-lg ${isDone ? 'bg-background' : q.bg} border ${q.border} shrink-0`}>
                     {q.icon}
                   </div>
-                  <div className="flex-1">
-                    <h3 className={`font-bold ${isDone ? 'text-muted-foreground line-through' : 'text-foreground'}`}>
+                  <div className="flex-1 min-w-0">
+                    <h3 className={`text-xs md:text-sm font-bold truncate ${isDone ? 'text-muted-foreground line-through' : 'text-foreground'}`}>
                       {q.title}
                     </h3>
-                    <p className="text-sm text-primary font-bold mt-1">+{q.pts} Poin</p>
+                    <p className="text-[11px] text-primary font-bold">+{q.pts} Poin</p>
                   </div>
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-colors ${
-                    isDone ? 'bg-primary border-primary text-primary-foreground' : 'border-muted bg-background text-transparent'
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center border-2 transition-colors shrink-0 ${
+                    isDone ? 'bg-primary border-primary text-primary-foreground' : 'border-muted-foreground/30 bg-background text-transparent'
                   }`}>
-                    <Check size={18} strokeWidth={3} />
+                    <Check size={14} strokeWidth={3} />
                   </div>
                 </CardContent>
               </Card>
@@ -100,25 +195,25 @@ export const HomeEducationTab: React.FC<HomeEducationTabProps> = ({
 
       {/* SECTION 2: Kuis Seru */}
       <section>
-        <div className="flex items-center justify-between mb-3 px-1">
+        <div className="flex items-center justify-between mb-2 px-1">
           <div className="flex items-center gap-2">
-            <HelpCircle size={24} className="text-amber-500" />
-            <h2 className="text-lg font-bold text-foreground">Kuis Seru</h2>
+            <HelpCircle size={18} className="text-amber-500" />
+            <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">Kuis Seru</h2>
           </div>
-          <button onClick={nextQuiz} className="flex items-center gap-1 text-sm font-bold text-muted-foreground hover:text-foreground bg-muted px-3 py-1.5 rounded-full">
-            <RefreshCw size={14} /> Ganti
+          <button onClick={nextQuiz} className="flex items-center gap-1 text-xs font-bold text-muted-foreground hover:text-foreground bg-muted px-2.5 py-1 rounded-full">
+            <RefreshCw size={12} /> Ganti
           </button>
         </div>
 
         <Card className="bg-card">
-          <CardContent className="p-5 space-y-4">
-            <div className="bg-muted/50 p-4 rounded-2xl">
-              <p className="text-base font-bold leading-relaxed text-foreground text-center">
+          <CardContent className="p-3.5 space-y-3">
+            <div className="bg-muted/50 p-3 rounded-xl">
+              <p className="text-xs md:text-sm font-bold leading-relaxed text-foreground text-center">
                 {currentQuiz.question}
               </p>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-2">
               {currentQuiz.options.map((opt, idx) => {
                 let btnVariant: 'outline' | 'default' | 'destructive' = 'outline';
                 if (hasAnswered) {
@@ -130,25 +225,25 @@ export const HomeEducationTab: React.FC<HomeEducationTabProps> = ({
                   <Button
                     key={idx}
                     variant={btnVariant}
-                    className="w-full justify-between h-auto py-4 px-5 text-left items-center group"
+                    className="w-full justify-between h-auto py-2 px-3 text-left items-center group rounded-xl"
                     disabled={hasAnswered}
                     onClick={() => handleAnswerQuiz(idx)}
                   >
-                    <span className="text-base whitespace-normal font-bold flex-1">{opt.text}</span>
-                    {hasAnswered && opt.isCorrect && <Check className="ml-3 shrink-0" size={20} />}
-                    {hasAnswered && selectedOption === idx && !opt.isCorrect && <X className="ml-3 shrink-0" size={20} />}
+                    <span className="text-xs md:text-sm whitespace-normal font-bold flex-1">{opt.text}</span>
+                    {hasAnswered && opt.isCorrect && <Check className="ml-2 shrink-0" size={16} />}
+                    {hasAnswered && selectedOption === idx && !opt.isCorrect && <X className="ml-2 shrink-0" size={16} />}
                   </Button>
                 );
               })}
             </div>
 
             {hasAnswered && (
-              <div className="bg-primary/10 text-primary-active p-4 rounded-2xl animate-in fade-in zoom-in-95 mt-4">
-                <div className="font-bold flex items-center gap-2 mb-1">
+              <div className="bg-primary/10 text-primary-active p-3 rounded-xl animate-in fade-in zoom-in-95 mt-2">
+                <div className="font-bold flex items-center gap-1.5 text-xs mb-1">
                   {currentQuiz.options[selectedOption ?? 0].isCorrect ? '✅ Benar!' : '💡 Penjelasan:'}
                 </div>
-                <p className="text-sm font-medium leading-relaxed">{currentQuiz.explanation}</p>
-                <Button className="w-full mt-4" size="sm" onClick={nextQuiz}>Soal Berikutnya</Button>
+                <p className="text-xs font-medium leading-relaxed">{currentQuiz.explanation}</p>
+                <Button className="w-full mt-3 h-8 text-xs rounded-lg" size="sm" onClick={nextQuiz}>Soal Berikutnya</Button>
               </div>
             )}
           </CardContent>
@@ -157,11 +252,11 @@ export const HomeEducationTab: React.FC<HomeEducationTabProps> = ({
 
       {/* SECTION 3: Panduan Warna Tong */}
       <section>
-        <div className="flex items-center gap-2 mb-3 px-1">
-          <Leaf size={24} className="text-emerald-500" />
-          <h2 className="text-lg font-bold text-foreground">Panduan Tong Sampah</h2>
+        <div className="flex items-center gap-2 mb-2 px-1">
+          <Leaf size={18} className="text-emerald-500" />
+          <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">Panduan Tong Sampah</h2>
         </div>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-2">
           {[
             { cat: 'organik', bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200' },
             { cat: 'plastik', bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200' },
@@ -170,13 +265,13 @@ export const HomeEducationTab: React.FC<HomeEducationTabProps> = ({
           ].map((item) => {
             const data = WASTE_CATEGORIES[item.cat as keyof typeof WASTE_CATEGORIES];
             return (
-              <Card key={item.cat} className={`${item.bg} border-0 shadow-none`}>
-                <CardContent className="p-4 flex flex-col items-center text-center gap-2">
-                  <span className="text-4xl drop-shadow-sm">{data.icon}</span>
-                  <div className={`text-xs font-bold px-2 py-1 rounded-full bg-white/60 ${item.text} border ${item.border}`}>
+              <Card key={item.cat} className={`${item.bg} border border-border/40 shadow-none`}>
+                <CardContent className="p-2.5 flex flex-col items-center text-center gap-1">
+                  <span className="text-2xl drop-shadow-sm">{data.icon}</span>
+                  <div className={`text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/70 ${item.text} border ${item.border}`}>
                     Tong {data.colorName}
                   </div>
-                  <h3 className="font-bold text-sm text-foreground mt-1">{data.name}</h3>
+                  <h3 className="font-bold text-xs text-foreground mt-0.5">{data.name}</h3>
                 </CardContent>
               </Card>
             );

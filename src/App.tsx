@@ -24,13 +24,31 @@ import { WithdrawalModal } from './components/WithdrawalModal';
 import { ReceiptModal } from './components/ReceiptModal';
 import { Sidebar } from './components/layout/Sidebar';
 import { MobileNav } from './components/layout/MobileNav';
+import { AuthPage } from './components/auth/AuthPage';
 
 export type UserRole = 'student' | 'coordinator' | 'admin';
 export type TabKey = 'beranda' | 'iot_bin' | 'leaderboard' | 'bank_sampah' | 'misi' | 'coordinator_input' | 'coordinator_history' | 'admin_dashboard' | 'admin_classes' | 'admin_settings';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabKey>('beranda');
-  const [userRole, setUserRole] = useState<UserRole>('student');
+  const [userRole, setUserRole] = useState<UserRole>(() => {
+    try {
+      const saved = localStorage.getItem('opung_user_role') as UserRole;
+      if (['student', 'coordinator', 'admin'].includes(saved)) return saved;
+      return 'student';
+    } catch {
+      return 'student';
+    }
+  });
+
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('opung_is_auth');
+      return saved !== null ? JSON.parse(saved) : true;
+    } catch {
+      return true;
+    }
+  });
 
   // App data states (stored in React state, initialized from initialData or localStorage)
   const [students, setStudents] = useState<Student[]>(() => {
@@ -353,6 +371,22 @@ export default function App() {
     setReceiptTrx(newTrx);
   };
 
+  const handleLogin = (role: UserRole, student?: Student) => {
+    setUserRole(role);
+    localStorage.setItem('opung_user_role', role);
+    if (student) {
+      setCurrentStudentId(student.id);
+      localStorage.setItem('ecokids_current_student', student.id);
+    }
+    setIsAuthenticated(true);
+    localStorage.setItem('opung_is_auth', JSON.stringify(true));
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.setItem('opung_is_auth', JSON.stringify(false));
+  };
+
   // Update active tab when user role changes to default tab for that role
   useEffect(() => {
     if (userRole === 'student' && !['beranda', 'iot_bin', 'leaderboard', 'bank_sampah', 'misi'].includes(activeTab)) {
@@ -363,6 +397,15 @@ export default function App() {
       setActiveTab('admin_dashboard');
     }
   }, [userRole, activeTab]);
+
+  if (!isAuthenticated) {
+    return (
+      <AuthPage
+        studentsList={students}
+        onLogin={handleLogin}
+      />
+    );
+  }
 
   return (
     <div className={`min-h-screen bg-stone-100 flex selection:bg-emerald-100 selection:text-emerald-900`}>
@@ -378,12 +421,9 @@ export default function App() {
       <div className={`flex-1 w-full bg-stone-50/60 min-h-screen relative flex flex-col transition-all duration-300`}>
         {/* Sticky Header */}
         <Header
-          currentStudent={currentStudent}
-          studentsList={students}
-          onSelectStudent={(stu) => setCurrentStudentId(stu.id)}
-          onOpenWithdrawal={() => setIsWithdrawModalOpen(true)}
           userRole={userRole}
-          setUserRole={setUserRole}
+          currentStudent={currentStudent}
+          onLogout={handleLogout}
         />
 
         {/* Main Tab Content View */}
@@ -392,9 +432,12 @@ export default function App() {
             <>
               {activeTab === 'beranda' && (
                 <HomeEducationTab
+                  currentStudent={currentStudent}
+                  studentsList={students}
+                  onSelectStudent={(stu) => setCurrentStudentId(stu.id)}
+                  onOpenWithdrawal={() => setIsWithdrawModalOpen(true)}
                   onGoToIoTBin={() => setActiveTab('iot_bin')}
                   onAddPoints={handleAddPoints}
-                  userPoints={currentStudent.points}
                 />
               )}
 
