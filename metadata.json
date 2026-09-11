@@ -1,0 +1,6 @@
+{
+  "name": "Edukasi Lingkungan & Bank Sampah Siswa",
+  "description": "Aplikasi edukasi sadar lingkungan anak sekolah berbasis mobile dengan simulator IoT tong sampah pintar, leaderboard pemilah sampah per kelas, dan penarikan saldo reward bank sampah.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
