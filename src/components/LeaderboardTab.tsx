@@ -1,16 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Trophy,
-  Users,
-  Medal,
-  Crown,
-  Sparkles,
-  ArrowUpRight,
-  TrendingUp,
-  Scale,
-  Award,
-  Filter,
-} from 'lucide-react';
+import { Trophy, Users } from 'lucide-react';
 import { SchoolClass, Student } from '../types';
 
 interface LeaderboardTabProps {
@@ -24,301 +13,155 @@ export const LeaderboardTab: React.FC<LeaderboardTabProps> = ({
   students,
   currentStudent,
 }) => {
-  const [viewMode, setViewMode] = useState<'class' | 'student'>('class');
-  const [selectedGrade, setSelectedGrade] = useState<number | 'all'>('all');
+  const [viewMode, setViewMode] = useState<'student' | 'class'>('student');
 
-  // Sort classes by totalPoints descending
   const sortedClasses = [...classes].sort((a, b) => b.totalPoints - a.totalPoints);
-
-  // Filter classes by grade
-  const filteredClasses =
-    selectedGrade === 'all'
-      ? sortedClasses
-      : sortedClasses.filter((c) => c.grade === selectedGrade);
-
-  // Sort students by points descending
   const sortedStudents = [...students].sort((a, b) => b.points - a.points);
-
   const topThreeClasses = sortedClasses.slice(0, 3);
-  const topThreeStudents = sortedStudents.slice(0, 3);
 
   return (
-      <div className="w-full space-y-3 pb-20 pt-1 md:px-4">
-        {/* Header Info - Flat Solid Dark Visual Anchor */}
-      <div className="bg-stone-900 text-white rounded-xl p-4 border border-stone-950">
-        <div className="flex items-start justify-between gap-2">
-          <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 text-[10px] font-medium text-stone-300 bg-stone-800 px-2 py-0.5 rounded">
-              <span>🏆</span>
-              <span>Papan Peringkat Adiwiyata</span>
-            </div>
-            <h2 className="text-sm font-bold text-white leading-tight">
-              Peringkat Pemilah Sampah
-            </h2>
-            <p className="text-xs text-stone-300 leading-relaxed">
-              Dihitung berdasarkan total berat pemilahan sampah dan poin keaktifan siswa.
-            </p>
-          </div>
-
-          <div className="w-10 h-10 rounded-lg bg-stone-800 border border-stone-700 flex items-center justify-center text-xl shrink-0">
-            🥇
-          </div>
-        </div>
-      </div>
-
-      {/* Switcher: Kelas vs Siswa - Segmented Control */}
-      <div className="bg-stone-100 p-1 rounded-lg border border-stone-200 flex items-center gap-1">
+    <div className="w-full space-y-4 pb-24 pt-2 md:px-4">
+      {/* Switcher */}
+      <div className="bg-muted p-1.5 rounded-2xl flex items-center gap-1 shadow-sm">
         <button
-          id="btn-view-class-rank"
-          onClick={() => {
-            setViewMode('class');
-          }}
-          className={`flex-1 py-1.5 rounded-md text-xs transition-colors flex items-center justify-center gap-1.5 ${
-            viewMode === 'class'
-              ? 'bg-white text-stone-900 font-semibold shadow-xs'
-              : 'text-stone-500 hover:text-stone-900 font-normal'
-          }`}
-        >
-          <Users size={13} />
-          <span>Peringkat Kelas</span>
-        </button>
-
-        <button
-          id="btn-view-student-rank"
-          onClick={() => {
-            setViewMode('student');
-          }}
-          className={`flex-1 py-1.5 rounded-md text-xs transition-colors flex items-center justify-center gap-1.5 ${
+          onClick={() => setViewMode('student')}
+          className={`flex-1 py-2.5 rounded-xl text-sm transition-all flex items-center justify-center gap-2 ${
             viewMode === 'student'
-              ? 'bg-white text-stone-900 font-semibold shadow-xs'
-              : 'text-stone-500 hover:text-stone-900 font-normal'
+              ? 'bg-background text-foreground font-bold shadow-sm'
+              : 'text-muted-foreground hover:text-foreground font-semibold'
           }`}
         >
-          <Trophy size={13} />
-          <span>Siswa Teraktif</span>
+          <Trophy size={18} />
+          <span>Siswa</span>
+        </button>
+        <button
+          onClick={() => setViewMode('class')}
+          className={`flex-1 py-2.5 rounded-xl text-sm transition-all flex items-center justify-center gap-2 ${
+            viewMode === 'class'
+              ? 'bg-background text-foreground font-bold shadow-sm'
+              : 'text-muted-foreground hover:text-foreground font-semibold'
+          }`}
+        >
+          <Users size={18} />
+          <span>Kelas</span>
         </button>
       </div>
 
-      {/* VIEW 1: PERINGKAT KELAS */}
-      {viewMode === 'class' && (
+      {viewMode === 'student' && (
         <div className="space-y-3">
-          {/* Grade filter pills */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 text-xs">
-            <span className="text-[10px] font-medium text-stone-500 px-0.5">Filter:</span>
-            {[
-              { label: 'Semua Kelas', val: 'all' as const },
-              { label: 'Kelas 4', val: 4 },
-              { label: 'Kelas 5', val: 5 },
-              { label: 'Kelas 6', val: 6 },
-            ].map((f) => (
-              <button
-                key={String(f.val)}
-                onClick={() => {
-                  setSelectedGrade(f.val);
-                }}
-                className={`px-2.5 py-1 rounded text-xs transition-colors ${
-                  selectedGrade === f.val
-                    ? 'bg-stone-900 text-white font-medium'
-                    : 'bg-white text-stone-600 border border-stone-200 hover:bg-stone-50'
+          {sortedStudents.map((stu, idx) => {
+            const isMe = stu.id === currentStudent.id;
+            const rank = idx + 1;
+            
+            let rankBg = 'bg-muted text-muted-foreground';
+            if (rank === 1) rankBg = 'bg-amber-100 text-amber-700 border-amber-200';
+            else if (rank === 2) rankBg = 'bg-slate-200 text-slate-700 border-slate-300';
+            else if (rank === 3) rankBg = 'bg-orange-100 text-orange-700 border-orange-200';
+
+            return (
+              <div
+                key={stu.id}
+                className={`p-4 rounded-2xl border flex items-center justify-between transition-colors ${
+                  isMe ? 'bg-primary/10 border-primary shadow-sm' : 'bg-card border-border'
                 }`}
               >
-                {f.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Top 3 Podium Visual - Flat & Clean */}
-          {selectedGrade === 'all' && topThreeClasses.length >= 3 && (
-            <div className="bg-white rounded-xl p-3.5 border border-stone-200">
-              <div className="text-[10px] font-semibold text-stone-500 uppercase tracking-wider text-center mb-3">
-                Top 3 Kelas Teratas
-              </div>
-
-              <div className="flex items-end justify-center gap-2 pt-1">
-                {/* 2nd Place */}
-                <div className="flex-1 flex flex-col items-center">
-                  <span className="text-xl mb-1">🥈</span>
-                  <div className="text-xs font-semibold text-stone-800 text-center truncate w-full">
-                    {topThreeClasses[1].name.split('-')[0]}
+                <div className="flex items-center gap-3">
+                  <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold text-sm ${rankBg}`}>
+                    {rank}
                   </div>
-                  <div className="text-[11px] font-mono text-stone-600">
-                    {topThreeClasses[1].totalKg} kg
-                  </div>
-                  <div className="w-full bg-stone-100 border border-stone-200 h-14 rounded-t-lg mt-1.5 flex flex-col items-center justify-center p-1 text-[10px] font-medium text-stone-700 font-mono">
-                    <span>{topThreeClasses[1].totalPoints} pts</span>
-                  </div>
-                </div>
-
-                {/* 1st Place */}
-                <div className="flex-1 flex flex-col items-center">
-                  <span className="text-2xl mb-1">🥇</span>
-                  <div className="text-xs font-bold text-stone-900 text-center truncate w-full">
-                    {topThreeClasses[0].name.split('-')[0]}
-                  </div>
-                  <div className="text-[11px] font-mono font-semibold text-emerald-800">
-                    {topThreeClasses[0].totalKg} kg
-                  </div>
-                  <div className="w-full bg-stone-200 border border-stone-300 h-20 rounded-t-lg mt-1.5 flex flex-col items-center justify-center p-1 text-[11px] font-semibold text-stone-900 font-mono">
-                    <span className="text-[9px] text-stone-500 font-normal">Juara 1</span>
-                    <span>{topThreeClasses[0].totalPoints} pts</span>
-                  </div>
-                </div>
-
-                {/* 3rd Place */}
-                <div className="flex-1 flex flex-col items-center">
-                  <span className="text-xl mb-1">🥉</span>
-                  <div className="text-xs font-semibold text-stone-800 text-center truncate w-full">
-                    {topThreeClasses[2].name.split('-')[0]}
-                  </div>
-                  <div className="text-[11px] font-mono text-stone-600">
-                    {topThreeClasses[2].totalKg} kg
-                  </div>
-                  <div className="w-full bg-stone-100 border border-stone-200 h-10 rounded-t-lg mt-1.5 flex flex-col items-center justify-center p-1 text-[10px] font-medium text-stone-700 font-mono">
-                    <span>{topThreeClasses[2].totalPoints} pts</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Full Class Ranking List */}
-          <div className="space-y-1.5">
-            {filteredClasses.map((cls, idx) => {
-              const isMyClass = currentStudent.className.includes(cls.name.split(' - ')[0]);
-              const rank = idx + 1;
-
-              return (
-                <div
-                  key={cls.id}
-                  className={`p-3 rounded-xl border transition-colors ${
-                    isMyClass
-                      ? 'bg-stone-900 text-white border-stone-950'
-                      : 'bg-white border-stone-200 hover:bg-stone-50 text-stone-900'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2.5">
-                      <div
-                        className={`w-6 h-6 rounded border flex items-center justify-center font-semibold text-xs font-mono ${
-                          isMyClass
-                            ? 'bg-stone-800 border-stone-700 text-white'
-                            : 'bg-stone-100 border-stone-200 text-stone-800'
-                        }`}
-                      >
-                        {rank}
-                      </div>
-
-                      <div>
-                        <div className="flex items-center gap-1.5">
-                          <span className={`text-xs font-semibold ${isMyClass ? 'text-white' : 'text-stone-900'}`}>
-                            {cls.name}
-                          </span>
-                          {isMyClass && (
-                            <span className="text-[9px] bg-emerald-500 text-stone-950 font-bold px-1.5 py-0.2 rounded">
-                              Kelas Anda
-                            </span>
-                          )}
-                          {cls.weeklyChampionBadge && (
-                            <span className="text-[9px] bg-amber-50 text-amber-800 border border-amber-200 font-medium px-1.5 py-0.2 rounded">
-                              Juara Pekan Ini
-                            </span>
-                          )}
-                        </div>
-                        <div className={`text-[10px] ${isMyClass ? 'text-stone-300' : 'text-stone-500'}`}>
-                          Wali: {cls.waliKelas} • {cls.activeStudents}/{cls.totalStudents} siswa aktif
-                        </div>
-                      </div>
+                  <span className="text-2xl bg-muted rounded-full w-12 h-12 flex items-center justify-center">{stu.avatar}</span>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className={`text-base font-bold ${isMe ? 'text-primary' : 'text-foreground'}`}>
+                        {stu.name}
+                      </span>
+                      {isMe && (
+                        <span className="text-[10px] bg-primary text-primary-foreground font-bold px-2 py-0.5 rounded-full">
+                          Kamu
+                        </span>
+                      )}
                     </div>
-
-                    <div className="text-right font-mono">
-                      <div className={`text-xs font-semibold ${isMyClass ? 'text-white' : 'text-stone-900'}`}>
-                        {cls.totalKg.toFixed(1)} kg
-                      </div>
-                      <div className={`text-[10px] ${isMyClass ? 'text-stone-300' : 'text-stone-500'}`}>
-                        {cls.totalPoints.toLocaleString('id-ID')} pts
-                      </div>
+                    <div className="text-sm text-muted-foreground font-medium">
+                      {stu.className}
                     </div>
                   </div>
-
-                  {/* Waste breakdown bar per class */}
-                  <div
-                    className={`mt-2 pt-2 border-t flex items-center justify-between text-[10px] font-mono ${
-                      isMyClass
-                        ? 'border-stone-800 text-stone-300'
-                        : 'border-stone-200/60 text-stone-500'
-                    }`}
-                  >
-                    <span>Organik: {cls.organicKg.toFixed(1)}kg</span>
-                    <span>Plastik: {cls.plasticKg.toFixed(1)}kg</span>
-                    <span>Kertas: {cls.paperKg.toFixed(1)}kg</span>
-                    <span>B3: {cls.b3Kg.toFixed(1)}kg</span>
-                  </div>
                 </div>
-              );
-            })}
-          </div>
+                <div className="text-right">
+                  <div className={`text-lg font-bold ${isMe ? 'text-primary' : 'text-foreground'}`}>
+                    {stu.points}
+                  </div>
+                  <div className="text-xs text-muted-foreground font-bold">Poin</div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
 
-      {/* VIEW 2: PERINGKAT SISWA TERAKTIF SE-SEKOLAH */}
-      {viewMode === 'student' && (
-        <div className="space-y-2">
-          <div className="p-3 bg-stone-50 rounded-xl border border-stone-200 text-stone-700 text-xs">
-            <span className="font-semibold text-stone-900">Siswa Paling Aktif: </span>
-            Semakin rajin kamu memilah sampah di IoT Tong Pintar, poin dan peringkatmu akan terus meningkat.
+      {viewMode === 'class' && (
+        <div className="space-y-4">
+          <div className="bg-amber-50 rounded-2xl p-4 border border-amber-200">
+            <h3 className="text-center font-bold text-amber-900 mb-4 uppercase tracking-wider text-sm">Podium Kelas</h3>
+            <div className="flex items-end justify-center gap-3">
+              <div className="flex-1 flex flex-col items-center">
+                <span className="text-3xl mb-2 drop-shadow-md">🥈</span>
+                <div className="text-sm font-bold text-foreground truncate w-full text-center">{topThreeClasses[1].name.split('-')[0]}</div>
+                <div className="w-full bg-slate-200 border-2 border-slate-300 h-16 rounded-t-xl mt-2 flex flex-col items-center justify-center font-bold text-slate-700">
+                  {topThreeClasses[1].totalPoints}
+                </div>
+              </div>
+              <div className="flex-1 flex flex-col items-center">
+                <span className="text-4xl mb-2 drop-shadow-md">👑</span>
+                <div className="text-sm font-bold text-foreground truncate w-full text-center">{topThreeClasses[0].name.split('-')[0]}</div>
+                <div className="w-full bg-amber-300 border-2 border-amber-400 h-24 rounded-t-xl mt-2 flex flex-col items-center justify-center font-bold text-amber-900">
+                  {topThreeClasses[0].totalPoints}
+                </div>
+              </div>
+              <div className="flex-1 flex flex-col items-center">
+                <span className="text-3xl mb-2 drop-shadow-md">🥉</span>
+                <div className="text-sm font-bold text-foreground truncate w-full text-center">{topThreeClasses[2].name.split('-')[0]}</div>
+                <div className="w-full bg-orange-200 border-2 border-orange-300 h-12 rounded-t-xl mt-2 flex flex-col items-center justify-center font-bold text-orange-800">
+                  {topThreeClasses[2].totalPoints}
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className="space-y-1.5">
-            {sortedStudents.map((stu, idx) => {
-              const isMe = stu.id === currentStudent.id;
+          <div className="space-y-3">
+            {sortedClasses.map((cls, idx) => {
+              const isMyClass = currentStudent.className.includes(cls.name.split(' - ')[0]);
               const rank = idx + 1;
-
               return (
-                <div
-                  key={stu.id}
-                  className={`p-2.5 rounded-xl border flex items-center justify-between transition-colors ${
-                    isMe
-                      ? 'bg-stone-900 text-white border-stone-950'
-                      : 'bg-white border-stone-200 hover:bg-stone-50 text-stone-900'
-                  }`}
-                >
-                  <div className="flex items-center gap-2">
-                    <div
-                      className={`w-5 h-5 rounded border flex items-center justify-center font-medium text-[11px] font-mono ${
-                        isMe
-                          ? 'bg-stone-800 border-stone-700 text-white'
-                          : 'bg-stone-100 border-stone-200 text-stone-700'
-                      }`}
-                    >
+                <div key={cls.id} className={`p-4 rounded-2xl border flex items-center justify-between transition-colors ${
+                  isMyClass ? 'bg-primary/10 border-primary shadow-sm' : 'bg-card border-border'
+                }`}>
+                  <div className="flex items-center gap-3">
+                    <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold text-sm ${
+                      isMyClass ? 'bg-primary text-primary-foreground border-primary' : 'bg-muted border-border'
+                    }`}>
                       {rank}
                     </div>
-
-                    <span className="text-lg">{stu.avatar}</span>
-
                     <div>
-                      <div className="flex items-center gap-1.5">
-                        <span className={`text-xs font-semibold ${isMe ? 'text-white' : 'text-stone-900'}`}>
-                          {stu.name}
+                      <div className="flex items-center gap-2">
+                        <span className={`text-base font-bold ${isMyClass ? 'text-primary' : 'text-foreground'}`}>
+                          {cls.name}
                         </span>
-                        {isMe && (
-                          <span className="text-[8px] bg-emerald-500 text-stone-950 font-bold px-1 py-0.2 rounded">
-                            Anda
+                        {isMyClass && (
+                          <span className="text-[10px] bg-primary text-primary-foreground font-bold px-2 py-0.5 rounded-full">
+                            Kelasmu
                           </span>
                         )}
                       </div>
-                      <div className={`text-[10px] ${isMe ? 'text-stone-300' : 'text-stone-500'}`}>
-                        {stu.className} • {stu.sortCount}x pilah
+                      <div className="text-sm text-muted-foreground font-medium">
+                        {cls.activeStudents} Siswa Aktif
                       </div>
                     </div>
                   </div>
-
-                  <div className="text-right font-mono">
-                    <div className={`text-xs font-semibold ${isMe ? 'text-white' : 'text-stone-900'}`}>
-                      {stu.points} pts
+                  <div className="text-right">
+                    <div className={`text-lg font-bold ${isMyClass ? 'text-primary' : 'text-foreground'}`}>
+                      {cls.totalPoints.toLocaleString('id-ID')}
                     </div>
-                    <div className={`text-[10px] ${isMe ? 'text-stone-300' : 'text-stone-500'}`}>
-                      {stu.totalKg.toFixed(1)} kg
-                    </div>
+                    <div className="text-xs text-muted-foreground font-bold">Poin</div>
                   </div>
                 </div>
               );

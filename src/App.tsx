@@ -34,8 +34,14 @@ export default function App() {
 
   // App data states (stored in React state, initialized from initialData or localStorage)
   const [students, setStudents] = useState<Student[]>(() => {
-    const saved = localStorage.getItem('ecokids_students');
-    return saved ? JSON.parse(saved) : INITIAL_STUDENTS;
+    try {
+      const saved = localStorage.getItem('ecokids_students');
+      if (!saved) return INITIAL_STUDENTS;
+      const parsed = JSON.parse(saved);
+      return Array.isArray(parsed) && parsed.length > 0 ? parsed : INITIAL_STUDENTS;
+    } catch {
+      return INITIAL_STUDENTS;
+    }
   });
 
   const [currentStudentId, setCurrentStudentId] = useState<string>(() => {
@@ -43,18 +49,36 @@ export default function App() {
   });
 
   const [classes, setClasses] = useState<SchoolClass[]>(() => {
-    const saved = localStorage.getItem('ecokids_classes');
-    return saved ? JSON.parse(saved) : INITIAL_CLASSES;
+    try {
+      const saved = localStorage.getItem('ecokids_classes');
+      if (!saved) return INITIAL_CLASSES;
+      const parsed = JSON.parse(saved);
+      return Array.isArray(parsed) && parsed.length > 0 ? parsed : INITIAL_CLASSES;
+    } catch {
+      return INITIAL_CLASSES;
+    }
   });
 
   const [iotBin, setIotBin] = useState<SmartBinIoTState>(() => {
-    const saved = localStorage.getItem('ecokids_iotbin');
-    return saved ? JSON.parse(saved) : INITIAL_IOT_BIN;
+    try {
+      const saved = localStorage.getItem('ecokids_iotbin');
+      if (!saved) return INITIAL_IOT_BIN;
+      const parsed = JSON.parse(saved);
+      return parsed && parsed.compartments ? parsed : INITIAL_IOT_BIN;
+    } catch {
+      return INITIAL_IOT_BIN;
+    }
   });
 
   const [transactions, setTransactions] = useState<BankTransaction[]>(() => {
-    const saved = localStorage.getItem('ecokids_transactions');
-    return saved ? JSON.parse(saved) : INITIAL_TRANSACTIONS;
+    try {
+      const saved = localStorage.getItem('ecokids_transactions');
+      if (!saved) return INITIAL_TRANSACTIONS;
+      const parsed = JSON.parse(saved);
+      return Array.isArray(parsed) ? parsed : INITIAL_TRANSACTIONS;
+    } catch {
+      return INITIAL_TRANSACTIONS;
+    }
   });
 
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState<boolean>(false);
@@ -82,7 +106,7 @@ export default function App() {
   }, [currentStudentId]);
 
   const currentStudent =
-    students.find((s) => s.id === currentStudentId) || students[0];
+    students.find((s) => s.id === currentStudentId) || students[0] || INITIAL_STUDENTS[0];
 
   // Handler when waste is disposed in the IoT Smart Bin
   const handleWasteDisposed = (

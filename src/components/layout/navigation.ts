@@ -15,11 +15,11 @@ export interface NavItem {
 export const getNavItemsForRole = (role: UserRole, pendingRewardNotice?: boolean): NavItem[] => {
   if (role === 'student') {
     return [
-      { key: 'beranda', label: 'Edukasi', icon: Home, accent: 'text-emerald-600' },
-      { key: 'iot_bin', label: 'IoT Tong', icon: Trash2, accent: 'text-emerald-600', badge: 'LIVE' },
+      { key: 'beranda', label: 'Beranda', icon: Home, accent: 'text-emerald-600' },
       { key: 'leaderboard', label: 'Peringkat', icon: Trophy, accent: 'text-amber-500' },
-      { key: 'bank_sampah', label: 'Bank Sampah', icon: Wallet, accent: 'text-emerald-600', notifyDot: pendingRewardNotice },
-      { key: 'misi', label: 'Lencana', icon: Award, accent: 'text-lime-600' },
+      { key: 'iot_bin', label: 'Setor Sampah', icon: Trash2, accent: 'text-emerald-600' },
+      { key: 'bank_sampah', label: 'Tabungan', icon: Wallet, accent: 'text-emerald-600', notifyDot: pendingRewardNotice },
+      { key: 'misi', label: 'Misi', icon: Award, accent: 'text-lime-600' },
     ];
   }
   

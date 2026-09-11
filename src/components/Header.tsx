@@ -71,7 +71,7 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Student Active Bar & Switcher */}
-        {userRole === 'student' && (
+        {userRole === 'student' && currentStudent && (
           <div className="flex items-center justify-between bg-white border border-stone-200 shadow-sm rounded-xl p-2 relative">
             <button
               id="btn-student-switcher"
@@ -81,22 +81,22 @@ export const Header: React.FC<HeaderProps> = ({
               className="flex items-center gap-2 text-left group"
             >
               <div className="relative">
-                <span className="text-2xl">{currentStudent.avatar}</span>
+                <span className="text-2xl">{currentStudent?.avatar || '🎓'}</span>
                 <span className="absolute -bottom-1 -right-1 w-4 h-4 bg-stone-900 text-white rounded-full text-[9px] font-bold flex items-center justify-center border border-white">
-                  {currentStudent.level}
+                  {currentStudent?.level ?? 1}
                 </span>
               </div>
               <div>
                 <div className="flex items-center gap-1">
                   <span className="font-semibold text-stone-900 text-sm group-hover:text-emerald-800 transition-colors">
-                    {currentStudent.name}
+                    {currentStudent?.name || 'Siswa'}
                   </span>
                   <ChevronDown size={14} className="text-stone-400 group-hover:text-stone-700" />
                 </div>
                 <div className="text-[11px] text-stone-500 flex items-center gap-1">
-                  <span className="font-medium text-stone-700">{currentStudent.className}</span>
+                  <span className="font-medium text-stone-700">{currentStudent?.className || '-'}</span>
                   <span>•</span>
-                  <span>{currentStudent.levelTitle}</span>
+                  <span>{currentStudent?.levelTitle || 'Pemula'}</span>
                 </div>
               </div>
             </button>
@@ -106,7 +106,7 @@ export const Header: React.FC<HeaderProps> = ({
               <div className="bg-stone-50 border border-stone-200 px-2.5 py-1.5 rounded-lg text-right">
                 <div className="text-[9px] text-stone-500 font-medium leading-none mb-0.5">Poin</div>
                 <div className="text-xs font-bold text-stone-900 leading-tight">
-                  {currentStudent.points}
+                  {currentStudent?.points ?? 0}
                 </div>
               </div>
 
@@ -122,7 +122,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <div className="text-left leading-none">
                   <div className="text-[9px] text-emerald-200 font-medium mb-0.5">Saldo</div>
                   <div className="text-xs font-bold tracking-tight">
-                    {formatCurrency(currentStudent.balanceRp)}
+                    {formatCurrency(currentStudent?.balanceRp ?? 0)}
                   </div>
                 </div>
               </button>
