@@ -18,8 +18,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const tabs = getNavItemsForRole(userRole, pendingRewardNotice);
 
   return (
-    <aside className="hidden md:flex flex-col w-64 bg-white border-r border-stone-200 h-screen sticky top-0 shrink-0 z-40">
-      <div className="p-4 border-b border-stone-100 mb-2">
+    <aside className="hidden md:flex flex-col w-64 bg-white border-r border-stone-200 h-screen sticky top-0 self-start shrink-0 z-40">
+      <div className="p-4 border-b border-stone-100 mb-2 shrink-0">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-emerald-700 flex items-center justify-center text-white text-base font-medium">
             🏫
@@ -35,7 +35,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
       </div>
       
-      <div className="flex-1 px-3 py-2 space-y-1">
+      <div className="flex-1 px-3 py-2 space-y-1 overflow-y-auto">
         <div className="text-xs font-semibold text-stone-500 mb-3 px-2">Menu Navigasi</div>
         {tabs.map((tab) => {
           const isActive = activeTab === tab.key;

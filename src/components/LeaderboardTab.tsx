@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Trophy, Users } from 'lucide-react';
+import { Trophy, Users, Award } from 'lucide-react';
 import { SchoolClass, Student } from '../types';
+import { BadgesMissionsTab } from './BadgesMissionsTab';
 
 interface LeaderboardTabProps {
   classes: SchoolClass[];
@@ -13,7 +14,7 @@ export const LeaderboardTab: React.FC<LeaderboardTabProps> = ({
   students,
   currentStudent,
 }) => {
-  const [viewMode, setViewMode] = useState<'student' | 'class'>('student');
+  const [viewMode, setViewMode] = useState<'student' | 'class' | 'missions'>('student');
 
   const sortedClasses = [...classes].sort((a, b) => b.totalPoints - a.totalPoints);
   const sortedStudents = [...students].sort((a, b) => b.points - a.points);
@@ -22,28 +23,39 @@ export const LeaderboardTab: React.FC<LeaderboardTabProps> = ({
   return (
     <div className="w-full space-y-4 pb-24 pt-2 md:px-4">
       {/* Switcher */}
-      <div className="bg-muted p-1.5 rounded-2xl flex items-center gap-1 shadow-sm">
+      <div className="bg-muted p-1 rounded-xl flex items-center gap-1 shadow-xs border border-border">
         <button
           onClick={() => setViewMode('student')}
-          className={`flex-1 py-2.5 rounded-xl text-sm transition-all flex items-center justify-center gap-2 ${
+          className={`flex-1 py-2 rounded-lg text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5 ${
             viewMode === 'student'
-              ? 'bg-background text-foreground font-bold shadow-sm'
-              : 'text-muted-foreground hover:text-foreground font-semibold'
+              ? 'bg-background text-foreground font-bold shadow-xs'
+              : 'text-muted-foreground hover:text-foreground font-medium'
           }`}
         >
-          <Trophy size={18} />
+          <Trophy size={16} />
           <span>Siswa</span>
         </button>
         <button
           onClick={() => setViewMode('class')}
-          className={`flex-1 py-2.5 rounded-xl text-sm transition-all flex items-center justify-center gap-2 ${
+          className={`flex-1 py-2 rounded-lg text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5 ${
             viewMode === 'class'
-              ? 'bg-background text-foreground font-bold shadow-sm'
-              : 'text-muted-foreground hover:text-foreground font-semibold'
+              ? 'bg-background text-foreground font-bold shadow-xs'
+              : 'text-muted-foreground hover:text-foreground font-medium'
           }`}
         >
-          <Users size={18} />
+          <Users size={16} />
           <span>Kelas</span>
+        </button>
+        <button
+          onClick={() => setViewMode('missions')}
+          className={`flex-1 py-2 rounded-lg text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5 ${
+            viewMode === 'missions'
+              ? 'bg-background text-foreground font-bold shadow-xs'
+              : 'text-muted-foreground hover:text-foreground font-medium'
+          }`}
+        >
+          <Award size={16} />
+          <span>Misi & Prestasi</span>
         </button>
       </div>
 
@@ -168,6 +180,10 @@ export const LeaderboardTab: React.FC<LeaderboardTabProps> = ({
             })}
           </div>
         </div>
+      )}
+
+      {viewMode === 'missions' && (
+        <BadgesMissionsTab currentStudent={currentStudent} />
       )}
     </div>
   );

@@ -9,6 +9,8 @@ import {
   Lock,
   Medal,
   FileCheck,
+  Target,
+  Flame,
 } from 'lucide-react';
 import { BadgeAchievement, Student } from '../types';
 import { BADGES_LIST } from '../data/initialData';
@@ -124,6 +126,103 @@ export const BadgesMissionsTab: React.FC<BadgesMissionsTabProps> = ({
         </div>
       </div>
 
+      {/* Misi Tantangan Mingguan */}
+      <div className="bg-white rounded-xl p-4 border border-stone-200 space-y-2.5">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <Target size={15} className="text-emerald-600" />
+            <h3 className="text-xs font-semibold text-stone-900">
+              Misi Tantangan Adiwiyata Minggu Ini
+            </h3>
+          </div>
+          <span className="text-[10px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded font-mono font-medium">
+            3/4 Tercapai
+          </span>
+        </div>
+
+        <div className="space-y-2">
+          {[
+            {
+              id: 'm-1',
+              title: 'Pilah Sampah Plastik Bersih',
+              desc: 'Setor minimal 1.0 kg botol/gelas plastik ke Smart Bin',
+              reward: '+50 XP',
+              progress: '1.2 / 1.0 kg',
+              done: true,
+            },
+            {
+              id: 'm-2',
+              title: 'Disiplin Pemilahan 3 Hari',
+              desc: 'Timbang sampah terpilah selama 3 hari dalam sepekan',
+              reward: '+75 XP',
+              progress: '3 / 3 Hari',
+              done: true,
+            },
+            {
+              id: 'm-3',
+              title: 'Dukung Karya Daur Ulang',
+              desc: 'Beli atau buat 1 produk kerajinan daur ulang siswa',
+              reward: '+60 XP',
+              progress: '1 / 1 Produk',
+              done: true,
+            },
+            {
+              id: 'm-4',
+              title: 'Juara Kuis Edukasi 3R',
+              desc: 'Selesaikan tantangan pilah sampah di modul edukasi dengan skor 100%',
+              reward: '+100 XP',
+              progress: '0 / 1 Selesai',
+              done: false,
+            },
+          ].map((mission) => (
+            <div
+              key={mission.id}
+              className={`p-3 rounded-lg border transition-colors flex items-center justify-between gap-2.5 ${
+                mission.done
+                  ? 'bg-emerald-50/40 border-emerald-200/80'
+                  : 'bg-stone-50/70 border-stone-200'
+              }`}
+            >
+              <div className="flex items-start gap-2.5 min-w-0">
+                <div className="mt-0.5 shrink-0">
+                  {mission.done ? (
+                    <div className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center">
+                      <CheckCircle size={12} strokeWidth={3} />
+                    </div>
+                  ) : (
+                    <div className="w-5 h-5 rounded-full border-2 border-stone-300 flex items-center justify-center">
+                      <div className="w-2 h-2 rounded-full bg-stone-300" />
+                    </div>
+                  )}
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <h4 className={`text-xs font-semibold leading-tight ${mission.done ? 'text-stone-900 line-through decoration-stone-400' : 'text-stone-900'}`}>
+                      {mission.title}
+                    </h4>
+                    <span className="text-[10px] font-mono font-bold text-emerald-700 bg-emerald-100/60 px-1.5 py-0.2 rounded">
+                      {mission.reward}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-stone-500 mt-0.5 leading-snug">
+                    {mission.desc}
+                  </p>
+                </div>
+              </div>
+              <div className="shrink-0 text-right">
+                <span className={`text-[10px] font-mono font-medium px-2 py-1 rounded-md ${
+                  mission.done
+                    ? 'bg-emerald-100 text-emerald-800'
+                    : 'bg-stone-200/70 text-stone-600'
+                }`}>
+                  {mission.progress}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Koleksi Lencana Prestasi (Badges) */}
       <div className="bg-white rounded-xl p-4 border border-stone-200 space-y-2.5">
         <div className="flex items-center justify-between">
@@ -188,7 +287,7 @@ export const BadgesMissionsTab: React.FC<BadgesMissionsTabProps> = ({
       {/* Piagam Modal */}
       {showCertificate && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/40 backdrop-blur-xs">
-          <div className="bg-white w-full max-w-sm rounded-xl border border-stone-200 p-5 text-center space-y-3 shadow-lg">
+          <div className="bg-white w-full max-w-[calc(100vw-2rem)] sm:max-w-sm max-h-[calc(100dvh-2rem)] overflow-y-auto overflow-x-hidden min-w-0 rounded-2xl border border-stone-200 p-5 text-center space-y-3 shadow-xl">
             <div className="text-2xl">🏅</div>
             <div className="text-[10px] uppercase font-semibold tracking-wider text-stone-500">
               Piagam Penghargaan Adiwiyata
@@ -199,9 +298,9 @@ export const BadgesMissionsTab: React.FC<BadgesMissionsTabProps> = ({
             <p className="text-xs text-stone-600">
               Diberikan kepada siswa:
             </p>
-            <div className="p-3 bg-stone-50 rounded-lg border border-stone-200">
-              <div className="text-sm font-bold text-stone-900">{currentStudent.name}</div>
-              <div className="text-xs text-stone-600 font-mono">
+            <div className="p-3 bg-stone-50 rounded-xl border border-stone-200 min-w-0">
+              <div className="text-sm font-bold text-stone-900 truncate">{currentStudent.name}</div>
+              <div className="text-xs text-stone-600 font-mono truncate">
                 {currentStudent.className} • {currentStudent.totalKg.toFixed(1)} kg sampah
               </div>
             </div>
@@ -212,7 +311,7 @@ export const BadgesMissionsTab: React.FC<BadgesMissionsTabProps> = ({
               onClick={() => {
                 setShowCertificate(false);
               }}
-              className="w-full py-2 bg-stone-900 hover:bg-stone-800 text-white text-xs font-medium rounded-lg transition-colors"
+              className="w-full py-2.5 bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold rounded-xl transition-colors cursor-pointer"
             >
               Tutup Piagam
             </button>

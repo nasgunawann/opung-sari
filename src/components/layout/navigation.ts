@@ -1,7 +1,20 @@
-import React from 'react';
-import { Home, Trash2, Trophy, Wallet, Award, Scale, History, Building2, Users, Settings } from 'lucide-react';
-import { UserRole } from '../../App';
-import { TabKey } from '../../App';
+import React from "react";
+import {
+  Home,
+  Trash2,
+  Trophy,
+  Wallet,
+  Award,
+  Scale,
+  History,
+  Building2,
+  Users,
+  Settings,
+  ShoppingCart,
+  ShoppingBag,
+} from "lucide-react";
+import { UserRole } from "../../App";
+import { TabKey } from "../../App";
 
 export interface NavItem {
   key: TabKey;
@@ -12,28 +25,82 @@ export interface NavItem {
   notifyDot?: boolean;
 }
 
-export const getNavItemsForRole = (role: UserRole, pendingRewardNotice?: boolean): NavItem[] => {
-  if (role === 'student') {
+export const getNavItemsForRole = (
+  role: UserRole,
+  pendingRewardNotice?: boolean,
+): NavItem[] => {
+  if (role === "student") {
     return [
-      { key: 'beranda', label: 'Beranda', icon: Home, accent: 'text-emerald-600' },
-      { key: 'leaderboard', label: 'Peringkat', icon: Trophy, accent: 'text-amber-500' },
-      { key: 'iot_bin', label: 'Setor Sampah', icon: Trash2, accent: 'text-emerald-600' },
-      { key: 'bank_sampah', label: 'Tabungan', icon: Wallet, accent: 'text-emerald-600', notifyDot: pendingRewardNotice },
-      { key: 'misi', label: 'Misi', icon: Award, accent: 'text-lime-600' },
+      {
+        key: "beranda",
+        label: "Beranda",
+        icon: Home,
+        accent: "text-emerald-600",
+      },
+      {
+        key: "leaderboard",
+        label: "Peringkat",
+        icon: Trophy,
+        accent: "text-amber-500",
+      },
+      {
+        key: "iot_bin",
+        label: "Setor Sampah",
+        icon: Trash2,
+        accent: "text-emerald-600",
+      },
+      {
+        key: "bank_sampah",
+        label: "Tabungan",
+        icon: Wallet,
+        accent: "text-emerald-600",
+        notifyDot: pendingRewardNotice,
+      },
+      {
+        key: "katalog",
+        label: "Katalog",
+        icon: ShoppingBag,
+        accent: "text-emerald-600",
+      },
     ];
   }
-  
-  if (role === 'coordinator') {
+
+  if (role === "coordinator") {
     return [
-      { key: 'coordinator_input', label: 'Input Timbangan', icon: Scale, accent: 'text-blue-600' },
-      { key: 'coordinator_history', label: 'Riwayat', icon: History, accent: 'text-stone-600' },
+      {
+        key: "coordinator_input",
+        label: "Input Timbangan",
+        icon: Scale,
+        accent: "text-blue-600",
+      },
+      {
+        key: "coordinator_history",
+        label: "Riwayat",
+        icon: History,
+        accent: "text-stone-600",
+      },
     ];
   }
 
   // Admin
   return [
-    { key: 'admin_dashboard', label: 'Dashboard', icon: Building2, accent: 'text-purple-600' },
-    { key: 'admin_classes', label: 'Kelola Kelas', icon: Users, accent: 'text-stone-600' },
-    { key: 'admin_settings', label: 'Pengaturan', icon: Settings, accent: 'text-stone-600' },
+    {
+      key: "admin_dashboard",
+      label: "Dashboard",
+      icon: Building2,
+      accent: "text-purple-600",
+    },
+    {
+      key: "admin_classes",
+      label: "Kelola Kelas",
+      icon: Users,
+      accent: "text-stone-600",
+    },
+    {
+      key: "admin_settings",
+      label: "Pengaturan",
+      icon: Settings,
+      accent: "text-stone-600",
+    },
   ];
 };
