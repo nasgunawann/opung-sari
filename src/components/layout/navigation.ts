@@ -1,0 +1,39 @@
+import React from 'react';
+import { Home, Trash2, Trophy, Wallet, Award, Scale, History, Building2, Users, Settings } from 'lucide-react';
+import { UserRole } from '../../App';
+import { TabKey } from '../../App';
+
+export interface NavItem {
+  key: TabKey;
+  label: string;
+  icon: React.ElementType;
+  accent: string;
+  badge?: string;
+  notifyDot?: boolean;
+}
+
+export const getNavItemsForRole = (role: UserRole, pendingRewardNotice?: boolean): NavItem[] => {
+  if (role === 'student') {
+    return [
+      { key: 'beranda', label: 'Edukasi', icon: Home, accent: 'text-emerald-600' },
+      { key: 'iot_bin', label: 'IoT Tong', icon: Trash2, accent: 'text-emerald-600', badge: 'LIVE' },
+      { key: 'leaderboard', label: 'Peringkat', icon: Trophy, accent: 'text-amber-500' },
+      { key: 'bank_sampah', label: 'Bank Sampah', icon: Wallet, accent: 'text-emerald-600', notifyDot: pendingRewardNotice },
+      { key: 'misi', label: 'Lencana', icon: Award, accent: 'text-lime-600' },
+    ];
+  }
+  
+  if (role === 'coordinator') {
+    return [
+      { key: 'coordinator_input', label: 'Input Timbangan', icon: Scale, accent: 'text-blue-600' },
+      { key: 'coordinator_history', label: 'Riwayat', icon: History, accent: 'text-stone-600' },
+    ];
+  }
+
+  // Admin
+  return [
+    { key: 'admin_dashboard', label: 'Dashboard', icon: Building2, accent: 'text-purple-600' },
+    { key: 'admin_classes', label: 'Kelola Kelas', icon: Users, accent: 'text-stone-600' },
+    { key: 'admin_settings', label: 'Pengaturan', icon: Settings, accent: 'text-stone-600' },
+  ];
+};

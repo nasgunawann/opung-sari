@@ -63,8 +63,8 @@ export const WasteBankRewardTab: React.FC<WasteBankRewardTabProps> = ({
   };
 
   return (
-    <div className="space-y-3 pb-20 pt-1">
-      {/* Saldo Bank Sampah Digital Card - Flat Solid Visual Anchor */}
+      <div className="w-full space-y-3 pb-20 pt-1 md:px-4">
+        {/* Saldo Bank Sampah Digital Card - Flat Solid Visual Anchor */}
       <div className="bg-emerald-900 text-white rounded-xl p-4 border border-emerald-950 space-y-3">
         <div className="flex items-center justify-between text-xs">
           <div className="flex items-center gap-1.5 font-medium text-emerald-200">

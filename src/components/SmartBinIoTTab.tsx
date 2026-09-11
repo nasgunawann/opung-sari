@@ -173,8 +173,8 @@ export const SmartBinIoTTab: React.FC<SmartBinIoTTabProps> = ({
   };
 
   return (
-    <div className="space-y-3.5 pb-20 pt-1">
-      {/* IoT Status Panel - Flat Solid Dark Visual Anchor */}
+      <div className="w-full space-y-3.5 pb-20 pt-1 md:px-4">
+        {/* IoT Status Panel - Flat Solid Dark Visual Anchor */}
       <div className="bg-stone-900 rounded-xl p-3.5 border border-stone-950 space-y-3 text-white">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">

@@ -35,8 +35,8 @@ export const BadgesMissionsTab: React.FC<BadgesMissionsTabProps> = ({
   );
 
   return (
-    <div className="space-y-3 pb-20 pt-1">
-      {/* Level & Student Profile Card - Flat Solid Dark Visual Anchor */}
+      <div className="w-full space-y-3 pb-20 pt-1 md:px-4">
+        {/* Level & Student Profile Card - Flat Solid Dark Visual Anchor */}
       <div className="bg-stone-900 text-white rounded-xl p-4 border border-stone-950 space-y-3">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-lg bg-stone-800 border border-stone-700 flex items-center justify-center text-2xl">

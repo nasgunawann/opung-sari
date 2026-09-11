@@ -1,6 +1,12 @@
 import React from 'react';
-import { X, CheckCircle2, QrCode, Printer, Share2, Sparkles } from 'lucide-react';
+import { CheckCircle2, QrCode } from 'lucide-react';
 import { BankTransaction } from '../types';
+
+import {
+  Dialog,
+  DialogContent,
+} from './ui/dialog';
+import { Button } from './ui/button';
 
 interface ReceiptModalProps {
   transaction: BankTransaction | null;
@@ -16,24 +22,24 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
   const isDeposit = transaction.type === 'deposit';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/40 backdrop-blur-xs">
-      <div className="bg-white w-full max-w-xs rounded-xl border border-stone-200 p-4 space-y-3 relative shadow-lg">
+    <Dialog open={!!transaction} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="sm:max-w-xs w-[90%] p-5 bg-white rounded-xl gap-4">
         {/* Top receipt title */}
-        <div className="text-center pb-2 border-b border-dashed border-stone-200">
-          <div className="w-8 h-8 mx-auto rounded-lg bg-stone-100 border border-stone-200 flex items-center justify-center text-base mb-1.5">
+        <div className="text-center pb-3 border-b border-dashed border-stone-200">
+          <div className="w-10 h-10 mx-auto rounded-xl bg-stone-100 border border-stone-200 flex items-center justify-center text-lg mb-2">
             {isDeposit ? '🌱' : '🎟️'}
           </div>
-          <h3 className="text-xs font-semibold text-stone-900 uppercase tracking-wider">
-            {isDeposit ? 'Struk Setor Sampah' : 'Voucher Penarikan Reward'}
+          <h3 className="text-xs font-bold text-stone-900 uppercase tracking-wider">
+            {isDeposit ? 'Struk Setor Sampah' : 'Voucher Penarikan'}
           </h3>
-          <p className="text-[10px] text-stone-500 font-mono">
-            Bank Sampah Sekolah
+          <p className="text-[10px] text-stone-500 font-mono mt-0.5">
+            Opung Sari Basah Bang
           </p>
         </div>
 
-        {/* Amount Box - Flat Solid Visual Anchor */}
+        {/* Amount Box */}
         <div
-          className={`text-center py-2.5 rounded-lg border ${
+          className={`text-center py-3 rounded-lg border ${
             isDeposit
               ? 'bg-emerald-900 text-white border-emerald-950'
               : 'bg-stone-900 text-white border-stone-950'
@@ -46,7 +52,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
           >
             {isDeposit ? 'Saldo Ditambahkan' : 'Nominal Voucher'}
           </div>
-          <div className="text-base font-bold font-mono text-white tracking-tight">
+          <div className="text-xl font-bold font-mono text-white tracking-tight">
             {isDeposit ? '+' : '-'}Rp {transaction.amountRp.toLocaleString('id-ID')}
           </div>
           {transaction.pointsEarned && (
@@ -61,7 +67,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
         </div>
 
         {/* Receipt Details Table */}
-        <div className="space-y-1.5 text-xs text-stone-600 px-0.5">
+        <div className="space-y-2 text-xs text-stone-600 px-1">
           <div className="flex justify-between">
             <span className="text-stone-400">Nama:</span>
             <span className="font-medium text-stone-900">{transaction.studentName}</span>
@@ -95,32 +101,30 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
           <div className="flex justify-between">
             <span className="text-stone-400">Status:</span>
             <span className="text-emerald-800 font-medium flex items-center gap-1">
-              <CheckCircle2 size={12} /> Berhasil
+              <CheckCircle2 size={13} /> Berhasil
             </span>
           </div>
         </div>
 
-        {/* Mock QR Voucher for School Canteen / Koperasi */}
+        {/* Mock QR Voucher */}
         {!isDeposit && (
-          <div className="p-2.5 bg-stone-50 rounded-lg border border-stone-200 flex flex-col items-center text-center space-y-1">
-            <div className="w-20 h-20 bg-white p-1 rounded border border-stone-200 flex items-center justify-center">
-              <QrCode size={68} className="text-stone-800" />
+          <div className="p-3 bg-stone-50 rounded-xl border border-stone-200 flex flex-col items-center text-center space-y-1.5 mt-2">
+            <div className="w-24 h-24 bg-white p-2 rounded-lg border border-stone-200 flex items-center justify-center">
+              <QrCode size={80} className="text-stone-800" />
             </div>
-            <span className="text-[9px] text-stone-500">
+            <span className="text-[10px] text-stone-500 max-w-[180px] leading-tight">
               Tunjukkan QR ini ke Petugas Kantin / Koperasi
             </span>
           </div>
         )}
 
-        <button
-          onClick={() => {
-            onClose();
-          }}
-          className="w-full py-2 bg-stone-900 hover:bg-stone-800 text-white text-xs font-medium rounded-lg transition-colors"
+        <Button
+          onClick={onClose}
+          className="w-full mt-2 font-medium"
         >
-          Tutup
-        </button>
-      </div>
-    </div>
+          Tutup Struk
+        </Button>
+      </DialogContent>
+    </Dialog>
   );
 };

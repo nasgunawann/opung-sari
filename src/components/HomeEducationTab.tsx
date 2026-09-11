@@ -16,6 +16,9 @@ import {
 import { QUIZ_QUESTIONS, WASTE_CATEGORIES, WASTE_ITEMS } from '../data/initialData';
 import { WasteCategory } from '../types';
 import confetti from 'canvas-confetti';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/card';
+import { Badge } from './ui/badge';
+import { Button } from './ui/button';
 
 interface HomeEducationTabProps {
   onGoToIoTBin: () => void;
@@ -83,54 +86,58 @@ export const HomeEducationTab: React.FC<HomeEducationTabProps> = ({
   };
 
   return (
-    <div className="space-y-3.5 pb-20 pt-1">
-      {/* Hero Welcome Card - Flat Solid Visual Anchor */}
-      <div className="bg-emerald-900 text-white border border-emerald-950 rounded-xl p-4">
-        <div className="flex items-start justify-between gap-3">
-          <div className="space-y-1.5 flex-1">
-            <div className="inline-flex items-center gap-1.5 text-emerald-200 text-[11px] font-medium bg-emerald-800/80 px-2 py-0.5 rounded border border-emerald-700/50">
-              <span>🌱</span>
-              <span>Edukasi Pilah Sampah</span>
+      <div className="w-full space-y-4 pb-20 pt-1 md:px-4">
+        {/* Hero Welcome Card */}
+      <Card className="bg-emerald-900 text-white border-emerald-950 overflow-hidden relative shadow-sm">
+        <div className="absolute -right-4 -top-4 w-24 h-24 bg-emerald-800 rounded-full blur-xl opacity-50"></div>
+        <CardContent className="p-4 relative z-10">
+          <div className="flex items-start justify-between gap-3">
+            <div className="space-y-2 flex-1">
+              <Badge className="bg-emerald-800 hover:bg-emerald-800 text-emerald-100 border-emerald-700/50 mb-1 font-medium px-2 py-0 border">
+                🌱 Edukasi Pilah Sampah
+              </Badge>
+              <h2 className="text-sm font-bold text-white leading-snug">
+                Pilah Sampah, Raih Tabungan & Juara Kelas
+              </h2>
+              <p className="text-xs text-emerald-100/90 leading-relaxed max-w-[220px]">
+                Setor botol, kertas, dan sampah terpilah ke Tong Pintar IoT untuk menambah saldo tabunganmu.
+              </p>
+              <div className="pt-2">
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  className="bg-white text-emerald-950 hover:bg-emerald-50 h-8 text-[11px] px-3 font-semibold shadow-sm"
+                  onClick={onGoToIoTBin}
+                >
+                  Buka Simulasi IoT Tong
+                  <ArrowRight size={14} className="ml-1.5" />
+                </Button>
+              </div>
             </div>
-            <h2 className="text-sm font-bold text-white leading-snug">
-              Pilah Sampah, Raih Tabungan & Juara Kelas
-            </h2>
-            <p className="text-xs text-emerald-100 leading-relaxed">
-              Setor botol, kertas, dan sampah terpilah ke Tong Pintar IoT untuk menambah saldo tabunganmu.
-            </p>
-            <div className="pt-1">
-              <button
-                id="btn-hero-to-iot"
-                onClick={() => {
-                  onGoToIoTBin();
-                }}
-                className="inline-flex items-center gap-1.5 bg-white hover:bg-emerald-50 text-emerald-950 font-semibold text-xs px-3 py-1.5 rounded-lg transition-colors"
-              >
-                <span>Buka Simulasi IoT Tong</span>
-                <ArrowRight size={13} />
-              </button>
+            <div className="w-14 shrink-0 relative flex items-center justify-center">
+              <div className="text-5xl transform rotate-12 filter drop-shadow-md">
+                ♻️
+              </div>
             </div>
           </div>
-
-          <div className="w-12 h-12 rounded-xl bg-emerald-800 border border-emerald-700 flex items-center justify-center text-2xl shrink-0">
-            🌱
-          </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* 4 Panduan Tong Sampah - Minimal Flat Grid */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between px-0.5">
-          <div className="flex items-center gap-1.5">
-            <BookOpen size={15} className="text-stone-700" />
-            <h3 className="text-xs font-semibold text-stone-900 uppercase tracking-wider">
-              4 Jenis Kategori Sampah
-            </h3>
+      <Card className="shadow-sm">
+        <CardHeader className="pb-3 pt-4 px-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <BookOpen size={16} className="text-stone-700" />
+              <CardTitle className="text-xs uppercase tracking-wider text-stone-900">
+                4 Kategori Tong
+              </CardTitle>
+            </div>
+            <span className="text-[10px] text-stone-500">Ketuk untuk detail</span>
           </div>
-          <span className="text-[11px] text-stone-500">Ketuk untuk rincian</span>
-        </div>
-
-        <div className="grid grid-cols-2 gap-2">
+        </CardHeader>
+        <CardContent className="px-4 pb-4 space-y-3">
+          <div className="grid grid-cols-2 gap-2">
           {/* Organik */}
           <button
             id="guide-card-organik"
@@ -278,30 +285,32 @@ export const HomeEducationTab: React.FC<HomeEducationTabProps> = ({
             </div>
           </div>
         )}
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Interactive Kuis Pilah Sampah - Flat Minimalist */}
-      <div className="bg-white rounded-xl p-4 border border-stone-200 space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded bg-stone-100 text-stone-700 flex items-center justify-center font-bold text-xs">
-              ?
+      <Card className="shadow-sm">
+        <CardContent className="p-4 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded bg-stone-100 text-stone-700 flex items-center justify-center font-bold text-sm">
+                ?
+              </div>
+              <div>
+                <h3 className="text-xs font-semibold text-stone-900">Kuis Edukasi Singkat</h3>
+                <p className="text-[10px] text-stone-500">
+                  Jawab benar untuk mendapatkan +{currentQuiz.points} poin
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-xs font-semibold text-stone-900">Kuis Edukasi Singkat</h3>
-              <p className="text-[10px] text-stone-500">
-                Jawab benar untuk mendapatkan +{currentQuiz.points} poin
-              </p>
-            </div>
+            <button
+              onClick={nextQuiz}
+              className="flex items-center gap-1 text-[10px] font-medium text-stone-600 hover:text-stone-900 bg-stone-100 px-2.5 py-1.5 rounded-md"
+            >
+              <RefreshCw size={12} />
+              <span>Ganti Kuis</span>
+            </button>
           </div>
-          <button
-            onClick={nextQuiz}
-            className="flex items-center gap-1 text-[11px] font-medium text-stone-600 hover:text-stone-900 bg-stone-100 px-2 py-1 rounded-md"
-          >
-            <RefreshCw size={11} />
-            <span>Ganti Kuis</span>
-          </button>
-        </div>
 
         {/* Question */}
         <div className="bg-stone-50 p-3 rounded-lg border border-stone-200">
@@ -364,28 +373,30 @@ export const HomeEducationTab: React.FC<HomeEducationTabProps> = ({
                 onClick={nextQuiz}
                 className="bg-stone-900 hover:bg-stone-800 text-white text-[11px] font-medium px-3 py-1 rounded-md"
               >
-                Soal Berikutnya →
+                Soal Berikutnya -&gt;
               </button>
             </div>
           </div>
         )}
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Tantangan Harian - Clean Flat Checklist */}
-      <div className="bg-white rounded-xl p-4 border border-stone-200 space-y-2.5">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5">
-            <CheckCircle2 size={15} className="text-stone-700" />
-            <h3 className="text-xs font-semibold text-stone-900 uppercase tracking-wider">
-              Tantangan Harian
-            </h3>
+      <Card className="shadow-sm">
+        <CardContent className="p-4 space-y-3">
+          <div className="flex items-center justify-between pb-1">
+            <div className="flex items-center gap-1.5">
+              <CheckCircle2 size={16} className="text-stone-700" />
+              <h3 className="text-xs font-semibold text-stone-900 uppercase tracking-wider">
+                Tantangan Harian
+              </h3>
+            </div>
+            <span className="text-[10px] text-stone-500 font-medium bg-stone-100 px-2 py-0.5 rounded">
+              Reset 17:00 WIB
+            </span>
           </div>
-          <span className="text-[10px] text-stone-500 font-medium">
-            Reset 17:00 WIB
-          </span>
-        </div>
 
-        <div className="space-y-1.5">
+          <div className="space-y-1.5">
           {/* Challenge 1 */}
           <div
             onClick={() => toggleQuest('quest1', 10)}
@@ -492,9 +503,10 @@ export const HomeEducationTab: React.FC<HomeEducationTabProps> = ({
                 {completedQuests['quest3'] && <Check size={11} strokeWidth={2.5} />}
               </div>
             </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

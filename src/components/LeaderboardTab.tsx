@@ -43,8 +43,8 @@ export const LeaderboardTab: React.FC<LeaderboardTabProps> = ({
   const topThreeStudents = sortedStudents.slice(0, 3);
 
   return (
-    <div className="space-y-3 pb-20 pt-1">
-      {/* Header Info - Flat Solid Dark Visual Anchor */}
+      <div className="w-full space-y-3 pb-20 pt-1 md:px-4">
+        {/* Header Info - Flat Solid Dark Visual Anchor */}
       <div className="bg-stone-900 text-white rounded-xl p-4 border border-stone-950">
         <div className="flex items-start justify-between gap-2">
           <div className="space-y-1">

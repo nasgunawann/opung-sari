@@ -13,17 +13,24 @@ import {
   WasteItem,
 } from './types';
 import { Header } from './components/Header';
-import { BottomNav, TabKey } from './components/BottomNav';
 import { HomeEducationTab } from './components/HomeEducationTab';
 import { SmartBinIoTTab } from './components/SmartBinIoTTab';
 import { LeaderboardTab } from './components/LeaderboardTab';
 import { WasteBankRewardTab } from './components/WasteBankRewardTab';
 import { BadgesMissionsTab } from './components/BadgesMissionsTab';
+import { CoordinatorTab } from './components/CoordinatorTab';
+import { AdminTab } from './components/AdminTab';
 import { WithdrawalModal } from './components/WithdrawalModal';
 import { ReceiptModal } from './components/ReceiptModal';
+import { Sidebar } from './components/layout/Sidebar';
+import { MobileNav } from './components/layout/MobileNav';
+
+export type UserRole = 'student' | 'coordinator' | 'admin';
+export type TabKey = 'beranda' | 'iot_bin' | 'leaderboard' | 'bank_sampah' | 'misi' | 'coordinator_input' | 'coordinator_history' | 'admin_dashboard' | 'admin_classes' | 'admin_settings';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabKey>('beranda');
+  const [userRole, setUserRole] = useState<UserRole>('student');
 
   // App data states (stored in React state, initialized from initialData or localStorage)
   const [students, setStudents] = useState<Student[]>(() => {
@@ -173,6 +180,106 @@ export default function App() {
     setTransactions((prev) => [newTrx, ...prev]);
   };
 
+  const handleManualDeposit = (studentId: string, categoryId: string, weightKg: number) => {
+    // Find category info
+    const catData = Object.values(require('./data/initialData').WASTE_CATEGORIES).find((c: any) => c.id === categoryId) as any;
+    if (!catData) return;
+
+    const earnedRp = catData.pricePerKg * weightKg;
+    const earnedPoints = Math.floor(weightKg * 15); // mock formula: 15 pts per kg
+
+    // Update Student
+    setStudents((prev) =>
+      prev.map((stu) => {
+        if (stu.id === studentId) {
+          const newTotalPoints = stu.points + earnedPoints;
+          const newLevel = Math.min(5, Math.floor(newTotalPoints / 100) + 1);
+          const levelTitles = [
+            'Tunas Hijau',
+            'Ksatria Tunas',
+            'Pendekar Hijau',
+            'Panglima Eco-Ranger',
+            'Duta Adiwiyata',
+          ];
+
+          return {
+            ...stu,
+            points: newTotalPoints,
+            balanceRp: stu.balanceRp + earnedRp,
+            totalKg: Number((stu.totalKg + weightKg).toFixed(2)),
+            sortCount: stu.sortCount + 1,
+            level: newLevel,
+            levelTitle: levelTitles[newLevel - 1] || 'Duta Adiwiyata',
+          };
+        }
+        return stu;
+      })
+    );
+
+    // Get student's class ID
+    const targetStudent = students.find(s => s.id === studentId);
+    if (!targetStudent) return;
+
+    // Update Class Leaderboard
+    setClasses((prev) => {
+      const updated = prev.map((cls) => {
+        if (cls.id === targetStudent.classId) {
+          const newTotalKg = Number((cls.totalKg + weightKg).toFixed(2));
+          const newTotalPoints = cls.totalPoints + earnedPoints;
+
+          const categoryKey =
+            categoryId === 'organik'
+              ? 'organicKg'
+              : categoryId === 'plastik'
+              ? 'plasticKg'
+              : categoryId === 'kertas'
+              ? 'paperKg'
+              : 'b3Kg';
+
+          return {
+            ...cls,
+            totalKg: newTotalKg,
+            totalPoints: newTotalPoints,
+            [categoryKey]: Number(((cls[categoryKey] as number) + weightKg).toFixed(2)),
+          };
+        }
+        return cls;
+      });
+
+      const sorted = [...updated].sort((a, b) => b.totalPoints - a.totalPoints);
+      return updated.map((cls) => {
+        const rank = sorted.findIndex((s) => s.id === cls.id) + 1;
+        return {
+          ...cls,
+          rank,
+          weeklyChampionBadge: rank === 1,
+        };
+      });
+    });
+
+    // Create Transaction
+    const now = new Date();
+    const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')} WIB`;
+
+    const newTrx: BankTransaction = {
+      id: `trx-${Date.now()}`,
+      studentId: targetStudent.id,
+      studentName: targetStudent.name,
+      type: 'deposit',
+      amountRp: earnedRp,
+      pointsEarned: earnedPoints,
+      wasteItemName: `${catData.name} (Manual)`,
+      weightKg: weightKg,
+      category: categoryId as any,
+      description: `Setoran manual ke Koordinator`,
+      timestamp: `Hari ini, ${timeStr}`,
+      referenceCode: `DEP-M-${Date.now().toString().slice(-6)}`,
+      status: 'berhasil',
+    };
+
+    setTransactions((prev) => [newTrx, ...prev]);
+  };
+
   // Handler for adding points directly (e.g. from quiz or daily challenges)
   const handleAddPoints = (pts: number) => {
     setStudents((prev) =>
@@ -222,64 +329,127 @@ export default function App() {
     setReceiptTrx(newTrx);
   };
 
+  // Update active tab when user role changes to default tab for that role
+  useEffect(() => {
+    if (userRole === 'student' && !['beranda', 'iot_bin', 'leaderboard', 'bank_sampah', 'misi'].includes(activeTab)) {
+      setActiveTab('beranda');
+    } else if (userRole === 'coordinator' && !['coordinator_input', 'coordinator_history'].includes(activeTab)) {
+      setActiveTab('coordinator_input');
+    } else if (userRole === 'admin' && !['admin_dashboard', 'admin_classes', 'admin_settings'].includes(activeTab)) {
+      setActiveTab('admin_dashboard');
+    }
+  }, [userRole, activeTab]);
+
   return (
-    <div className="min-h-screen bg-stone-100 flex justify-center selection:bg-emerald-100 selection:text-emerald-900">
-      {/* Mobile-first clean flat container */}
-      <div className="w-full max-w-md bg-stone-50/60 min-h-screen relative flex flex-col border-x border-stone-200">
-        {/* Sticky Mobile Header */}
+    <div className={`min-h-screen bg-stone-100 flex selection:bg-emerald-100 selection:text-emerald-900`}>
+      {/* Universal Desktop Sidebar (md+) */}
+      <Sidebar
+        activeTab={activeTab}
+        onChangeTab={setActiveTab}
+        userRole={userRole}
+        pendingRewardNotice={userRole === 'student' ? currentStudent.balanceRp >= 10000 : false}
+      />
+
+      {/* Main Container */}
+      <div className={`flex-1 w-full bg-stone-50/60 min-h-screen relative flex flex-col transition-all duration-300`}>
+        {/* Sticky Header */}
         <Header
           currentStudent={currentStudent}
           studentsList={students}
           onSelectStudent={(stu) => setCurrentStudentId(stu.id)}
           onOpenWithdrawal={() => setIsWithdrawModalOpen(true)}
+          userRole={userRole}
+          setUserRole={setUserRole}
         />
 
         {/* Main Tab Content View */}
         <main className="flex-1 px-4 pt-3 overflow-y-auto">
-          {activeTab === 'beranda' && (
-            <HomeEducationTab
-              onGoToIoTBin={() => setActiveTab('iot_bin')}
-              onAddPoints={handleAddPoints}
-              userPoints={currentStudent.points}
-            />
+          {userRole === 'student' && (
+            <>
+              {activeTab === 'beranda' && (
+                <HomeEducationTab
+                  onGoToIoTBin={() => setActiveTab('iot_bin')}
+                  onAddPoints={handleAddPoints}
+                  userPoints={currentStudent.points}
+                />
+              )}
+
+              {activeTab === 'iot_bin' && (
+                <SmartBinIoTTab
+                  currentStudent={currentStudent}
+                  iotBin={iotBin}
+                  onUpdateBin={setIotBin}
+                  onWasteDisposed={handleWasteDisposed}
+                />
+              )}
+
+              {activeTab === 'leaderboard' && (
+                <LeaderboardTab
+                  classes={classes}
+                  students={students}
+                  currentStudent={currentStudent}
+                />
+              )}
+
+              {activeTab === 'bank_sampah' && (
+                <WasteBankRewardTab
+                  currentStudent={currentStudent}
+                  transactions={transactions}
+                  onOpenWithdrawModal={() => setIsWithdrawModalOpen(true)}
+                  onViewReceipt={(trx) => setReceiptTrx(trx)}
+                />
+              )}
+
+              {activeTab === 'misi' && (
+                <BadgesMissionsTab currentStudent={currentStudent} />
+              )}
+            </>
           )}
 
-          {activeTab === 'iot_bin' && (
-            <SmartBinIoTTab
-              currentStudent={currentStudent}
-              iotBin={iotBin}
-              onUpdateBin={setIotBin}
-              onWasteDisposed={handleWasteDisposed}
-            />
+          {userRole === 'coordinator' && (
+            <>
+              {activeTab === 'coordinator_input' && (
+                <CoordinatorTab
+                  students={students}
+                  onManualDeposit={handleManualDeposit}
+                />
+              )}
+              {activeTab === 'coordinator_history' && (
+                <div className="py-12 text-center text-stone-500">
+                  <h3 className="font-medium text-stone-900 mb-2">Riwayat Transaksi</h3>
+                  <p className="text-sm">Fitur dalam pengembangan.</p>
+                </div>
+              )}
+            </>
           )}
 
-          {activeTab === 'leaderboard' && (
-            <LeaderboardTab
-              classes={classes}
-              students={students}
-              currentStudent={currentStudent}
-            />
-          )}
-
-          {activeTab === 'bank_sampah' && (
-            <WasteBankRewardTab
-              currentStudent={currentStudent}
-              transactions={transactions}
-              onOpenWithdrawModal={() => setIsWithdrawModalOpen(true)}
-              onViewReceipt={(trx) => setReceiptTrx(trx)}
-            />
-          )}
-
-          {activeTab === 'misi' && (
-            <BadgesMissionsTab currentStudent={currentStudent} />
+          {userRole === 'admin' && (
+            <>
+              {activeTab === 'admin_dashboard' && (
+                <AdminTab classes={classes} transactions={transactions} />
+              )}
+              {activeTab === 'admin_classes' && (
+                 <div className="py-12 text-center text-stone-500">
+                  <h3 className="font-medium text-stone-900 mb-2">Kelola Kelas</h3>
+                  <p className="text-sm">Fitur dalam pengembangan.</p>
+                </div>
+              )}
+              {activeTab === 'admin_settings' && (
+                 <div className="py-12 text-center text-stone-500">
+                  <h3 className="font-medium text-stone-900 mb-2">Pengaturan</h3>
+                  <p className="text-sm">Fitur dalam pengembangan.</p>
+                </div>
+              )}
+            </>
           )}
         </main>
 
-        {/* Mobile Bottom Navigation Bar */}
-        <BottomNav
+        {/* Mobile Navigation (All Roles) */}
+        <MobileNav
           activeTab={activeTab}
           onChangeTab={setActiveTab}
-          pendingRewardNotice={currentStudent.balanceRp >= 10000}
+          userRole={userRole}
+          pendingRewardNotice={userRole === 'student' ? currentStudent.balanceRp >= 10000 : false}
         />
 
         {/* Modals */}
