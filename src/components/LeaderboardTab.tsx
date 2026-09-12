@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Trophy, Users, Award } from 'lucide-react';
+import { Trophy, Users } from 'lucide-react';
 import { SchoolClass, Student } from '../types';
-import { BadgesMissionsTab } from './BadgesMissionsTab';
 
 interface LeaderboardTabProps {
   classes: SchoolClass[];
@@ -45,17 +44,6 @@ export const LeaderboardTab: React.FC<LeaderboardTabProps> = ({
         >
           <Users size={16} />
           <span>Kelas</span>
-        </button>
-        <button
-          onClick={() => setViewMode('missions')}
-          className={`flex-1 py-2 rounded-lg text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5 ${
-            viewMode === 'missions'
-              ? 'bg-background text-foreground font-bold shadow-xs'
-              : 'text-muted-foreground hover:text-foreground font-medium'
-          }`}
-        >
-          <Award size={16} />
-          <span>Misi & Prestasi</span>
         </button>
       </div>
 
@@ -180,10 +168,6 @@ export const LeaderboardTab: React.FC<LeaderboardTabProps> = ({
             })}
           </div>
         </div>
-      )}
-
-      {viewMode === 'missions' && (
-        <BadgesMissionsTab currentStudent={currentStudent} />
       )}
     </div>
   );

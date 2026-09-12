@@ -18,7 +18,6 @@ import { SmartBinIoTTab } from './components/SmartBinIoTTab';
 import { LeaderboardTab } from './components/LeaderboardTab';
 import { WasteBankRewardTab } from './components/WasteBankRewardTab';
 import { BadgesMissionsTab } from './components/BadgesMissionsTab';
-import { RecycledEcommerceTab } from './components/RecycledEcommerceTab';
 import { CoordinatorTab } from './components/CoordinatorTab';
 import { AdminTab } from './components/AdminTab';
 import { WithdrawalModal } from './components/WithdrawalModal';
@@ -28,7 +27,7 @@ import { MobileNav } from './components/layout/MobileNav';
 import { AuthPage } from './components/auth/AuthPage';
 
 export type UserRole = 'student' | 'coordinator' | 'admin';
-export type TabKey = 'beranda' | 'iot_bin' | 'leaderboard' | 'bank_sampah' | 'katalog' | 'misi' | 'coordinator_input' | 'coordinator_history' | 'admin_dashboard' | 'admin_classes' | 'admin_settings';
+export type TabKey = 'beranda' | 'iot_bin' | 'leaderboard' | 'bank_sampah' | 'misi' | 'coordinator_input' | 'coordinator_history' | 'admin_dashboard' | 'admin_classes' | 'admin_settings';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabKey>('beranda');
@@ -372,20 +371,6 @@ export default function App() {
     setReceiptTrx(newTrx);
   };
 
-  const handleUpdateStudentBalance = (newBalance: number) => {
-    setStudents((prev) =>
-      prev.map((stu) => {
-        if (stu.id === currentStudent.id) {
-          return {
-            ...stu,
-            balanceRp: newBalance,
-          };
-        }
-        return stu;
-      })
-    );
-  };
-
   const handleLogin = (role: UserRole, student?: Student) => {
     setUserRole(role);
     localStorage.setItem('opung_user_role', role);
@@ -404,7 +389,7 @@ export default function App() {
 
   // Update active tab when user role changes to default tab for that role
   useEffect(() => {
-    if (userRole === 'student' && !['beranda', 'iot_bin', 'leaderboard', 'bank_sampah', 'katalog', 'misi'].includes(activeTab)) {
+    if (userRole === 'student' && !['beranda', 'iot_bin', 'leaderboard', 'bank_sampah', 'misi'].includes(activeTab)) {
       setActiveTab('beranda');
     } else if (userRole === 'coordinator' && !['coordinator_input', 'coordinator_history'].includes(activeTab)) {
       setActiveTab('coordinator_input');
@@ -433,7 +418,7 @@ export default function App() {
       />
 
       {/* Main Container */}
-      <div className={`flex-1 w-full bg-stone-50/60 min-h-screen relative flex flex-col transition-all duration-300`}>
+      <div className={`flex-1 w-full bg-stone-50/60 min-h-screen relative flex flex-col`}>
         {/* Sticky Header */}
         <Header
           userRole={userRole}
@@ -442,7 +427,7 @@ export default function App() {
         />
 
         {/* Main Tab Content View */}
-        <main className="flex-1 px-4 pt-3 overflow-y-auto">
+        <main className="flex-1 px-4 pt-3 pb-24 md:pb-8">
           {userRole === 'student' && (
             <>
               {activeTab === 'beranda' && (
@@ -482,10 +467,9 @@ export default function App() {
                 />
               )}
 
-              {(activeTab === 'katalog' || activeTab === 'misi') && (
-                <RecycledEcommerceTab
+              {activeTab === 'misi' && (
+                <BadgesMissionsTab
                   currentStudent={currentStudent}
-                  onUpdateStudentBalance={handleUpdateStudentBalance}
                 />
               )}
             </>

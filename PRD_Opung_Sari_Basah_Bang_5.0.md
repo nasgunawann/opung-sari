@@ -28,7 +28,7 @@ Meskipun fondasi pembiasaan sudah terbentuk, operasional di lapangan menghadapi 
 4. **Potensi Ekonomi Sampah Terbatas:** Hasil karya daur ulang siswa sulit dipasarkan ke luar lingkungan kelas/sekolah.
 
 ### 1.3 Solusi Produk
-Mengembangkan platform web **Opung Sari Basah Bang 5.0** yang mengintegrasikan telemetri perangkat pintar (*Smart Trash Can* IoT), sistem pencatatan transaksi bank sampah digital, modul dompet kas kelas, etalase e-commerce daur ulang, gamifikasi (leaderboard), serta portal pelaporan terbuka antar-sekolah.
+Mengembangkan platform web **Opung Sari Basah Bang 5.0** yang mengintegrasikan telemetri perangkat pintar (*Smart Trash Can* IoT), sistem pencatatan transaksi bank sampah digital, modul dompet kas kelas, gamifikasi LISA (leaderboard & misi Adiwiyata), serta portal pelaporan terbuka antar-sekolah (pembinaan berjenjang). Fokus utama diarahkan pada 2 pilar tematik: Pendidikan Ekologis & Energi/Lingkungan Hidup.
 
 ---
 
@@ -36,8 +36,8 @@ Mengembangkan platform web **Opung Sari Basah Bang 5.0** yang mengintegrasikan t
 
 | Role | Identitas Persona | Kebutuhan Utama | Hak Akses Utama |
 | :--- | :--- | :--- | :--- |
-| **Siswa / Pengurus Kas Kelas** | Perwakilan kelas / bendahara kelas yang mengelola kebersihan dan kas. | Ingin memantau saldo kas kelas, mengajukan pencairan dana, melihat posisi kelas di papan peringkat, dan menjual kreasi daur ulang. | - Akses Dashboard Kelas<br>- Pengajuan Penarikan Saldo (*Payout Request*)<br>- Akses Katalog & Pasang Produk Daur Ulang<br>- Lihat Leaderboard & Materi Edukasi |
-| **Koordinator Bank Sampah Sekolah** | Guru pembina atau petugas kebersihan yang bertugas saat jam setor sampah. | Membutuhkan antarmuka timbang-setor sampah yang cepat, akurat, dan validasi kas kelas tanpa selisih hitung. | - Input Transaksi Timbangan Sampah<br>- Verifikasi & Persetujuan Penarikan Saldo Kas<br>- Validasi Listing Produk E-Commerce<br>- Unggah Laporan Bulanan Sekolah |
+| **Siswa / Pengurus Kas Kelas** | Perwakilan kelas / bendahara kelas yang mengelola kebersihan dan kas. | Ingin memantau saldo kas kelas, mengajukan pencairan dana, melihat posisi kelas di papan peringkat, menyelesaikan misi Adiwiyata, dan belajar dari modul edukasi. | - Akses Dashboard Kelas<br>- Pengajuan Penarikan Saldo (*Payout Request*)<br>- Lihat Leaderboard & Misi Adiwiyata<br>- Akses Materi Edukasi 3R & Bank Sampah |
+| **Koordinator Bank Sampah Sekolah** | Guru pembina atau petugas kebersihan yang bertugas saat jam setor sampah. | Membutuhkan antarmuka timbang-setor sampah yang cepat, akurat, dan validasi kas kelas tanpa selisih hitung. | - Input Transaksi Timbangan Sampah<br>- Verifikasi & Persetujuan Penarikan Saldo Kas<br>- Unggah & Pengesahan Laporan Bulanan Sekolah |
 | **Kepala Sekolah / Admin Sekolah** | Pimpinan satuan pendidikan. | Mengawasi efektivitas program, audit kas sekolah, dan membandingkan performa kelas. | - Read-only Audit Finansial Sekolah<br>- Persetujuan Final Laporan Bulanan Sekolah<br>- Manajemen Akun Guru/Kelas di Sekolah |
 | **Dinas Lingkungan Hidup / Dinas Pendidikan Deli Serdang** | Regulator & Pengawas Tingkat Kabupaten. | Mengagregasi metrik timbulan sampah sekolah, memantau tingkat kepatuhan pelaporan bulanan, dan audit transparansi. | - Akses Seluruh Laporan Lintas Sekolah<br>- Leaderboard Agregat Kabupaten<br>- Master Data Tarif Sampah (Rp/kg) Regional |
 
@@ -86,15 +86,14 @@ Mengembangkan platform web **Opung Sari Basah Bang 5.0** yang mengintegrasikan t
    - Form Registrasi (Hierarkis: Sekolah > Kelas)
    - Form Login Multi-Role
 2. **Dashboard Siswa / Kelas**
-   - Overview Status Keterisian Tong Sampah IoT
+   - Overview Status Keterisian Tong Sampah IoT & FAB Setor Sampah Cepat
    - Dompet Kas Kelas & Formulir Penarikan Saldo
    - Riwayat Transaksi Setor Sampah
-   - Etalase E-Commerce Daur Ulang & Manajemen Produk
+   - Modul Gamifikasi & Misi LISA Adiwiyata
    - Modul Edukasi (Artikel & Video Bank Sampah)
 3. **Portal Operasional Koordinator**
    - Kasir / Input Timbangan Sampah
    - Manajemen Antrean Pencairan Saldo
-   - Verifikasi Produk Kreasi Daur Ulang
    - Generator & Pengesahan Laporan Bulanan
 4. **Modul Gamifikasi & Pembinaan Berjenjang**
    - Leaderboard Inter-Class (Tingkat Sekolah)
@@ -134,29 +133,21 @@ Mengembangkan platform web **Opung Sari Basah Bang 5.0** yang mengintegrasikan t
   - Kuning: Keterisian $50\% - 79\%$
   - Merah: Keterisian $\ge 80\%$ (Notifikasi otomatis butuh pengangkutan/pemilahan)
 - **FR-IOT-03 (Anti-Spam Filter):** Menerapkan mekanisme debouncing data telemetri (pembukaan sensor dengan jeda kurang dari 30 detik dari pembukaan sebelumnya tidak dihitung sebagai penambahan frekuensi baru).
-
 ### Modul 4: Pencatatan Transaksi Bank Sampah & Kas Kelas
-- **FR-BS-01 (Input Setoran):** Koordinator sekolah dapat mencatat setoran dengan memilih kelas, memilih jenis kategori sampah (Plastik PET, Kertas/Karton, Dupleks, Logam, Botol Kaca), dan memasukkan bobot timbangan aktual (kg).
+- **FR-BS-01 (Input Setoran):** Koordinator sekolah dapat mencatat setoran dengan memilih kelas, memilih jenis kategori sampah (Plastik PET, Kertas/Karton, Dupleks, Logam, Botol Kaca), dan memasukkan bobot timbangan aktual (kg). Tombol akses cepat (FAB "Setor Sampah") ditempatkan di tengah navigasi mobile untuk kemudahan operasional.
 - **FR-BS-02 (Kalkulasi Otomatis):** Sistem menghitung nilai rupiah otomatis berdasarkan formula: `Total Nominal = Berat (kg) × Tarif Kategori Aktif (Rp/kg)`.
 - **FR-BS-03 (Buku Besar Transparan):** Riwayat setoran tersimpan sebagai catatan mutasi kredit (*credit entry*) yang dapat dilihat oleh siswa perwakilan kelas kapan saja.
 - **FR-BS-04 (Penarikan Kas / Payout):** Perwakilan kelas dapat mengajukan pencairan saldo kas kelas dengan menyertakan keterangan peruntukan (misal: kas kebersihan, pembelian tanaman hijau kelas). Pencairan berstatus *Pending* hingga diverifikasi dan disetujui koordinator secara fisik.
 
-### Modul 5: Mini E-Commerce Daur Ulang
-- **FR-ECOM-01 (Katalog Produk):** Halaman etalase publik yang menampilkan barang daur ulang buatan siswa (nama barang, foto, harga, deskripsi bahan asal, kelas produsen).
-- **FR-ECOM-02 (Manajemen Produk Kelas):** Kelas dapat mengunggah draf produk baru yang menunggu verifikasi (*approval*) dari koordinator sebelum tampil di katalog publik.
-- **FR-ECOM-03 (Alur Transaksi & Kas):** Pembelian mencatat status pesanan (Menunggu Verifikasi $ightarrow$ Siap Diambil $ightarrow$ Selesai). Nominal bersih hasil penjualan langsung dialokasikan ke saldo kas kelas bersangkutan.
+### Modul 5: Gamifikasi, Misi Adiwiyata & Leaderboard
+- **FR-LEAD-01 (Leaderboard Antar-Kelas):** Menampilkan pemeringkatan kelas dalam satu sekolah berdasarkan akumulasi bobot sampah terpilah (70%) dan konsistensi frekuensi pembuangan teratur terverifikasi IoT (30%).
+- **FR-LEAD-02 (Misi & Lencana LISA):** Sistem memberikan tantangan mingguan dan lencana Adiwiyata (misal: "Eco Ranger", "Pilah Master") untuk mendorong habituasi pemilahan sampah.
+- **FR-LEAD-03 (Leaderboard Antar-Sekolah):** Menampilkan pemeringkatan sekolah se-Deli Serdang dalam volume reduksi sampah dan konsistensi sirkular ekonomi bank sampah (Pembinaan Berjenjang).
 
-### Modul 6: Gamifikasi & Leaderboard
-- **FR-LEAD-01 (Leaderboard Antar-Kelas):** Menampilkan pemeringkatan kelas dalam satu sekolah berdasarkan:
-  - Akumulasi bobot sampah terpilah (kg).
-  - Konsistensi frekuensi pembuangan teratur terverifikasi IoT.
-- **FR-LEAD-02 (Leaderboard Antar-Sekolah):** Menampilkan pemeringkatan sekolah terbaik se-Deli Serdang dalam volume reduksi sampah dan konsistensi sirkular ekonomi bank sampah.
-
-### Modul 7: Pelaporan Bulanan & Pembinaan Berjenjang
+### Modul 6: Pelaporan Bulanan & Pembinaan Berjenjang
 - **FR-REP-01 (Generator Laporan):** Sistem menyediakan template laporan bulanan otomatis yang mengompilasi total tonase sampah tereduksi, rekapitulasi finansial bank sampah, dan tingkat partisipasi kelas.
 - **FR-REP-02 (Siklus Pengunggahan):** Koordinator sekolah wajib mengonfirmasi dan menerbitkan laporan bulanan paling lambat tanggal 5 pada siklus bulan berikutnya.
 - **FR-REP-03 (Cross-School Benchmarking):** Setiap sekolah dan dinas terkait dapat mengunduh serta membaca laporan bulanan sekolah lain untuk membandingkan implementasi dan praktik terbaik pengelolaan sampah.
-
 ---
 
 ## 5. Non-Functional Requirements (NFR)
@@ -216,5 +207,5 @@ Mengembangkan platform web **Opung Sari Basah Bang 5.0** yang mengintegrasikan t
 - **Sprint 0 (PoC - Current):** Setup React frontend, Shadcn UI, dan Tailwind. Pembuatan mock state (React Context) untuk interaktivitas UI tanpa backend. Simulasi RBAC (Student/Coordinator/Admin).
 - **Sprint 1 - 2:** Setup database relasional, RBAC auth sesungguhnya, modul input timbangan koordinator, dan ledger kas kelas.
 - **Sprint 3:** Pembangunan ingestion endpoint telemetri IoT, algoritma anti-spam sensor, dan widget dashboard status tong sampah.
-- **Sprint 4:** Implementasi etalase mini e-commerce daur ulang, modul pengajuan penarikan saldo (*payout*), dan leaderboard kelas.
+- **Sprint 4:** Modul pengajuan penarikan saldo (*payout*), leaderboard kelas & Deli Serdang, serta quest gamifikasi Adiwiyata.
 - **Sprint 5:** Modul pelaporan bulanan otomatis, repositori terbuka lintas sekolah Deli Serdang, testing performa PWA offline, dan final UAT.

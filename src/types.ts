@@ -139,37 +139,3 @@ export interface BadgeAchievement {
   unlockedDate?: string;
 }
 
-export type RecycledProductCategory = 'semua' | 'kerajinan' | 'pertanian' | 'alat_tulis' | 'fashion';
-
-export interface RecycledProduct {
-  id: string;
-  name: string;
-  priceRp: number;
-  producerClass: string;
-  materialSource: string;
-  category: 'kerajinan' | 'pertanian' | 'alat_tulis' | 'fashion';
-  image: string;
-  description: string;
-  stock: number;
-  soldCount: number;
-  rating: number;
-  status: 'published' | 'draft_pending';
-}
-
-export interface RecycledOrder {
-  id: string;
-  orderNumber: string;
-  productId: string;
-  productName: string;
-  productImage: string;
-  producerClass: string;
-  buyerName: string;
-  buyerClass: string;
-  quantity: number;
-  totalPriceRp: number;
-  paymentMethod: 'saldo_tabungan' | 'tunai_koperasi';
-  status: 'menunggu_verifikasi' | 'siap_diambil' | 'selesai';
-  createdAt: string;
-  pickupLocation: string;
-}
-

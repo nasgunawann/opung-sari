@@ -10,8 +10,6 @@ import {
   Building2,
   Users,
   Settings,
-  ShoppingCart,
-  ShoppingBag,
 } from "lucide-react";
 import { UserRole } from "../../App";
 import { TabKey } from "../../App";
@@ -38,10 +36,10 @@ export const getNavItemsForRole = (
         accent: "text-emerald-600",
       },
       {
-        key: "leaderboard",
-        label: "Peringkat",
-        icon: Trophy,
-        accent: "text-amber-500",
+        key: "bank_sampah",
+        label: "Tabungan",
+        icon: Wallet,
+        accent: "text-emerald-600",
       },
       {
         key: "iot_bin",
@@ -50,17 +48,17 @@ export const getNavItemsForRole = (
         accent: "text-emerald-600",
       },
       {
-        key: "bank_sampah",
-        label: "Tabungan",
-        icon: Wallet,
+        key: "misi",
+        label: "Misi",
+        icon: Award,
         accent: "text-emerald-600",
         notifyDot: pendingRewardNotice,
       },
       {
-        key: "katalog",
-        label: "Katalog",
-        icon: ShoppingBag,
-        accent: "text-emerald-600",
+        key: "leaderboard",
+        label: "Peringkat",
+        icon: Trophy,
+        accent: "text-amber-500",
       },
     ];
   }
