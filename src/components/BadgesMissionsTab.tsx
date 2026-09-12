@@ -208,49 +208,49 @@ export const BadgesMissionsTab: React.FC<BadgesMissionsTabProps> = ({
           </span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-          <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-2xl p-3.5 text-center shadow-xs">
-            <div className="w-10 h-10 rounded-2xl bg-emerald-100/90 text-emerald-700 flex items-center justify-center mx-auto mb-2">
-              <TreePine size={20} />
+        <div className="grid grid-cols-3 gap-2 sm:gap-3">
+          <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-2xl p-2.5 sm:p-3.5 text-center shadow-xs flex flex-col items-center justify-center">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-emerald-100/90 text-emerald-700 flex items-center justify-center mb-1 sm:mb-2">
+              <TreePine size={16} className="sm:w-5 sm:h-5" />
             </div>
-            <div className="text-lg sm:text-xl font-black text-emerald-950">
+            <div className="text-sm sm:text-xl font-black text-emerald-950 truncate w-full">
               {treesSaved}
             </div>
-            <div className="text-xs font-extrabold text-emerald-900 mt-0.5">
-              Pohon Terlindungi
+            <div className="text-[10px] sm:text-xs font-extrabold text-emerald-900 mt-0.5 leading-tight">
+              Pohon Terjaga
             </div>
-            <p className="text-[11px] text-emerald-700/85 mt-1">
-              Dari kertas &amp; karton yang kamu tabung
+            <p className="hidden sm:block text-[11px] text-emerald-700/85 mt-1 leading-tight">
+              Dari kertas yang kamu tabung
             </p>
           </div>
 
-          <div className="bg-blue-50/70 border border-blue-200/80 rounded-2xl p-3.5 text-center shadow-xs">
-            <div className="w-10 h-10 rounded-2xl bg-blue-100/90 text-blue-700 flex items-center justify-center mx-auto mb-2">
-              <Droplets size={20} />
+          <div className="bg-blue-50/70 border border-blue-200/80 rounded-2xl p-2.5 sm:p-3.5 text-center shadow-xs flex flex-col items-center justify-center">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-blue-100/90 text-blue-700 flex items-center justify-center mb-1 sm:mb-2">
+              <Droplets size={16} className="sm:w-5 sm:h-5" />
             </div>
-            <div className="text-lg sm:text-xl font-black text-blue-950">
-              {waterSavedLiters} Liter
+            <div className="text-sm sm:text-xl font-black text-blue-950 truncate w-full">
+              {waterSavedLiters} L
             </div>
-            <div className="text-xs font-extrabold text-blue-900 mt-0.5">
-              Air Bersih Hemat
+            <div className="text-[10px] sm:text-xs font-extrabold text-blue-900 mt-0.5 leading-tight">
+              Air Terhemat
             </div>
-            <p className="text-[11px] text-blue-700/85 mt-1">
-              Efisiensi proses daur ulang sirkular
+            <p className="hidden sm:block text-[11px] text-blue-700/85 mt-1 leading-tight">
+              Daur ulang sirkular ramah
             </p>
           </div>
 
-          <div className="bg-amber-50/70 border border-amber-200/80 rounded-2xl p-3.5 text-center shadow-xs">
-            <div className="w-10 h-10 rounded-2xl bg-amber-100/90 text-amber-700 flex items-center justify-center mx-auto mb-2">
-              <Wind size={20} />
+          <div className="bg-amber-50/70 border border-amber-200/80 rounded-2xl p-2.5 sm:p-3.5 text-center shadow-xs flex flex-col items-center justify-center">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-amber-100/90 text-amber-700 flex items-center justify-center mb-1 sm:mb-2">
+              <Wind size={16} className="sm:w-5 sm:h-5" />
             </div>
-            <div className="text-lg sm:text-xl font-black text-amber-950">
+            <div className="text-sm sm:text-xl font-black text-amber-950 truncate w-full">
               {co2PreventedKg} kg
             </div>
-            <div className="text-xs font-extrabold text-amber-900 mt-0.5">
-              Emisi CO₂ Dicegah
+            <div className="text-[10px] sm:text-xs font-extrabold text-amber-900 mt-0.5 leading-tight">
+              CO₂ Dicegah
             </div>
-            <p className="text-[11px] text-amber-700/85 mt-1">
-              Mengurangi beban polusi lingkungan
+            <p className="hidden sm:block text-[11px] text-amber-700/85 mt-1 leading-tight">
+              Reduksi polusi lingkungan
             </p>
           </div>
         </div>
@@ -275,11 +275,11 @@ export const BadgesMissionsTab: React.FC<BadgesMissionsTabProps> = ({
           </span>
         </div>
 
-        <div className="space-y-2.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           {missions.map((mission) => (
             <div
               key={mission.id}
-              className={`p-3.5 sm:p-4 rounded-2xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+              className={`p-3.5 sm:p-4 rounded-2xl border transition-all flex flex-col justify-between gap-3 ${
                 mission.claimed
                   ? 'bg-stone-50/80 border-stone-200 opacity-85'
                   : mission.done
@@ -287,7 +287,7 @@ export const BadgesMissionsTab: React.FC<BadgesMissionsTabProps> = ({
                   : 'bg-white border-stone-200 hover:border-stone-300'
               }`}
             >
-              <div className="flex items-start gap-3 min-w-0">
+              <div className="flex items-start gap-2.5 min-w-0">
                 <div className="mt-0.5 shrink-0">
                   {mission.done ? (
                     <div className="w-7 h-7 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-xs">
@@ -300,17 +300,17 @@ export const BadgesMissionsTab: React.FC<BadgesMissionsTabProps> = ({
                   )}
                 </div>
 
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-1.5 flex-wrap">
                     <h4 className={`text-xs sm:text-sm font-extrabold leading-tight ${
                       mission.claimed ? 'text-stone-700' : 'text-stone-900'
                     }`}>
                       {mission.title}
                     </h4>
-                    <span className="text-[10px] font-extrabold text-amber-800 bg-amber-100/90 px-2 py-0.5 rounded-full">
+                    <span className="text-[10px] font-extrabold text-amber-800 bg-amber-100/90 px-2 py-0.5 rounded-full shrink-0">
                       +{mission.rewardPoints} XP
                     </span>
-                    <span className="text-[10px] font-bold text-stone-500 bg-stone-100 px-2 py-0.5 rounded-full">
+                    <span className="text-[10px] font-bold text-stone-500 bg-stone-100 px-2 py-0.5 rounded-full shrink-0">
                       {mission.category}
                     </span>
                   </div>
@@ -321,7 +321,7 @@ export const BadgesMissionsTab: React.FC<BadgesMissionsTabProps> = ({
                   {/* Micro progress bar if incomplete */}
                   {!mission.done && (
                     <div className="mt-2.5 flex items-center gap-2">
-                      <div className="w-28 bg-stone-100 h-2 rounded-full overflow-hidden border border-stone-200">
+                      <div className="w-24 bg-stone-100 h-2 rounded-full overflow-hidden border border-stone-200">
                         <div
                           className="bg-emerald-500 h-full rounded-full transition-all"
                           style={{ width: `${mission.progressPercent}%` }}
@@ -336,22 +336,23 @@ export const BadgesMissionsTab: React.FC<BadgesMissionsTabProps> = ({
               </div>
 
               {/* Action / Status Pill */}
-              <div className="shrink-0 flex items-center sm:justify-end gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-stone-100">
+              <div className="pt-2 border-t border-stone-100/80 flex items-center justify-between gap-2">
+                <span className="text-[11px] font-bold text-stone-400">Target Mingguan</span>
                 {mission.claimed ? (
-                  <span className="text-xs font-bold text-emerald-700 bg-emerald-100/80 px-3 py-1.5 rounded-xl flex items-center gap-1.5">
-                    <Check size={13} strokeWidth={3} />
-                    <span>Sudah Diklaim</span>
+                  <span className="text-xs font-bold text-emerald-700 bg-emerald-100/80 px-2.5 py-1 rounded-xl flex items-center gap-1">
+                    <Check size={12} strokeWidth={3} />
+                    <span>Selesai</span>
                   </span>
                 ) : mission.done ? (
                   <button
                     onClick={() => handleClaimReward(mission.id, mission.rewardPoints)}
-                    className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-extrabold text-xs px-4 py-2 rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer border-b-2 border-emerald-800 animate-pulse"
+                    className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-extrabold text-xs px-3.5 py-1.5 rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer border-b-2 border-emerald-800 animate-pulse"
                   >
                     <Gift size={13} />
                     <span>Klaim +{mission.rewardPoints} XP</span>
                   </button>
                 ) : (
-                  <span className="text-xs font-bold text-stone-500 bg-stone-100 px-3 py-1.5 rounded-xl">
+                  <span className="text-xs font-bold text-stone-500 bg-stone-100 px-2.5 py-1 rounded-xl">
                     {mission.progressText}
                   </span>
                 )}
@@ -401,8 +402,8 @@ export const BadgesMissionsTab: React.FC<BadgesMissionsTabProps> = ({
           ))}
         </div>
 
-        {/* Badges Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {/* Badges Grid (2-column on mobile) */}
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
           {filteredBadges.map((badge) => {
             const isUnlocked = badge.unlocked;
 
@@ -410,49 +411,49 @@ export const BadgesMissionsTab: React.FC<BadgesMissionsTabProps> = ({
               <div
                 key={badge.id}
                 onClick={() => setSelectedBadge(badge)}
-                className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between ${
+                className={`p-3 sm:p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between ${
                   isUnlocked
                     ? 'bg-emerald-50/40 border-emerald-200 hover:border-emerald-400 hover:bg-emerald-50/70 shadow-xs'
                     : 'bg-stone-50/60 border-stone-200 opacity-75 hover:opacity-90'
                 }`}
               >
                 <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="w-11 h-11 rounded-2xl bg-white flex items-center justify-center text-2xl shadow-xs border border-stone-100">
+                  <div className="flex items-center justify-between gap-1 mb-1.5 sm:mb-2">
+                    <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-white flex items-center justify-center text-xl sm:text-2xl shadow-xs border border-stone-100 shrink-0">
                       {badge.icon}
                     </div>
                     {isUnlocked ? (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-full">
-                        <CheckCircle2 size={11} strokeWidth={3} />
+                      <span className="inline-flex items-center gap-0.5 sm:gap-1 text-[9px] sm:text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-200 px-1.5 sm:px-2 py-0.5 rounded-full shrink-0">
+                        <CheckCircle2 size={10} strokeWidth={3} />
                         <span>Terbuka</span>
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-stone-200/80 text-stone-600 px-2 py-0.5 rounded-full">
-                        <Lock size={10} />
+                      <span className="inline-flex items-center gap-0.5 sm:gap-1 text-[9px] sm:text-[10px] font-bold bg-stone-200/80 text-stone-600 px-1.5 sm:px-2 py-0.5 rounded-full shrink-0">
+                        <Lock size={9} />
                         <span>Terkunci</span>
                       </span>
                     )}
                   </div>
 
-                  <h4 className="text-xs sm:text-sm font-extrabold text-stone-900 leading-tight">
+                  <h4 className="text-xs sm:text-sm font-extrabold text-stone-900 leading-tight truncate">
                     {badge.title}
                   </h4>
-                  <p className="text-xs text-stone-500 mt-1 line-clamp-2 leading-relaxed">
+                  <p className="text-[10px] sm:text-xs text-stone-500 mt-1 line-clamp-2 leading-relaxed">
                     {badge.description}
                   </p>
                 </div>
 
-                <div className="mt-3 pt-2 border-t border-stone-200/60">
+                <div className="mt-2.5 sm:mt-3 pt-2 border-t border-stone-200/60">
                   {isUnlocked ? (
-                    <div className="text-[11px] font-bold text-emerald-800">
-                      Diraih: {badge.unlockedDate || 'Tercapai'}
+                    <div className="text-[10px] sm:text-[11px] font-bold text-emerald-800 truncate">
+                      {badge.unlockedDate || 'Tercapai'}
                     </div>
                   ) : (
                     <div className="space-y-1">
-                      <div className="flex items-center justify-between text-[10px] font-bold text-stone-500">
+                      <div className="flex items-center justify-between text-[9px] sm:text-[10px] font-bold text-stone-500">
                         <span>Progres</span>
                         <span>
-                          {badge.currentValue} / {badge.targetValue} {badge.requiredMetric}
+                          {badge.currentValue}/{badge.targetValue}
                         </span>
                       </div>
                       <div className="w-full bg-stone-200 h-1.5 rounded-full overflow-hidden">

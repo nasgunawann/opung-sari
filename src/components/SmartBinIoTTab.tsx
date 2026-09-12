@@ -322,7 +322,7 @@ export const SmartBinIoTTab: React.FC<SmartBinIoTTabProps> = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-2.5">
           {[
             {
               cat: 'organik',
@@ -358,30 +358,30 @@ export const SmartBinIoTTab: React.FC<SmartBinIoTTabProps> = ({
               <div
                 key={style.cat}
                 onClick={() => setActiveCategoryFilter(style.cat)}
-                className={`${style.bg} border ${style.border} rounded-2xl p-3.5 shadow-xs transition-all flex flex-col justify-between cursor-pointer hover:shadow-sm`}
+                className={`${style.bg} border ${style.border} rounded-2xl p-3 sm:p-3.5 shadow-xs transition-all flex flex-col justify-between cursor-pointer hover:shadow-sm`}
               >
                 <div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl drop-shadow-xs">{data.icon}</span>
-                    <span className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border ${style.pill}`}>
+                  <div className="flex items-center justify-between gap-1">
+                    <span className="text-xl sm:text-2xl drop-shadow-xs">{data.icon}</span>
+                    <span className={`text-[9px] sm:text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${style.pill} truncate max-w-[85px] sm:max-w-none`}>
                       Tong {data.colorName}
                     </span>
                   </div>
-                  <h4 className="font-extrabold text-sm text-stone-900 mt-2">
+                  <h4 className="font-extrabold text-xs sm:text-sm text-stone-900 mt-1.5 sm:mt-2 truncate">
                     {data.name}
                   </h4>
-                  <p className="text-xs text-stone-600 mt-1 line-clamp-2 leading-relaxed">
+                  <p className="text-[10px] sm:text-xs text-stone-600 mt-0.5 sm:mt-1 line-clamp-2 leading-tight">
                     {data.examples.join(', ')}
                   </p>
                 </div>
 
-                <div className="mt-3 pt-2.5 border-t border-stone-200/60 flex items-center justify-between">
-                  <span className="text-[11px] font-bold text-stone-500">Nilai Setor</span>
-                  <div className="flex items-baseline gap-1">
-                    <span className={`text-sm font-black ${style.accent}`}>
+                <div className="mt-2.5 sm:mt-3 pt-2 sm:pt-2.5 border-t border-stone-200/60 flex items-center justify-between">
+                  <span className="text-[10px] sm:text-[11px] font-bold text-stone-500">Nilai</span>
+                  <div className="flex items-baseline gap-0.5 sm:gap-1">
+                    <span className={`text-xs sm:text-sm font-black ${style.accent}`}>
                       Rp {data.pricePerKg.toLocaleString('id-ID')}
                     </span>
-                    <span className="text-[10px] font-bold text-stone-400">/ kg</span>
+                    <span className="text-[9px] sm:text-[10px] font-bold text-stone-400">/kg</span>
                   </div>
                 </div>
               </div>

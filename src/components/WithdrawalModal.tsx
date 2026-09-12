@@ -128,9 +128,9 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({
         <div className="p-3 mb-4 bg-emerald-900 text-white rounded-xl border border-emerald-950 flex items-center justify-between gap-2 w-full min-w-0">
           <div className="min-w-0">
             <div className="text-[10px] text-emerald-300 font-medium">Saldo Kas Kelas Tersedia</div>
-            <div className="text-base font-bold font-mono text-white truncate">
-              Rp {availableBalance.toLocaleString('id-ID')}
-            </div>
+          <div className="text-base font-extrabold text-white truncate">
+            Rp {availableBalance.toLocaleString('id-ID')}
+          </div>
           </div>
           <span className="text-[10px] bg-emerald-800 text-emerald-100 px-2 py-1 rounded-md font-medium shrink-0">
             Pemohon: {currentStudent.nickname} ({currentStudent.className})
@@ -144,7 +144,7 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({
               <Label className="text-xs font-bold text-stone-700">1. Bisa Dipakai untuk Apa Saja?</Label>
               <span className="text-[10px] text-stone-500">Pilih keperluan kas</span>
             </div>
-            <div className="space-y-1.5 w-full min-w-0">
+            <div className="grid grid-cols-2 gap-2 w-full min-w-0">
               {WITHDRAWAL_DESTINATIONS.map((dest) => {
                 const isSelected = selectedDest.id === dest.id;
                 return (
@@ -157,38 +157,31 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({
                         setAmount(dest.minAmount);
                       }
                     }}
-                    className={`w-full p-2.5 rounded-xl border text-left transition-all flex items-center justify-between gap-3 min-w-0 cursor-pointer active:scale-[0.99] ${
+                    className={`w-full p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between gap-1.5 min-w-0 cursor-pointer active:scale-[0.99] ${
                       isSelected
                         ? 'bg-emerald-50/90 border-emerald-600 text-emerald-950 ring-1.5 ring-emerald-500/30 shadow-xs'
                         : 'bg-white border-stone-200 hover:bg-stone-50 hover:border-stone-300 text-stone-700'
                     }`}
                   >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="w-9 h-9 rounded-lg bg-stone-100/90 border border-stone-200/70 flex items-center justify-center text-lg shrink-0">
+                    <div className="flex items-center justify-between w-full">
+                      <div className="w-8 h-8 rounded-lg bg-stone-100 border border-stone-200/70 flex items-center justify-center text-base shrink-0">
                         {dest.icon}
                       </div>
-                      <div className="min-w-0">
-                        <div className="text-xs font-bold leading-tight truncate">
-                          {dest.name}
-                        </div>
-                        <div className="flex items-center gap-1.5 text-[10px] mt-0.5">
-                          <span className={`font-semibold truncate ${isSelected ? 'text-emerald-700' : 'text-stone-500'}`}>
-                            {dest.badge || 'Panduan'}
-                          </span>
-                          <span className="text-stone-300">•</span>
-                          <span className="font-mono text-stone-500 font-medium shrink-0">
-                            Min Rp {dest.minAmount.toLocaleString('id-ID')}
-                          </span>
-                        </div>
+                      <div className={`w-4 h-4 rounded-full flex items-center justify-center border transition-colors shrink-0 ${
+                        isSelected
+                          ? 'bg-emerald-600 border-emerald-600 text-white'
+                          : 'border-stone-300 bg-white text-transparent'
+                      }`}>
+                        <Check size={10} strokeWidth={3} />
                       </div>
                     </div>
-
-                    <div className={`w-5 h-5 rounded-full flex items-center justify-center border transition-colors shrink-0 ${
-                      isSelected
-                        ? 'bg-emerald-600 border-emerald-600 text-white'
-                        : 'border-stone-300 bg-white text-transparent'
-                    }`}>
-                      <Check size={12} strokeWidth={3} />
+                    <div className="min-w-0 w-full">
+                      <div className="text-xs font-bold leading-tight truncate">
+                        {dest.name}
+                      </div>
+                      <div className="text-[10px] font-bold text-emerald-800 mt-0.5 truncate">
+                        Min Rp {dest.minAmount.toLocaleString('id-ID')}
+                      </div>
                     </div>
                   </button>
                 );
@@ -209,7 +202,7 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({
                   className={`w-full py-1.5 px-1 rounded-lg text-[11px] font-mono text-center transition-colors truncate ${
                     amount === q
                       ? 'bg-stone-900 text-white font-bold shadow-xs'
-                      : 'bg-stone-100 text-stone-700 hover:bg-stone-200 font-medium'
+                      : 'bg-stone-100 text-stone-700 hover:bg-stone-200 font-bold'
                   }`}
                 >
                   Rp {q.toLocaleString('id-ID')}
@@ -218,7 +211,7 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({
             </div>
 
             <div className="relative w-full min-w-0">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-mono text-stone-500">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-stone-500">
                 Rp
               </span>
               <Input
@@ -228,7 +221,7 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({
                 step="1000"
                 value={amount || ''}
                 onChange={(e) => setAmount(Number(e.target.value))}
-                className="pl-9 font-mono text-sm h-10 rounded-xl"
+                className="pl-9 font-bold text-sm h-10 rounded-xl"
                 placeholder="Masukkan nominal"
                 required
               />

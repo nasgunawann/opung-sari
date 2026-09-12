@@ -221,7 +221,7 @@ export const WasteBankRewardTab: React.FC<WasteBankRewardTabProps> = ({
 
           {isDestinationsOpen && (
             <div className="p-3 pt-1 border-t border-border/60 bg-muted/10 space-y-2.5 animate-in fade-in-50 duration-150">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+              <div className="grid grid-cols-2 gap-2 pt-1">
                 {WITHDRAWAL_DESTINATIONS.map((dest) => {
                   const getCardStyle = (id: string) => {
                     switch (id) {
@@ -242,21 +242,21 @@ export const WasteBankRewardTab: React.FC<WasteBankRewardTabProps> = ({
                       onClick={onOpenWithdrawModal}
                       className={`p-2.5 rounded-xl border ${getCardStyle(
                         dest.id
-                      )} cursor-pointer transition-all active:scale-[0.99] flex items-start gap-2.5`}
+                      )} cursor-pointer transition-all active:scale-[0.99] flex flex-col justify-between`}
                     >
-                      <div className="w-8 h-8 rounded-xl bg-white shadow-xs border border-border/80 flex items-center justify-center text-base shrink-0">
-                        {dest.icon}
-                      </div>
-                      <div className="min-w-0 flex-1">
+                      <div>
                         <div className="flex items-center justify-between gap-1">
-                          <h3 className="text-xs font-bold text-foreground truncate">
-                            {dest.name}
-                          </h3>
-                          <span className="text-[9px] font-bold text-emerald-900 bg-white/90 border border-emerald-200/80 px-1.5 py-0.2 rounded shrink-0">
-                            Min. Rp {dest.minAmount.toLocaleString('id-ID')}
+                          <div className="w-8 h-8 rounded-xl bg-white shadow-xs border border-border/80 flex items-center justify-center text-base shrink-0">
+                            {dest.icon}
+                          </div>
+                          <span className="text-[9px] font-bold text-emerald-900 bg-white/90 border border-emerald-200/80 px-1.5 py-0.5 rounded shrink-0 truncate max-w-[85px] sm:max-w-none">
+                            Min Rp {dest.minAmount.toLocaleString('id-ID')}
                           </span>
                         </div>
-                        <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2 leading-tight">
+                        <h3 className="text-xs font-bold text-foreground truncate mt-1.5">
+                          {dest.name}
+                        </h3>
+                        <p className="text-[10px] sm:text-[11px] text-muted-foreground mt-0.5 line-clamp-2 leading-tight">
                           {dest.description}
                         </p>
                       </div>

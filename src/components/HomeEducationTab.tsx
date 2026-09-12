@@ -318,8 +318,8 @@ export const HomeEducationTab: React.FC<HomeEducationTabProps> = ({
               </p>
             </div>
 
-            {/* ABCD Options List */}
-            <div className="space-y-3">
+            {/* ABCD Options Grid (2x2 on sm+) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {currentQuiz.options.map((opt, idx) => {
                 const letter = ['A', 'B', 'C', 'D'][idx];
                 let btnVariant: 'outline' | 'default' | 'destructive' = 'outline';
