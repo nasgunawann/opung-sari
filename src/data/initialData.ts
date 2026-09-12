@@ -1,6 +1,7 @@
 import {
   BadgeAchievement,
   BankTransaction,
+  EducationModule,
   QuizQuestion,
   SchoolClass,
   SmartBinIoTState,
@@ -687,4 +688,96 @@ export const BADGES_LIST: BadgeAchievement[] = [
     unlocked: false,
   },
 ];
+
+export const EDUCATION_MODULES: EducationModule[] = [
+  {
+    id: 'mod-vid-01',
+    type: 'video',
+    title: 'Teknik Kompos Sampah Organik Sekolah',
+    category: 'kompos',
+    categoryLabel: 'Video Edukasi',
+    durationOrReadTime: '3:45',
+    thumbnail: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&auto=format&fit=crop&q=80',
+    summary: 'Pelajari cara mengolah sisa daun dan bekal makanan kelas menjadi pupuk kompos penyubur taman sekolah Adiwiyata.',
+    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+    author: 'Tim Adiwiyata Deli Serdang',
+    content: [
+      'Pisahkan sampah organik basah (sisa buah, sayur) dari plastik dan kemasan.',
+      'Campurkan dedaunan kering di komposter kelas dengan perbandingan seimbang.',
+      'Jaga kelembapan media dan aduk secara berkala setiap 3 hari.',
+      'Dalam 3-4 minggu, kompos matang berwarna hitam gembur siap menyuburkan kebun kelas!'
+    ],
+  },
+  {
+    id: 'mod-vid-02',
+    type: 'video',
+    title: 'Perjalanan Botol Plastik di Bank Sampah',
+    category: 'daur_ulang',
+    categoryLabel: 'Video Edukasi',
+    durationOrReadTime: '2:30',
+    thumbnail: 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=600&auto=format&fit=crop&q=80',
+    summary: 'Bagaimana botol air mineral dari tong kuning diolah pabrik daur ulang menjadi serat pakaian dan ember baru.',
+    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+    author: 'Bank Sampah Opung Sari',
+    content: [
+      'Botol plastik PET yang disetor dibersihkan dari label dan tutupnya.',
+      'Botol dipress menjadi bal padat dan dikirim ke sentra pencacahan plastik.',
+      'Flakes plastik dicuci bersih dan dilelehkan menjadi biji plastik daur ulang.',
+      'Biji plastik siap dicetak kembali menjadi pot tanaman, tas belanja, hingga serat tekstil!'
+    ],
+  },
+  {
+    id: 'mod-vid-03',
+    type: 'video',
+    title: 'Aksi LISA: Lihat Sampah Ambil di Lingkungan Sekolah',
+    category: '3R',
+    categoryLabel: 'Video Edukasi',
+    durationOrReadTime: '4:10',
+    thumbnail: 'https://images.unsplash.com/photo-1618477461853-cf6ed80faba5?w=600&auto=format&fit=crop&q=80',
+    summary: 'Gerakan pembiasaan peduli lingkungan bersama teman sekelas demi menjaga kebersihan lingkungan belajar.',
+    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+    author: 'Dinas Pendidikan & Lingkungan Hidup',
+    content: [
+      'Prinsip LISA: Begitu melihat sampah berserakan, jangan lewati, segera ambil.',
+      'Pilah langsung sebelum membuang ke tong pintar IoT sesuai warnanya.',
+      'Ajak teman satu kelas saling mengingatkan tanpa saling menyalahkan.',
+      'Kelas terbersih dan paling aktif memilah akan meraih trofi bergilir Adiwiyata!'
+    ],
+  },
+  {
+    id: 'mod-art-01',
+    type: 'article',
+    title: 'Trik Meremukkan Botol & Memilah Kertas Bersih',
+    category: '3R',
+    categoryLabel: 'Panduan Praktis',
+    durationOrReadTime: '2 mnt baca',
+    thumbnail: 'https://images.unsplash.com/photo-1595278069441-2cf29f8005a4?w=600&auto=format&fit=crop&q=80',
+    summary: 'Cara cerdas menghemat kapasitas tong sampah hingga 70% dengan langkah mudah sebelum setor sampah.',
+    author: 'Koordinator Bank Sampah',
+    content: [
+      'Kosongkan cairan hingga tetes terakhir dari dalam botol atau kardus susu.',
+      'Buka tutup botol, injak/tekan botol hingga pipih, lalu pasang kembali tutupnya agar tidak mengembang.',
+      'Untuk kertas dan kardus, lipat rapi dalam kondisi kering agar nilai jual timbangannya optimal.',
+      'Hindari mencampur kertas minyak atau tisu kotor ke dalam tong kertas biru.'
+    ],
+  },
+  {
+    id: 'mod-art-02',
+    type: 'article',
+    title: 'Mengenal Limbah B3 Sekolah & Bahaya Baterai Bekas',
+    category: 'b3',
+    categoryLabel: 'Panduan Praktis',
+    durationOrReadTime: '3 mnt baca',
+    thumbnail: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=600&auto=format&fit=crop&q=80',
+    summary: 'Kenapa baterai dan lampu neon bekas tidak boleh dibuang ke sembarang tempat dan harus masuk tong merah.',
+    author: 'Pembina Adiwiyata',
+    content: [
+      'Baterai bekas mengandung logam berat berbahaya seperti merkuri, kadmium, dan timbal.',
+      'Jika dibuang ke tanah terbuka, zat kimia dapat meresap dan mencemari air tanah yang kita minum.',
+      'Selalu masukkan baterai mati, cartridge tinta, dan lampu bekas ke tong merah (B3).',
+      'Tim sekolah akan mengumpulkan limbah B3 secara terpisah ke pengolah limbah berizin resmi.'
+    ],
+  },
+];
+
 

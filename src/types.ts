@@ -142,3 +142,18 @@ export interface BadgeAchievement {
   unlockedDate?: string;
 }
 
+export interface EducationModule {
+  id: string;
+  type: 'video' | 'article';
+  title: string;
+  category: '3R' | 'kompos' | 'daur_ulang' | 'b3';
+  categoryLabel: string;
+  durationOrReadTime: string;
+  thumbnail: string;
+  summary: string;
+  content?: string[];
+  videoUrl?: string;
+  author?: string;
+}
+
+

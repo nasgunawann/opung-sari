@@ -3,16 +3,22 @@ import {
   Wallet,
   ArrowDownRight,
   ArrowUpRight,
-  PlusCircle,
   Clock,
-  Sparkles,
   Receipt,
   Calculator,
-  ChevronRight,
   Gift,
+  Scale,
+  Coins,
+  FileText,
+  ChevronRight,
+  ChevronDown,
+  TrendingUp,
+  TrendingDown,
 } from 'lucide-react';
 import { BankTransaction, SchoolClass, Student, WasteCategory } from '../types';
 import { WASTE_CATEGORIES, WITHDRAWAL_DESTINATIONS } from '../data/initialData';
+import { Card, CardContent } from './ui/card';
+import { Button } from './ui/button';
 
 interface WasteBankRewardTabProps {
   currentStudent: Student;
@@ -30,11 +36,20 @@ export const WasteBankRewardTab: React.FC<WasteBankRewardTabProps> = ({
   onViewReceipt,
 }) => {
   const [filterType, setFilterType] = useState<'all' | 'deposit' | 'withdrawal'>('all');
+  const [isDestinationsOpen, setIsDestinationsOpen] = useState(false);
 
   // Interactive Waste Calculator state
   const [calcCategory, setCalcCategory] = useState<WasteCategory>('plastik');
-  const [calcQuantity, setCalcQuantity] = useState<number>(10); // e.g. 10 bottles
+  const [calcQuantity, setCalcQuantity] = useState<number>(10);
   const [calcUnit, setCalcUnit] = useState<'item' | 'kg'>('item');
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
 
   const classTransactions = transactions.filter(
     (t) => (t.classId && t.classId === currentClass?.id) || t.studentId === currentStudent.id
@@ -45,13 +60,20 @@ export const WasteBankRewardTab: React.FC<WasteBankRewardTabProps> = ({
     return t.type === filterType;
   });
 
+  const totalIncome = classTransactions
+    .filter((t) => t.type === 'deposit')
+    .reduce((sum, t) => sum + t.amountRp, 0);
+
+  const totalExpense = classTransactions
+    .filter((t) => t.type === 'withdrawal')
+    .reduce((sum, t) => sum + t.amountRp, 0);
+
   // Calculate earnings in interactive calculator
   const calculateEstimate = () => {
     const cat = WASTE_CATEGORIES[calcCategory];
     if (calcUnit === 'kg') {
       return Math.round(calcQuantity * cat.pricePerKg);
     } else {
-      // 1 item roughly 0.05kg for plastic bottle, 0.15kg for paper, 0.06kg for can, 0.1kg for organic
       const approxWeights: Record<WasteCategory, number> = {
         plastik: 0.05,
         kertas: 0.15,
@@ -64,278 +86,315 @@ export const WasteBankRewardTab: React.FC<WasteBankRewardTabProps> = ({
   };
 
   return (
-      <div className="w-full space-y-3 pb-20 pt-1 md:px-4">
-      {/* Saldo Kas Kelas Card */}
-      <div className="bg-emerald-900 text-white rounded-xl p-4 border border-emerald-950 space-y-3">
-        <div className="flex items-center justify-between text-xs">
-          <div className="flex items-center gap-1.5 font-medium text-emerald-200">
-            <Wallet size={14} className="text-emerald-300" />
-            <span>Kas Bersama {currentClass?.name || currentStudent.className}</span>
+    <div className="w-full min-w-0 max-w-4xl mx-auto space-y-4 pb-24 pt-1 md:px-2">
+      {/* SECTION 0: Hero Fintech Wallet Card (Buku Kas Bersama) */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 text-white shadow-md p-4 sm:p-5">
+        {/* Subtle background ambient glows */}
+        <div className="pointer-events-none absolute -right-6 -top-6 w-36 h-36 rounded-full bg-white/10 blur-xl" />
+        <div className="pointer-events-none absolute -left-8 -bottom-8 w-32 h-32 rounded-full bg-emerald-400/15 blur-lg" />
+
+        {/* Top Bar: Class identity & Wali Kelas */}
+        <div className="relative flex items-center justify-between gap-2">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="relative shrink-0">
+              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl border border-white/25 shadow-inner">
+                🏦
+              </div>
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5 min-w-0">
+                <h2 className="text-sm sm:text-base font-extrabold text-white truncate tracking-tight">
+                  Kas Bersama {currentClass?.name?.split(' - ')[0] || currentStudent?.className}
+                </h2>
+              </div>
+              <p className="text-xs text-emerald-100/85 font-medium truncate">
+                Wali Kelas: {currentClass?.waliKelas || 'Guru Pembina'}
+              </p>
+            </div>
           </div>
-          <span className="bg-emerald-800/80 px-2 py-0.5 rounded text-[11px] text-emerald-100 font-mono">
-            Wali Kelas: {currentClass?.waliKelas?.split(',')[0] || 'Guru'}
+          <span className="hidden sm:inline-flex items-center text-[10px] font-semibold bg-white/15 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20 text-emerald-100">
+            Buku Kas Kelas
           </span>
         </div>
 
-        <div>
-          <div className="text-[11px] text-emerald-300 font-medium">Saldo Kas Bersama Kelas</div>
-          <div className="text-2xl font-bold font-mono text-white mt-0.5">
-            Rp {(currentClass?.balanceRp ?? currentStudent.balanceRp).toLocaleString('id-ID')}
+        {/* Middle: Saldo Display */}
+        <div className="relative mt-4">
+          <div className="flex items-center gap-1.5 text-emerald-100/90 text-[11px] font-bold uppercase tracking-wider">
+            <Wallet size={13} className="opacity-90" />
+            <span>Saldo Kas Kelas Terkumpul</span>
           </div>
-          <p className="text-[11px] text-emerald-200/80 mt-1">
-            Akumulasi hasil setor sampah seluruh siswa {currentClass?.name?.split(' - ')[0] || currentStudent.className}.
+          <div className="text-2xl sm:text-3xl font-black tracking-tight text-white mt-1">
+            {formatCurrency(currentClass?.balanceRp ?? currentStudent?.balanceRp ?? 0)}
+          </div>
+          <p className="text-[11px] text-emerald-100/80 mt-0.5">
+            Akumulasi hasil pemilahan sampah siswa {currentClass?.name?.split(' - ')[0] || currentStudent.className}.
           </p>
         </div>
 
-        <div className="pt-3 border-t border-emerald-800/80 flex items-center justify-between">
-          <div className="text-xs text-emerald-200">
-            <span className="font-semibold text-white block">Perwakilan Siswa: {currentStudent.name}</span>
-            <span className="text-[11px] text-emerald-300 font-mono">
-              Kontribusi Kamu: {currentStudent.totalKg} kg • {currentStudent.points} pts
-            </span>
+        {/* Mini Ledger Quick Stats */}
+        <div className="relative mt-3.5 grid grid-cols-2 gap-2">
+          <div className="bg-black/15 backdrop-blur-md rounded-2xl p-2.5 border border-white/10">
+            <div className="flex items-center gap-1 text-[10px] font-semibold text-emerald-200">
+              <TrendingUp size={12} className="text-emerald-300" />
+              <span>Total Pemasukan</span>
+            </div>
+            <div className="text-xs sm:text-sm font-extrabold text-white mt-0.5">
+              +{formatCurrency(totalIncome)}
+            </div>
+          </div>
+
+          <div className="bg-black/15 backdrop-blur-md rounded-2xl p-2.5 border border-white/10">
+            <div className="flex items-center gap-1 text-[10px] font-semibold text-amber-200">
+              <TrendingDown size={12} className="text-amber-300" />
+              <span>Total Dicairkan</span>
+            </div>
+            <div className="text-xs sm:text-sm font-extrabold text-white mt-0.5">
+              -{formatCurrency(totalExpense)}
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Bar: Personal Contribution & Tarik Button */}
+        <div className="relative mt-4 pt-3 border-t border-white/15 flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <div className="inline-flex items-center gap-1 bg-black/20 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10 text-xs font-bold text-white">
+              <Coins size={13} className="text-amber-300" />
+              <span>{currentStudent.points} <span className="text-emerald-200 text-[10px] font-semibold">poin</span></span>
+            </div>
+            <div className="inline-flex items-center gap-1 bg-black/20 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10 text-xs font-bold text-white">
+              <Scale size={13} className="text-emerald-200" />
+              <span>{currentStudent.totalKg} <span className="text-emerald-200 text-[10px] font-semibold">kg</span></span>
+            </div>
           </div>
 
           <button
             id="btn-withdraw-main"
-            onClick={() => {
-              onOpenWithdrawModal();
-            }}
-            className="bg-white hover:bg-emerald-50 text-emerald-950 text-xs font-semibold px-3.5 py-2 rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer shrink-0"
+            onClick={onOpenWithdrawModal}
+            className="flex items-center gap-1.5 bg-white hover:bg-emerald-50 active:scale-95 text-emerald-950 font-extrabold text-xs px-3.5 py-2 rounded-xl shadow-xs transition-all cursor-pointer shrink-0"
           >
-            <span>Pencairan Kas</span>
-            <ArrowUpRight size={14} />
+            <ArrowUpRight size={14} className="text-emerald-700" />
+            <span>Ajukan Pencairan</span>
           </button>
         </div>
       </div>
 
-      {/* Saldo Bisa Dipakai untuk Apa Saja? */}
-      <div className="bg-white rounded-xl p-3.5 border border-stone-200 space-y-2.5">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-xs font-bold text-stone-900">
-              Saldo Bisa Dipakai untuk Apa Saja?
-            </h3>
-            <p className="text-[11px] text-stone-500">
-              Minta izin ke Wali Kelas (pemegang kas) untuk mencairkan saldo bagi keperluan:
-            </p>
-          </div>
-          <span className="text-[9px] bg-amber-50 text-amber-800 border border-amber-200 font-semibold px-2 py-0.5 rounded-full shrink-0">
-            Izin Wali Kelas
-          </span>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-0.5">
-          {WITHDRAWAL_DESTINATIONS.map((dest) => (
-            <div
-              key={dest.id}
-              onClick={() => onOpenWithdrawModal()}
-              className="p-2.5 rounded-lg border border-stone-200 bg-stone-50/50 hover:bg-emerald-50/40 hover:border-emerald-300 cursor-pointer transition-all flex items-start gap-2.5"
-            >
-              <span className="text-xl shrink-0 mt-0.5">{dest.icon}</span>
+      {/* SECTION 1: Accordion Rekomendasi Peruntukan Kas Kelas */}
+      <section>
+        <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-xs">
+          <button
+            type="button"
+            onClick={() => setIsDestinationsOpen((prev) => !prev)}
+            className="w-full p-3 flex items-center justify-between gap-3 text-left hover:bg-muted/40 transition-colors cursor-pointer select-none"
+            aria-expanded={isDestinationsOpen}
+          >
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                <Gift size={16} />
+              </div>
               <div className="min-w-0">
-                <div className="text-xs font-semibold text-stone-900 leading-tight">
-                  {dest.name}
+                <div className="flex items-center gap-1.5">
+                  <h2 className="text-xs sm:text-sm font-bold text-foreground truncate">
+                    Pencairan Kas ke Mana Saja?
+                  </h2>
+                  <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 rounded-full shrink-0">
+                    4 Pilihan
+                  </span>
                 </div>
-                <div className="text-[11px] text-stone-600 mt-0.5 leading-snug">
-                  {dest.description}
-                </div>
-                <div className="text-[10px] text-emerald-700 font-medium mt-1">
-                  Min. penarikan: Rp {dest.minAmount.toLocaleString('id-ID')}
-                </div>
+                <p className="text-[11px] text-muted-foreground truncate">
+                  Panduan peruntukan kas kelas & batas minimum penarikan
+                </p>
               </div>
             </div>
-          ))}
-        </div>
-      </div>
 
-      {/* Kalkulator Simulasi Tabungan Sampah */}
-      <div className="bg-white rounded-xl p-4 border border-stone-200 space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5">
-            <Calculator size={15} className="text-stone-600" />
-            <h3 className="text-xs font-semibold text-stone-900">
-              Kalkulator Taksiran Sampah
-            </h3>
+            <div className="flex items-center gap-1.5 shrink-0 text-muted-foreground">
+              <span className="text-[11px] font-semibold hidden sm:inline text-primary">
+                {isDestinationsOpen ? 'Tutup' : 'Lihat'}
+              </span>
+              <ChevronDown
+                size={16}
+                className={`transition-transform duration-200 ${
+                  isDestinationsOpen ? 'rotate-180 text-foreground' : ''
+                }`}
+              />
+            </div>
+          </button>
+
+          {isDestinationsOpen && (
+            <div className="p-3 pt-1 border-t border-border/60 bg-muted/10 space-y-2.5 animate-in fade-in-50 duration-150">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                {WITHDRAWAL_DESTINATIONS.map((dest) => {
+                  const getCardStyle = (id: string) => {
+                    switch (id) {
+                      case 'kebersihan':
+                        return 'bg-emerald-50/60 border-emerald-200/80 hover:border-emerald-400 hover:bg-emerald-50';
+                      case 'tanaman':
+                        return 'bg-teal-50/60 border-teal-200/80 hover:border-teal-400 hover:bg-teal-50';
+                      case 'kantin':
+                        return 'bg-amber-50/60 border-amber-200/80 hover:border-amber-400 hover:bg-amber-50';
+                      default:
+                        return 'bg-blue-50/60 border-blue-200/80 hover:border-blue-400 hover:bg-blue-50';
+                    }
+                  };
+
+                  return (
+                    <div
+                      key={dest.id}
+                      onClick={onOpenWithdrawModal}
+                      className={`p-2.5 rounded-xl border ${getCardStyle(
+                        dest.id
+                      )} cursor-pointer transition-all active:scale-[0.99] flex items-start gap-2.5`}
+                    >
+                      <div className="w-8 h-8 rounded-xl bg-white shadow-xs border border-border/80 flex items-center justify-center text-base shrink-0">
+                        {dest.icon}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between gap-1">
+                          <h3 className="text-xs font-bold text-foreground truncate">
+                            {dest.name}
+                          </h3>
+                          <span className="text-[9px] font-bold text-emerald-900 bg-white/90 border border-emerald-200/80 px-1.5 py-0.2 rounded shrink-0">
+                            Min. Rp {dest.minAmount.toLocaleString('id-ID')}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2 leading-tight">
+                          {dest.description}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="pt-1">
+                <Button
+                  type="button"
+                  onClick={onOpenWithdrawModal}
+                  size="sm"
+                  className="w-full font-bold text-xs gap-1.5 cursor-pointer"
+                >
+                  <ArrowUpRight className="size-4" />
+                  <span>Ajukan Pencairan Kas Kelas</span>
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* SECTION 3: Buku Besar Mutasi Saldo Kas (PRD FR-BS-03) */}
+      <section className="space-y-2">
+        <div className="flex items-center justify-between px-1">
+          <div className="flex items-center gap-2">
+            <Receipt size={18} className="text-primary" />
+            <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">
+              Arus Kas
+            </h2>
           </div>
-          <span className="text-[10px] text-stone-600 bg-stone-100 px-2 py-0.5 rounded font-medium">
-            Simulasi
-          </span>
         </div>
 
-        <p className="text-xs text-stone-600">
-          Hitung perkiraan saldo yang didapat saat menyetorkan sampah ke IoT tong pintar.
-        </p>
-
-        {/* Category buttons */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5">
-          {(['plastik', 'kertas', 'logam_b3', 'organik'] as WasteCategory[]).map((catKey) => {
-            const isSel = calcCategory === catKey;
-            const cat = WASTE_CATEGORIES[catKey];
-            return (
+        <Card className="border-border">
+          <CardContent className="p-3.5 space-y-3">
+            {/* Filter Pills */}
+            <div className="flex items-center gap-1 bg-muted/60 p-1 rounded-xl border border-border">
               <button
-                key={catKey}
-                onClick={() => {
-                  setCalcCategory(catKey);
-                }}
-                className={`px-2.5 py-1 rounded text-xs flex items-center gap-1 whitespace-nowrap transition-colors ${
-                  isSel
-                    ? 'bg-stone-900 text-white font-medium'
-                    : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
+                onClick={() => setFilterType('all')}
+                className={`flex-1 py-1 text-xs font-bold rounded-lg transition-all ${
+                  filterType === 'all'
+                    ? 'bg-card text-foreground shadow-xs'
+                    : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                <span>{cat.icon}</span>
-                <span>{cat.name.split(' ')[0]}</span>
+                Semua
               </button>
-            );
-          })}
-        </div>
-
-        {/* Stepper amount */}
-        <div className="flex items-center justify-between bg-stone-50 p-3 rounded-lg border border-stone-200">
-          <div>
-            <div className="text-[10px] text-stone-500 font-medium">Jumlah Sampah</div>
-            <div className="text-xs font-semibold text-stone-900">
-              {calcQuantity} {calcUnit === 'item' ? 'Buah / Kemasan' : 'Kilogram'}
+              <button
+                onClick={() => setFilterType('deposit')}
+                className={`flex-1 py-1 text-xs font-bold rounded-lg transition-all ${
+                  filterType === 'deposit'
+                    ? 'bg-card text-foreground shadow-xs'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                Setoran Masuk
+              </button>
+              <button
+                onClick={() => setFilterType('withdrawal')}
+                className={`flex-1 py-1 text-xs font-bold rounded-lg transition-all ${
+                  filterType === 'withdrawal'
+                    ? 'bg-card text-foreground shadow-xs'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                Pencairan Kas
+              </button>
             </div>
-          </div>
 
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => {
-                setCalcQuantity((prev) => Math.max(1, prev - 5));
-              }}
-              className="w-7 h-7 rounded bg-white border border-stone-300 text-stone-800 font-medium flex items-center justify-center hover:bg-stone-100"
-            >
-              -
-            </button>
-            <span className="text-xs font-mono font-semibold text-stone-900 min-w-[28px] text-center">
-              {calcQuantity}
-            </span>
-            <button
-              onClick={() => {
-                setCalcQuantity((prev) => prev + 5);
-              }}
-              className="w-7 h-7 rounded bg-stone-900 text-white font-medium flex items-center justify-center hover:bg-stone-800"
-            >
-              +
-            </button>
-          </div>
-        </div>
+            {/* List */}
+            {filteredTransactions.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground text-xs">
+                Belum ada catatan mutasi transaksi pada filter ini.
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {filteredTransactions.map((trx) => {
+                  const isDeposit = trx.type === 'deposit';
 
-        {/* Estimated reward banner */}
-        <div className="p-3 bg-stone-100 rounded-lg border border-stone-200 text-stone-900 flex items-center justify-between">
-          <div>
-            <div className="text-[10px] text-stone-500 font-medium">Estimasi Saldo Bank Sampah</div>
-            <div className="text-base font-bold font-mono text-stone-900">
-              Rp {calculateEstimate().toLocaleString('id-ID')}
-            </div>
-          </div>
-          <span className="text-xl">💰</span>
-        </div>
-      </div>
-
-      {/* Riwayat Mutasi Setor & Tarik Saldo */}
-      <div className="bg-white rounded-xl p-4 border border-stone-200 space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5">
-            <Clock size={15} className="text-stone-600" />
-            <h3 className="text-xs font-semibold text-stone-900">
-              Riwayat Mutasi Saldo
-            </h3>
-          </div>
-
-          {/* Filter tabs */}
-          <div className="flex items-center gap-1 text-[10px] bg-stone-100 p-0.5 rounded border border-stone-200">
-            <button
-              onClick={() => setFilterType('all')}
-              className={`px-2 py-0.5 rounded font-medium transition-colors ${
-                filterType === 'all' ? 'bg-white text-stone-900 shadow-xs' : 'text-stone-500'
-              }`}
-            >
-              Semua
-            </button>
-            <button
-              onClick={() => setFilterType('deposit')}
-              className={`px-2 py-0.5 rounded font-medium transition-colors ${
-                filterType === 'deposit' ? 'bg-white text-stone-900 shadow-xs' : 'text-stone-500'
-              }`}
-            >
-              Masuk
-            </button>
-            <button
-              onClick={() => setFilterType('withdrawal')}
-              className={`px-2 py-0.5 rounded font-medium transition-colors ${
-                filterType === 'withdrawal' ? 'bg-white text-stone-900 shadow-xs' : 'text-stone-500'
-              }`}
-            >
-              Tarik
-            </button>
-          </div>
-        </div>
-
-        {filteredTransactions.length === 0 ? (
-          <div className="text-center py-6 text-stone-400 text-xs">
-            Belum ada catatan mutasi transaksi
-          </div>
-        ) : (
-          <div className="space-y-1.5">
-            {filteredTransactions.map((trx) => {
-              const isDeposit = trx.type === 'deposit';
-
-              return (
-                <div
-                  key={trx.id}
-                  onClick={() => {
-                    onViewReceipt(trx);
-                  }}
-                  className="p-2.5 rounded-xl border border-stone-200 hover:bg-stone-50 transition-colors cursor-pointer flex items-center justify-between"
-                >
-                  <div className="flex items-center gap-2">
+                  return (
                     <div
-                      className={`w-7 h-7 rounded flex items-center justify-center font-bold ${
-                        isDeposit
-                          ? 'bg-stone-100 text-stone-700'
-                          : 'bg-stone-100 text-stone-700'
-                      }`}
+                      key={trx.id}
+                      onClick={() => onViewReceipt(trx)}
+                      className="p-2.5 sm:p-3 rounded-2xl border border-border hover:border-primary/50 hover:bg-muted/30 transition-all cursor-pointer flex items-center justify-between gap-2.5"
                     >
-                      {isDeposit ? <ArrowDownRight size={14} /> : <ArrowUpRight size={14} />}
-                    </div>
+                      <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                        <div
+                          className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
+                            isDeposit
+                              ? 'bg-emerald-100 text-emerald-800'
+                              : 'bg-amber-100 text-amber-800'
+                          }`}
+                        >
+                          {isDeposit ? <ArrowDownRight size={18} /> : <ArrowUpRight size={18} />}
+                        </div>
 
-                    <div>
-                      <div className="text-xs font-semibold text-stone-900 leading-tight flex items-center gap-1.5 flex-wrap">
-                        <span>
-                          {isDeposit
-                            ? `${trx.studentName}: ${trx.wasteItemName || 'Setor Sampah'}`
-                            : trx.description}
-                        </span>
-                        {trx.status === 'diproses' && (
-                          <span className="text-[9px] bg-amber-100 text-amber-800 font-medium px-1.5 py-0.2 rounded border border-amber-200">
-                            Menunggu Izin
-                          </span>
-                        )}
+                        <div className="min-w-0 flex-1">
+                          <div className="text-xs font-bold text-foreground truncate flex items-center gap-1.5">
+                            <span className="truncate">
+                              {isDeposit
+                                ? (trx.wasteItemName || 'Setor Sampah')
+                                : trx.description}
+                            </span>
+                            {trx.status === 'diproses' && (
+                              <span className="inline-flex items-center gap-1 text-[9px] bg-amber-100 text-amber-900 font-bold px-1.5 py-0.2 rounded-full border border-amber-200 shrink-0">
+                                <Clock size={9} /> Izin
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-[11px] text-muted-foreground mt-0.5 truncate flex items-center gap-1.5">
+                            <span>{trx.timestamp}</span>
+                            <span>•</span>
+                            <span className="truncate">
+                              {isDeposit ? trx.studentName.split(' ')[0] : 'Kas Kelas'}
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                      <div className="text-[10px] text-stone-500 mt-0.5 font-mono">
-                        {trx.timestamp} • {trx.referenceCode}
-                      </div>
-                    </div>
-                  </div>
 
-                  <div className="text-right font-mono">
-                    <div className="text-xs font-semibold text-stone-900">
-                      {isDeposit ? '+' : '-'}Rp {trx.amountRp.toLocaleString('id-ID')}
-                    </div>
-                    {trx.pointsEarned && (
-                      <div className="text-[10px] text-stone-500">
-                        +{trx.pointsEarned} pts
+                      <div className="text-right shrink-0">
+                        <div
+                          className={`text-xs sm:text-sm font-extrabold ${
+                            isDeposit ? 'text-emerald-700' : 'text-amber-700'
+                          }`}
+                        >
+                          {isDeposit ? '+' : '-'}Rp {trx.amountRp.toLocaleString('id-ID')}
+                        </div>
                       </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </section>
     </div>
   );
 };

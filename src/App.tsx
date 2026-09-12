@@ -443,7 +443,7 @@ export default function App() {
       />
 
       {/* Main Container */}
-      <div className={`flex-1 w-full bg-stone-50/60 min-h-screen relative flex flex-col`}>
+      <div className="flex-1 min-w-0 w-full bg-stone-50/60 min-h-screen relative flex flex-col">
         {/* Sticky Header */}
         <Header
           userRole={userRole}
@@ -452,7 +452,7 @@ export default function App() {
         />
 
         {/* Main Tab Content View */}
-        <main className="flex-1 px-4 pt-3 pb-24 md:pb-8">
+        <main className="flex-1 min-w-0 px-4 pt-3 pb-24 md:pb-8 w-full max-w-5xl mx-auto">
           {userRole === 'student' && (
             <>
               {activeTab === 'beranda' && (
@@ -470,6 +470,7 @@ export default function App() {
               {activeTab === 'iot_bin' && (
                 <SmartBinIoTTab
                   currentStudent={currentStudent}
+                  currentClass={currentClass}
                   iotBin={iotBin}
                   onUpdateBin={setIotBin}
                   onWasteDisposed={handleWasteDisposed}

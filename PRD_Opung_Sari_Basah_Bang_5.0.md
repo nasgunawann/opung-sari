@@ -160,6 +160,10 @@ Mengembangkan platform web **Opung Sari Basah Bang 5.0** yang mengintegrasikan t
    - Endpoint penerima telemetri IoT mampu menangani *burst request* dengan latensi respons $< 500$ ms.
 3. **Aksesibilitas & UI/UX:**
    - Desain antarmuka responsif (*Mobile-First Design*) dengan layout adaptif untuk smartphone, tablet, maupun layar desktop operator.
+   - **Bahasa Desain Ramah Anak & Siswa (*Friendly-Looking Design*):**
+     - Menggunakan tipografi humanis/bulat (*Nunito font-sans*) dengan bobot yang tegas dan bersahabat.
+     - Menghindari tipografi teknikal *monospace* (`font-mono`) pada antarmuka pengguna siswa (dashboard, tabungan, mutasi).
+     - Prinsip kejelasan sekilas (*at-a-glance clarity*): kartu mutasi arus kas disajikan ringkas dan ramah (hanya menampilkan jenis transaksi, waktu/tanggal, status, dan nominal rupiah). Rincian teknis seperti kode referensi unik dan audit trail diakses melalui modal tanda terima/kuitansi.
 4. **Keamanan & Integritas Data (Security):**
    - Transmisi data terenkripsi end-to-end menggunakan HTTPS / TLS 1.3.
    - Ingestion IoT dilindungi autentikasi API Key/Token per unit perangkat.
