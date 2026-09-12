@@ -7,16 +7,16 @@ import {
   Clock,
   Sparkles,
   Receipt,
-  Tag,
   Calculator,
   ChevronRight,
   Gift,
 } from 'lucide-react';
-import { BankTransaction, Student, WasteCategory } from '../types';
+import { BankTransaction, SchoolClass, Student, WasteCategory } from '../types';
 import { WASTE_CATEGORIES, WITHDRAWAL_DESTINATIONS } from '../data/initialData';
 
 interface WasteBankRewardTabProps {
   currentStudent: Student;
+  currentClass?: SchoolClass;
   transactions: BankTransaction[];
   onOpenWithdrawModal: () => void;
   onViewReceipt: (trx: BankTransaction) => void;
@@ -24,6 +24,7 @@ interface WasteBankRewardTabProps {
 
 export const WasteBankRewardTab: React.FC<WasteBankRewardTabProps> = ({
   currentStudent,
+  currentClass,
   transactions,
   onOpenWithdrawModal,
   onViewReceipt,
@@ -35,11 +36,11 @@ export const WasteBankRewardTab: React.FC<WasteBankRewardTabProps> = ({
   const [calcQuantity, setCalcQuantity] = useState<number>(10); // e.g. 10 bottles
   const [calcUnit, setCalcUnit] = useState<'item' | 'kg'>('item');
 
-  const studentTransactions = transactions.filter(
-    (t) => t.studentId === currentStudent.id
+  const classTransactions = transactions.filter(
+    (t) => (t.classId && t.classId === currentClass?.id) || t.studentId === currentStudent.id
   );
 
-  const filteredTransactions = studentTransactions.filter((t) => {
+  const filteredTransactions = classTransactions.filter((t) => {
     if (filterType === 'all') return true;
     return t.type === filterType;
   });
@@ -64,29 +65,34 @@ export const WasteBankRewardTab: React.FC<WasteBankRewardTabProps> = ({
 
   return (
       <div className="w-full space-y-3 pb-20 pt-1 md:px-4">
-        {/* Saldo Bank Sampah Digital Card - Flat Solid Visual Anchor */}
+      {/* Saldo Kas Kelas Card */}
       <div className="bg-emerald-900 text-white rounded-xl p-4 border border-emerald-950 space-y-3">
         <div className="flex items-center justify-between text-xs">
           <div className="flex items-center gap-1.5 font-medium text-emerald-200">
             <Wallet size={14} className="text-emerald-300" />
-            <span>Rekening Bank Sampah Siswa</span>
+            <span>Kas Bersama {currentClass?.name || currentStudent.className}</span>
           </div>
           <span className="bg-emerald-800/80 px-2 py-0.5 rounded text-[11px] text-emerald-100 font-mono">
-            NIS: {currentStudent.nis}
+            Wali Kelas: {currentClass?.waliKelas?.split(',')[0] || 'Guru'}
           </span>
         </div>
 
         <div>
-          <div className="text-[11px] text-emerald-300 font-medium">Saldo Reward Tersedia</div>
+          <div className="text-[11px] text-emerald-300 font-medium">Saldo Kas Bersama Kelas</div>
           <div className="text-2xl font-bold font-mono text-white mt-0.5">
-            Rp {currentStudent.balanceRp.toLocaleString('id-ID')}
+            Rp {(currentClass?.balanceRp ?? currentStudent.balanceRp).toLocaleString('id-ID')}
           </div>
+          <p className="text-[11px] text-emerald-200/80 mt-1">
+            Akumulasi hasil setor sampah seluruh siswa {currentClass?.name?.split(' - ')[0] || currentStudent.className}.
+          </p>
         </div>
 
         <div className="pt-3 border-t border-emerald-800/80 flex items-center justify-between">
           <div className="text-xs text-emerald-200">
-            <span className="font-semibold text-white block">{currentStudent.name}</span>
-            <span className="text-[11px] text-emerald-300 font-mono">{currentStudent.className} • BSS-{currentStudent.nis.slice(-4)}</span>
+            <span className="font-semibold text-white block">Perwakilan Siswa: {currentStudent.name}</span>
+            <span className="text-[11px] text-emerald-300 font-mono">
+              Kontribusi Kamu: {currentStudent.totalKg} kg • {currentStudent.points} pts
+            </span>
           </div>
 
           <button
@@ -94,83 +100,48 @@ export const WasteBankRewardTab: React.FC<WasteBankRewardTabProps> = ({
             onClick={() => {
               onOpenWithdrawModal();
             }}
-            className="bg-white hover:bg-emerald-50 text-emerald-950 text-xs font-semibold px-3.5 py-2 rounded-lg transition-colors flex items-center gap-1.5"
+            className="bg-white hover:bg-emerald-50 text-emerald-950 text-xs font-semibold px-3.5 py-2 rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer shrink-0"
           >
-            <span>Tarik Saldo</span>
+            <span>Pencairan Kas</span>
             <ArrowUpRight size={14} />
           </button>
         </div>
       </div>
 
-      {/* Pilihan Penukaran Cepat (Kantin, Koperasi, Tabungan) */}
-      <div className="space-y-1.5">
-        <div className="flex items-center justify-between px-0.5">
-          <h3 className="text-xs font-semibold text-stone-700">
-            Tujuan Penarikan Reward
-          </h3>
-          <span className="text-[10px] text-stone-500">Tanpa Biaya Admin</span>
+      {/* Saldo Bisa Dipakai untuk Apa Saja? */}
+      <div className="bg-white rounded-xl p-3.5 border border-stone-200 space-y-2.5">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-xs font-bold text-stone-900">
+              Saldo Bisa Dipakai untuk Apa Saja?
+            </h3>
+            <p className="text-[11px] text-stone-500">
+              Minta izin ke Wali Kelas (pemegang kas) untuk mencairkan saldo bagi keperluan:
+            </p>
+          </div>
+          <span className="text-[9px] bg-amber-50 text-amber-800 border border-amber-200 font-semibold px-2 py-0.5 rounded-full shrink-0">
+            Izin Wali Kelas
+          </span>
         </div>
 
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-0.5">
           {WITHDRAWAL_DESTINATIONS.map((dest) => (
             <div
               key={dest.id}
-              onClick={() => {
-                onOpenWithdrawModal();
-              }}
-              className="p-3 bg-white hover:bg-stone-50 rounded-xl border border-stone-200 cursor-pointer transition-colors flex flex-col justify-between"
+              onClick={() => onOpenWithdrawModal()}
+              className="p-2.5 rounded-lg border border-stone-200 bg-stone-50/50 hover:bg-emerald-50/40 hover:border-emerald-300 cursor-pointer transition-all flex items-start gap-2.5"
             >
-              <div className="flex items-start justify-between">
-                <span className="text-xl">{dest.icon}</span>
-                <span className="text-[9px] bg-stone-100 text-stone-700 font-medium px-1.5 py-0.5 rounded">
-                  Bebas Biaya
-                </span>
-              </div>
-              <div className="mt-2">
+              <span className="text-xl shrink-0 mt-0.5">{dest.icon}</span>
+              <div className="min-w-0">
                 <div className="text-xs font-semibold text-stone-900 leading-tight">
                   {dest.name}
                 </div>
-                <div className="text-[10px] text-stone-500 mt-0.5 line-clamp-1">
+                <div className="text-[11px] text-stone-600 mt-0.5 leading-snug">
                   {dest.description}
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Daftar Nilai Tukar Harga Sampah per Kg */}
-      <div className="bg-white rounded-xl p-4 border border-stone-200 space-y-2.5">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5">
-            <Tag size={15} className="text-stone-600" />
-            <h3 className="text-xs font-semibold text-stone-900">
-              Katalog Harga Beli Sampah
-            </h3>
-          </div>
-          <span className="text-[10px] text-stone-400 font-mono">Standar Sekolah</span>
-        </div>
-
-        <div className="grid grid-cols-2 gap-2">
-          {Object.values(WASTE_CATEGORIES).map((cat) => (
-            <div
-              key={cat.id}
-              className="p-2.5 rounded-lg bg-stone-50 border border-stone-200 flex items-center justify-between"
-            >
-              <div className="flex items-center gap-2">
-                <span className="text-lg">{cat.icon}</span>
-                <div>
-                  <div className="text-xs font-semibold text-stone-900 leading-tight">
-                    {cat.name}
-                  </div>
-                  <div className="text-[10px] text-stone-500">{cat.label.split(' ')[0]}</div>
+                <div className="text-[10px] text-emerald-700 font-medium mt-1">
+                  Min. penarikan: Rp {dest.minAmount.toLocaleString('id-ID')}
                 </div>
-              </div>
-              <div className="text-right font-mono">
-                <div className="text-xs font-semibold text-stone-900">
-                  Rp {cat.pricePerKg.toLocaleString('id-ID')}
-                </div>
-                <div className="text-[9px] text-stone-400">/ kg</div>
               </div>
             </div>
           ))}
@@ -331,8 +302,17 @@ export const WasteBankRewardTab: React.FC<WasteBankRewardTabProps> = ({
                     </div>
 
                     <div>
-                      <div className="text-xs font-semibold text-stone-900 leading-tight">
-                        {isDeposit ? trx.wasteItemName || 'Setor Sampah IoT' : trx.description}
+                      <div className="text-xs font-semibold text-stone-900 leading-tight flex items-center gap-1.5 flex-wrap">
+                        <span>
+                          {isDeposit
+                            ? `${trx.studentName}: ${trx.wasteItemName || 'Setor Sampah'}`
+                            : trx.description}
+                        </span>
+                        {trx.status === 'diproses' && (
+                          <span className="text-[9px] bg-amber-100 text-amber-800 font-medium px-1.5 py-0.2 rounded border border-amber-200">
+                            Menunggu Izin
+                          </span>
+                        )}
                       </div>
                       <div className="text-[10px] text-stone-500 mt-0.5 font-mono">
                         {trx.timestamp} • {trx.referenceCode}

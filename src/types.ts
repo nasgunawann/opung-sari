@@ -53,6 +53,7 @@ export interface SchoolClass {
   activeStudents: number;
   totalKg: number;
   totalPoints: number;
+  balanceRp: number;
   organicKg: number;
   plasticKg: number;
   paperKg: number;
@@ -89,6 +90,8 @@ export interface BankTransaction {
   id: string;
   studentId: string;
   studentName: string;
+  classId?: string;
+  className?: string;
   type: 'deposit' | 'withdrawal';
   amountRp: number;
   pointsEarned?: number;

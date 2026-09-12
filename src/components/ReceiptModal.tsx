@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle2, QrCode } from 'lucide-react';
+import { CheckCircle2, QrCode, Clock } from 'lucide-react';
 import { BankTransaction } from '../types';
 
 import {
@@ -100,9 +100,15 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
           )}
           <div className="flex justify-between items-center gap-2 min-w-0">
             <span className="text-stone-400 shrink-0">Status:</span>
-            <span className="text-emerald-800 font-medium flex items-center gap-1 shrink-0">
-              <CheckCircle2 size={13} /> Berhasil
-            </span>
+            {transaction.status === 'diproses' ? (
+              <span className="text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded text-[11px] font-medium flex items-center gap-1 shrink-0">
+                <Clock size={12} /> Menunggu Izin Wali Kelas
+              </span>
+            ) : (
+              <span className="text-emerald-800 font-medium flex items-center gap-1 shrink-0">
+                <CheckCircle2 size={13} /> Berhasil
+              </span>
+            )}
           </div>
         </div>
 
@@ -112,8 +118,10 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
             <div className="w-24 h-24 bg-white p-2 rounded-lg border border-stone-200 flex items-center justify-center">
               <QrCode size={80} className="text-stone-800" />
             </div>
-            <span className="text-[10px] text-stone-500 max-w-[180px] leading-tight">
-              Tunjukkan QR ini ke Petugas Kantin / Koperasi
+            <span className="text-[10px] text-stone-600 max-w-[200px] leading-tight">
+              {transaction.status === 'diproses'
+                ? 'Tunjukkan bukti pengajuan ini kepada Wali Kelas selaku pemegang kas untuk persetujuan pencairan.'
+                : 'Tunjukkan QR ini ke Petugas Kantin / Koperasi'}
             </span>
           </div>
         )}

@@ -13,7 +13,10 @@ import {
   QrCode,
   Layers,
   Scale,
+  Leaf,
+  Tag,
 } from 'lucide-react';
+import { Card, CardContent } from './ui/card';
 import {
   BinCompartment,
   SchoolClass,
@@ -253,6 +256,78 @@ export const SmartBinIoTTab: React.FC<SmartBinIoTTabProps> = ({
               </div>
             );
           })}
+        </div>
+      </div>
+
+      {/* Panduan Tong Sampah (Pedoman Pemilahan Siswa) */}
+      <div className="space-y-2">
+        <div className="flex items-center gap-1.5 px-1">
+          <Leaf size={15} className="text-emerald-600" />
+          <h3 className="text-xs font-bold text-stone-900 uppercase tracking-wide">
+            Panduan Pemilahan Tong Sampah
+          </h3>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          {[
+            { cat: 'organik', bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200' },
+            { cat: 'plastik', bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200' },
+            { cat: 'kertas', bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200' },
+            { cat: 'logam_b3', bg: 'bg-rose-50', text: 'text-rose-700', border: 'border-rose-200' },
+          ].map((item) => {
+            const data = WASTE_CATEGORIES[item.cat as keyof typeof WASTE_CATEGORIES];
+            return (
+              <Card key={item.cat} className={`${item.bg} border ${item.border} shadow-none`}>
+                <CardContent className="p-2.5 flex flex-col items-center text-center gap-1">
+                  <span className="text-2xl drop-shadow-sm">{data.icon}</span>
+                  <div className={`text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/80 ${item.text} border ${item.border}`}>
+                    Tong {data.colorName}
+                  </div>
+                  <h4 className="font-bold text-xs text-foreground mt-0.5">{data.name}</h4>
+                  <p className="text-[10px] text-stone-600 line-clamp-2 leading-tight">
+                    Contoh: {data.examples.slice(0, 3).join(', ')}
+                  </p>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Katalog Harga Beli Sampah */}
+      <div className="bg-white rounded-xl p-3.5 border border-stone-200 space-y-2.5">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <Tag size={15} className="text-stone-600" />
+            <h3 className="text-xs font-semibold text-stone-900">
+              Katalog Harga Beli Sampah
+            </h3>
+          </div>
+          <span className="text-[10px] text-stone-500 font-mono">Standar Bank Sampah Sekolah</span>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          {Object.values(WASTE_CATEGORIES).map((cat) => (
+            <div
+              key={cat.id}
+              className="p-2.5 rounded-lg bg-stone-50 border border-stone-200 flex flex-col justify-between"
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-lg">{cat.icon}</span>
+                <div className="min-w-0">
+                  <div className="text-xs font-semibold text-stone-900 leading-tight truncate">
+                    {cat.name}
+                  </div>
+                  <div className="text-[10px] text-stone-500 truncate">Tong {cat.colorName}</div>
+                </div>
+              </div>
+              <div className="mt-2 pt-1.5 border-t border-stone-200/70 flex items-baseline justify-between font-mono">
+                <span className="text-xs font-bold text-emerald-800">
+                  Rp {cat.pricePerKg.toLocaleString('id-ID')}
+                </span>
+                <span className="text-[9px] text-stone-400">/ kg</span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 

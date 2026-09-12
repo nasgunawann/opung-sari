@@ -4,20 +4,20 @@ import {
   HelpCircle,
   Check,
   X,
-  Leaf,
   RefreshCw,
   Wallet,
   ArrowDownToLine,
   Coins,
 } from 'lucide-react';
 import { QUIZ_QUESTIONS, WASTE_CATEGORIES } from '../data/initialData';
-import { Student } from '../types';
+import { SchoolClass, Student } from '../types';
 import confetti from 'canvas-confetti';
 import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
 
 interface HomeEducationTabProps {
   currentStudent: Student;
+  currentClass?: SchoolClass;
   studentsList: Student[];
   onSelectStudent: (student: Student) => void;
   onOpenWithdrawal: () => void;
@@ -27,6 +27,7 @@ interface HomeEducationTabProps {
 
 export const HomeEducationTab: React.FC<HomeEducationTabProps> = ({
   currentStudent,
+  currentClass,
   studentsList,
   onSelectStudent,
   onOpenWithdrawal,
@@ -113,40 +114,47 @@ export const HomeEducationTab: React.FC<HomeEducationTabProps> = ({
                 </span>
               </div>
               <p className="text-xs text-emerald-100/80 font-medium truncate">
-                {currentStudent?.className || '-'}
+                {currentStudent?.className || '-'} • Wali Kelas: {currentClass?.waliKelas || 'Guru Pembina'}
               </p>
             </div>
           </div>
         </div>
 
-        {/* Middle: Saldo Hero Display */}
+        {/* Middle: Saldo Hero Display (Kas Kelas Bersama) */}
         <div className="relative mt-4">
-          <div className="flex items-center gap-1.5 text-emerald-100/80 text-[11px] font-bold uppercase tracking-wider">
-            <Wallet size={13} className="opacity-90" />
-            <span>Saldo Tabungan</span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5 text-emerald-100/90 text-[11px] font-bold uppercase tracking-wider">
+              <Wallet size={13} className="opacity-90" />
+              <span>Saldo Kas {currentClass?.name?.split(' - ')[0] || currentStudent?.className}</span>
+            </div>
           </div>
-          <div className="text-2xl sm:text-3xl font-black tracking-tight text-white mt-0.5">
-            {formatCurrency(currentStudent?.balanceRp ?? 0)}
+          <div className="text-2xl sm:text-3xl font-black tracking-tight text-white mt-1">
+            {formatCurrency(currentClass?.balanceRp ?? currentStudent?.balanceRp ?? 0)}
           </div>
+          <p className="text-[11px] text-emerald-100/75 mt-0.5">
+            Dikelola bersama oleh Wali Kelas.
+          </p>
         </div>
 
-        {/* Bottom Bar: Points Badge & Tarik Button */}
-        <div className="relative mt-4 pt-3 border-t border-white/15 flex items-center justify-between gap-2">
-          {/* Points Pill */}
-          <div className="inline-flex items-center gap-1.5 bg-black/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
-            <Coins size={14} className="text-amber-300" />
-            <span className="text-xs font-bold text-white">
-              {currentStudent?.points ?? 0} <span className="text-emerald-200 text-[11px] font-semibold">poin</span>
-            </span>
+        {/* Bottom Bar: Personal Contribution & Tarik Button */}
+        <div className="relative mt-4 pt-3 border-t border-white/15 flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
+          {/* Personal Points & Contribution Badges */}
+          <div className="flex items-center gap-1.5">
+            <div className="inline-flex items-center gap-1 bg-black/20 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10">
+              <Coins size={13} className="text-amber-300" />
+              <span className="text-xs font-bold text-white">
+                {currentStudent?.points ?? 0} <span className="text-emerald-200 text-[10px] font-semibold">poin</span>
+              </span>
+            </div>
           </div>
 
           {/* Action Button */}
           <button
             onClick={onOpenWithdrawal}
-            className="flex items-center gap-1.5 bg-white hover:bg-emerald-50 active:scale-95 text-emerald-900 font-extrabold text-xs px-3.5 py-1.5 rounded-xl shadow-xs transition-all cursor-pointer"
+            className="flex items-center gap-1.5 bg-white hover:bg-emerald-50 active:scale-95 text-emerald-900 font-extrabold text-xs px-3.5 py-1.5 rounded-xl shadow-xs transition-all cursor-pointer shrink-0"
           >
             <ArrowDownToLine size={13} className="text-emerald-700" />
-            <span>Tarik Saldo</span>
+            <span>Pencairan Kas</span>
           </button>
         </div>
       </div>
@@ -248,35 +256,6 @@ export const HomeEducationTab: React.FC<HomeEducationTabProps> = ({
             )}
           </CardContent>
         </Card>
-      </section>
-
-      {/* SECTION 3: Panduan Warna Tong */}
-      <section>
-        <div className="flex items-center gap-2 mb-2 px-1">
-          <Leaf size={18} className="text-emerald-500" />
-          <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">Panduan Tong Sampah</h2>
-        </div>
-        <div className="grid grid-cols-2 gap-2">
-          {[
-            { cat: 'organik', bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200' },
-            { cat: 'plastik', bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200' },
-            { cat: 'kertas', bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200' },
-            { cat: 'logam_b3', bg: 'bg-rose-50', text: 'text-rose-700', border: 'border-rose-200' },
-          ].map((item) => {
-            const data = WASTE_CATEGORIES[item.cat as keyof typeof WASTE_CATEGORIES];
-            return (
-              <Card key={item.cat} className={`${item.bg} border border-border/40 shadow-none`}>
-                <CardContent className="p-2.5 flex flex-col items-center text-center gap-1">
-                  <span className="text-2xl drop-shadow-sm">{data.icon}</span>
-                  <div className={`text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/70 ${item.text} border ${item.border}`}>
-                    Tong {data.colorName}
-                  </div>
-                  <h3 className="font-bold text-xs text-foreground mt-0.5">{data.name}</h3>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
       </section>
     </div>
   );

@@ -126,6 +126,9 @@ export default function App() {
   const currentStudent =
     students.find((s) => s.id === currentStudentId) || students[0] || INITIAL_STUDENTS[0];
 
+  const currentClass =
+    classes.find((c) => c.id === currentStudent.classId) || classes[0] || INITIAL_CLASSES[0];
+
   // Handler when waste is disposed in the IoT Smart Bin
   const handleWasteDisposed = (
     item: WasteItem,
@@ -161,12 +164,13 @@ export default function App() {
       })
     );
 
-    // 2. Update Student's Class in Leaderboard
+    // 2. Update Student's Class in Leaderboard & Treasury Balance
     setClasses((prev) => {
       const updated = prev.map((cls) => {
         if (cls.id === currentStudent.classId) {
           const newTotalKg = Number((cls.totalKg + weightKg).toFixed(2));
           const newTotalPoints = cls.totalPoints + earnedPoints;
+          const newBalanceRp = (cls.balanceRp || 0) + earnedRp;
 
           const categoryKey =
             item.category === 'organik'
@@ -181,6 +185,7 @@ export default function App() {
             ...cls,
             totalKg: newTotalKg,
             totalPoints: newTotalPoints,
+            balanceRp: newBalanceRp,
             [categoryKey]: Number(((cls[categoryKey] as number) + weightKg).toFixed(2)),
           };
         }
@@ -207,13 +212,15 @@ export default function App() {
       id: `trx-${Date.now()}`,
       studentId: currentStudent.id,
       studentName: currentStudent.name,
+      classId: currentStudent.classId,
+      className: currentStudent.className,
       type: 'deposit',
       amountRp: earnedRp,
       pointsEarned: earnedPoints,
       wasteItemName: `${item.name}`,
       weightKg: weightKg,
       category: item.category,
-      description: `Setor pilah ke IoT EcoBin Hall`,
+      description: `${currentStudent.name} setor ${item.name} ke Kas ${currentStudent.className}`,
       timestamp: `Hari ini, ${timeStr}`,
       referenceCode: `DEP-${Date.now().toString().slice(-6)}`,
       status: 'berhasil',
@@ -278,10 +285,13 @@ export default function App() {
               ? 'paperKg'
               : 'b3Kg';
 
+          const newBalanceRp = (cls.balanceRp || 0) + earnedRp;
+
           return {
             ...cls,
             totalKg: newTotalKg,
             totalPoints: newTotalPoints,
+            balanceRp: newBalanceRp,
             [categoryKey]: Number(((cls[categoryKey] as number) + weightKg).toFixed(2)),
           };
         }
@@ -307,13 +317,15 @@ export default function App() {
       id: `trx-${Date.now()}`,
       studentId: targetStudent.id,
       studentName: targetStudent.name,
+      classId: targetStudent.classId,
+      className: targetStudent.className,
       type: 'deposit',
       amountRp: earnedRp,
       pointsEarned: earnedPoints,
       wasteItemName: `${catData.name} (Manual)`,
       weightKg: weightKg,
       category: categoryId as any,
-      description: `Setoran manual ke Koordinator`,
+      description: `${targetStudent.name} setor manual ${catData.name} ke Kas ${targetStudent.className}`,
       timestamp: `Hari ini, ${timeStr}`,
       referenceCode: `DEP-M-${Date.now().toString().slice(-6)}`,
       status: 'berhasil',
@@ -354,7 +366,7 @@ export default function App() {
 
   // Handler when user confirms withdrawal from Waste Bank
   const handleConfirmWithdrawal = (newTrx: BankTransaction) => {
-    // Deduct student balance
+    // Deduct student contribution/balance
     setStudents((prev) =>
       prev.map((stu) => {
         if (stu.id === currentStudent.id) {
@@ -364,6 +376,19 @@ export default function App() {
           };
         }
         return stu;
+      })
+    );
+
+    // Deduct class treasury balance
+    setClasses((prev) =>
+      prev.map((cls) => {
+        if (cls.id === currentStudent.classId) {
+          return {
+            ...cls,
+            balanceRp: Math.max(0, (cls.balanceRp || 0) - newTrx.amountRp),
+          };
+        }
+        return cls;
       })
     );
 
@@ -433,6 +458,7 @@ export default function App() {
               {activeTab === 'beranda' && (
                 <HomeEducationTab
                   currentStudent={currentStudent}
+                  currentClass={currentClass}
                   studentsList={students}
                   onSelectStudent={(stu) => setCurrentStudentId(stu.id)}
                   onOpenWithdrawal={() => setIsWithdrawModalOpen(true)}
@@ -461,6 +487,7 @@ export default function App() {
               {activeTab === 'bank_sampah' && (
                 <WasteBankRewardTab
                   currentStudent={currentStudent}
+                  currentClass={currentClass}
                   transactions={transactions}
                   onOpenWithdrawModal={() => setIsWithdrawModalOpen(true)}
                   onViewReceipt={(trx) => setReceiptTrx(trx)}
@@ -526,6 +553,7 @@ export default function App() {
           isOpen={isWithdrawModalOpen}
           onClose={() => setIsWithdrawModalOpen(false)}
           currentStudent={currentStudent}
+          currentClass={currentClass}
           onConfirmWithdrawal={handleConfirmWithdrawal}
         />
 
