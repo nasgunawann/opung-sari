@@ -4,6 +4,7 @@ import {
   INITIAL_IOT_BIN,
   INITIAL_STUDENTS,
   INITIAL_TRANSACTIONS,
+  WASTE_CATEGORIES,
 } from './data/initialData';
 import {
   BankTransaction,
@@ -11,6 +12,7 @@ import {
   SmartBinIoTState,
   Student,
   WasteItem,
+  WasteCategory,
 } from './types';
 import { Header } from './components/Header';
 import { HomeEducationTab } from './components/HomeEducationTab';
@@ -19,6 +21,8 @@ import { LeaderboardTab } from './components/LeaderboardTab';
 import { WasteBankRewardTab } from './components/WasteBankRewardTab';
 import { BadgesMissionsTab } from './components/BadgesMissionsTab';
 import { CoordinatorTab } from './components/CoordinatorTab';
+import { CoordinatorApprovalsTab } from './components/CoordinatorApprovalsTab';
+import { CoordinatorReportsTab } from './components/CoordinatorReportsTab';
 import { AdminTab } from './components/AdminTab';
 import { WithdrawalModal } from './components/WithdrawalModal';
 import { ReceiptModal } from './components/ReceiptModal';
@@ -27,7 +31,7 @@ import { MobileNav } from './components/layout/MobileNav';
 import { AuthPage } from './components/auth/AuthPage';
 
 export type UserRole = 'student' | 'coordinator' | 'admin';
-export type TabKey = 'beranda' | 'iot_bin' | 'leaderboard' | 'bank_sampah' | 'misi' | 'coordinator_input' | 'coordinator_history' | 'admin_dashboard' | 'admin_classes' | 'admin_settings';
+export type TabKey = 'beranda' | 'iot_bin' | 'leaderboard' | 'bank_sampah' | 'misi' | 'coordinator_input' | 'coordinator_approvals' | 'coordinator_reports' | 'coordinator_history' | 'admin_dashboard' | 'admin_classes' | 'admin_settings';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabKey>('beranda');
@@ -229,50 +233,55 @@ export default function App() {
     setTransactions((prev) => [newTrx, ...prev]);
   };
 
-  const handleManualDeposit = (studentId: string, categoryId: string, weightKg: number) => {
-    // Find category info
-    const catData = Object.values(require('./data/initialData').WASTE_CATEGORIES).find((c: any) => c.id === categoryId) as any;
+  const handleManualDeposit = (
+    classId: string,
+    categoryId: WasteCategory,
+    weightKg: number,
+    studentId?: string,
+    notes?: string
+  ) => {
+    const catData = WASTE_CATEGORIES[categoryId];
     if (!catData) return;
 
-    const earnedRp = catData.pricePerKg * weightKg;
-    const earnedPoints = Math.floor(weightKg * 15); // mock formula: 15 pts per kg
+    const earnedRp = Math.round(catData.pricePerKg * weightKg);
+    const earnedPoints = Math.floor(weightKg * 15); // formula: 15 pts per kg
 
-    // Update Student
-    setStudents((prev) =>
-      prev.map((stu) => {
-        if (stu.id === studentId) {
-          const newTotalPoints = stu.points + earnedPoints;
-          const newLevel = Math.min(5, Math.floor(newTotalPoints / 100) + 1);
-          const levelTitles = [
-            'Tunas Hijau',
-            'Ksatria Tunas',
-            'Pendekar Hijau',
-            'Panglima Eco-Ranger',
-            'Duta Adiwiyata',
-          ];
+    // Update Student XP & level if representative is chosen
+    if (studentId) {
+      setStudents((prev) =>
+        prev.map((stu) => {
+          if (stu.id === studentId) {
+            const newTotalPoints = stu.points + earnedPoints;
+            const newLevel = Math.min(5, Math.floor(newTotalPoints / 100) + 1);
+            const levelTitles = [
+              'Tunas Hijau',
+              'Ksatria Tunas',
+              'Pendekar Hijau',
+              'Panglima Eco-Ranger',
+              'Duta Adiwiyata',
+            ];
 
-          return {
-            ...stu,
-            points: newTotalPoints,
-            balanceRp: stu.balanceRp + earnedRp,
-            totalKg: Number((stu.totalKg + weightKg).toFixed(2)),
-            sortCount: stu.sortCount + 1,
-            level: newLevel,
-            levelTitle: levelTitles[newLevel - 1] || 'Duta Adiwiyata',
-          };
-        }
-        return stu;
-      })
-    );
+            return {
+              ...stu,
+              points: newTotalPoints,
+              totalKg: Number((stu.totalKg + weightKg).toFixed(2)),
+              sortCount: stu.sortCount + 1,
+              level: newLevel,
+              levelTitle: levelTitles[newLevel - 1] || 'Duta Adiwiyata',
+            };
+          }
+          return stu;
+        })
+      );
+    }
 
-    // Get student's class ID
-    const targetStudent = students.find(s => s.id === studentId);
-    if (!targetStudent) return;
+    const targetClass = classes.find((c) => c.id === classId);
+    const targetStudent = studentId ? students.find((s) => s.id === studentId) : null;
 
-    // Update Class Leaderboard
+    // Update Class Leaderboard & Treasury Balance
     setClasses((prev) => {
       const updated = prev.map((cls) => {
-        if (cls.id === targetStudent.classId) {
+        if (cls.id === classId) {
           const newTotalKg = Number((cls.totalKg + weightKg).toFixed(2));
           const newTotalPoints = cls.totalPoints + earnedPoints;
 
@@ -315,23 +324,68 @@ export default function App() {
 
     const newTrx: BankTransaction = {
       id: `trx-${Date.now()}`,
-      studentId: targetStudent.id,
-      studentName: targetStudent.name,
-      classId: targetStudent.classId,
-      className: targetStudent.className,
+      studentId: targetStudent ? targetStudent.id : 'rep-class',
+      studentName: targetStudent ? targetStudent.name : 'Perwakilan Kelas',
+      classId: classId,
+      className: targetClass?.name || 'Kelas',
       type: 'deposit',
       amountRp: earnedRp,
       pointsEarned: earnedPoints,
-      wasteItemName: `${catData.name} (Manual)`,
+      wasteItemName: `${catData.name} (Timbang Fisik)`,
       weightKg: weightKg,
-      category: categoryId as any,
-      description: `${targetStudent.name} setor manual ${catData.name} ke Kas ${targetStudent.className}`,
+      category: categoryId,
+      description: notes
+        ? `Setor fisik ${catData.name} (${weightKg} kg): ${notes}`
+        : targetStudent
+        ? `${targetStudent.name} setor fisik ${catData.name} (${weightKg} kg) ke Kas ${targetClass?.name}`
+        : `Setoran fisik ${catData.name} (${weightKg} kg) ke Kas ${targetClass?.name}`,
       timestamp: `Hari ini, ${timeStr}`,
       referenceCode: `DEP-M-${Date.now().toString().slice(-6)}`,
       status: 'berhasil',
     };
 
     setTransactions((prev) => [newTrx, ...prev]);
+  };
+
+  const handleApproveWithdrawal = (trxId: string) => {
+    setTransactions((prev) =>
+      prev.map((t) => (t.id === trxId ? { ...t, status: 'berhasil' } : t))
+    );
+  };
+
+  const handleRejectWithdrawal = (trxId: string, reason: string) => {
+    const targetTrx = transactions.find((t) => t.id === trxId);
+    if (!targetTrx) return;
+
+    // Refund class balance
+    if (targetTrx.classId) {
+      setClasses((prev) =>
+        prev.map((c) =>
+          c.id === targetTrx.classId
+            ? { ...c, balanceRp: c.balanceRp + targetTrx.amountRp }
+            : c
+        )
+      );
+    }
+
+    // Refund student balance if applicable
+    if (targetTrx.studentId && targetTrx.studentId !== 'rep-class') {
+      setStudents((prev) =>
+        prev.map((s) =>
+          s.id === targetTrx.studentId
+            ? { ...s, balanceRp: s.balanceRp + targetTrx.amountRp }
+            : s
+        )
+      );
+    }
+
+    setTransactions((prev) =>
+      prev.map((t) =>
+        t.id === trxId
+          ? { ...t, status: 'ditolak', rejectionReason: reason }
+          : t
+      )
+    );
   };
 
   // Handler for adding points directly (e.g. from quiz or daily challenges)
@@ -416,12 +470,16 @@ export default function App() {
   useEffect(() => {
     if (userRole === 'student' && !['beranda', 'iot_bin', 'leaderboard', 'bank_sampah', 'misi'].includes(activeTab)) {
       setActiveTab('beranda');
-    } else if (userRole === 'coordinator' && !['coordinator_input', 'coordinator_history'].includes(activeTab)) {
+    } else if (userRole === 'coordinator' && !['coordinator_input', 'coordinator_approvals', 'coordinator_reports', 'coordinator_history'].includes(activeTab)) {
       setActiveTab('coordinator_input');
     } else if (userRole === 'admin' && !['admin_dashboard', 'admin_classes', 'admin_settings'].includes(activeTab)) {
       setActiveTab('admin_dashboard');
     }
   }, [userRole, activeTab]);
+
+  const pendingApprovalsCount = transactions.filter(
+    (t) => t.type === 'withdrawal' && t.status === 'diproses'
+  ).length;
 
   if (!isAuthenticated) {
     return (
@@ -439,7 +497,13 @@ export default function App() {
         activeTab={activeTab}
         onChangeTab={setActiveTab}
         userRole={userRole}
-        pendingRewardNotice={userRole === 'student' ? currentStudent.balanceRp >= 10000 : false}
+        pendingRewardNotice={
+          userRole === 'student'
+            ? currentStudent.balanceRp >= 10000
+            : userRole === 'coordinator'
+            ? pendingApprovalsCount > 0
+            : false
+        }
       />
 
       {/* Main Container */}
@@ -509,15 +573,27 @@ export default function App() {
             <>
               {activeTab === 'coordinator_input' && (
                 <CoordinatorTab
+                  classes={classes}
                   students={students}
                   onManualDeposit={handleManualDeposit}
+                  onNavigateToApprovals={() => setActiveTab('coordinator_approvals')}
+                  pendingApprovalsCount={pendingApprovalsCount}
                 />
               )}
-              {activeTab === 'coordinator_history' && (
-                <div className="py-12 text-center text-stone-500">
-                  <h3 className="font-medium text-stone-900 mb-2">Riwayat Transaksi</h3>
-                  <p className="text-sm">Fitur dalam pengembangan.</p>
-                </div>
+              {activeTab === 'coordinator_approvals' && (
+                <CoordinatorApprovalsTab
+                  transactions={transactions}
+                  classes={classes}
+                  onApproveWithdrawal={handleApproveWithdrawal}
+                  onRejectWithdrawal={handleRejectWithdrawal}
+                />
+              )}
+              {(activeTab === 'coordinator_reports' || activeTab === 'coordinator_history') && (
+                <CoordinatorReportsTab
+                  classes={classes}
+                  students={students}
+                  transactions={transactions}
+                />
               )}
             </>
           )}
@@ -548,7 +624,13 @@ export default function App() {
           activeTab={activeTab}
           onChangeTab={setActiveTab}
           userRole={userRole}
-          pendingRewardNotice={userRole === 'student' ? currentStudent.balanceRp >= 10000 : false}
+          pendingRewardNotice={
+            userRole === 'student'
+              ? currentStudent.balanceRp >= 10000
+              : userRole === 'coordinator'
+              ? pendingApprovalsCount > 0
+              : false
+          }
         />
 
         {/* Modals */}

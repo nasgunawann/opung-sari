@@ -569,6 +569,21 @@ export const INITIAL_TRANSACTIONS: BankTransaction[] = [
     referenceCode: 'DEP-202409-1198',
     status: 'berhasil',
   },
+  {
+    id: 'trx-105',
+    studentId: 's-02',
+    studentName: 'Zahra Aulia',
+    classId: 'c-4b',
+    className: 'Kelas 4B',
+    type: 'withdrawal',
+    amountRp: 20000,
+    description: 'Beli 3 bibit tanaman lidah mertua & pupuk kompos untuk taman kelas 4B',
+    timestamp: 'Hari ini, 08:15 WIB',
+    method: 'Bibit & Tanaman Hias',
+    targetAccount: 'Wali Kelas Bapak Hartono, M.Pd',
+    referenceCode: 'WDR-202409-5521',
+    status: 'diproses',
+  },
 ];
 
 export const QUIZ_QUESTIONS: QuizQuestion[] = [

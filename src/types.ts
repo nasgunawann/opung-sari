@@ -103,7 +103,8 @@ export interface BankTransaction {
   method?: string;
   targetAccount?: string;
   referenceCode: string;
-  status: 'berhasil' | 'diproses';
+  status: 'berhasil' | 'diproses' | 'ditolak';
+  rejectionReason?: string;
 }
 
 export interface WithdrawalDestination {

@@ -6,6 +6,8 @@ import {
   Wallet,
   Award,
   Scale,
+  ClipboardCheck,
+  BarChart3,
   History,
   Building2,
   Users,
@@ -67,15 +69,22 @@ export const getNavItemsForRole = (
     return [
       {
         key: "coordinator_input",
-        label: "Input Timbangan",
+        label: "Input Timbang",
         icon: Scale,
-        accent: "text-blue-600",
+        accent: "text-emerald-700",
       },
       {
-        key: "coordinator_history",
-        label: "Riwayat",
-        icon: History,
-        accent: "text-stone-600",
+        key: "coordinator_approvals",
+        label: "Validasi Kas",
+        icon: ClipboardCheck,
+        accent: "text-amber-600",
+        notifyDot: pendingRewardNotice,
+      },
+      {
+        key: "coordinator_reports",
+        label: "Laporan",
+        icon: BarChart3,
+        accent: "text-blue-600",
       },
     ];
   }
