@@ -482,6 +482,7 @@ export default function App() {
                   classes={classes}
                   students={students}
                   currentStudent={currentStudent}
+                  currentClass={currentClass}
                 />
               )}
 
@@ -498,6 +499,7 @@ export default function App() {
               {activeTab === 'misi' && (
                 <BadgesMissionsTab
                   currentStudent={currentStudent}
+                  onAddPoints={handleAddPoints}
                 />
               )}
             </>

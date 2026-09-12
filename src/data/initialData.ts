@@ -161,7 +161,7 @@ export const WASTE_ITEMS: WasteItem[] = [
 export const INITIAL_CLASSES: SchoolClass[] = [
   {
     id: 'c-5a',
-    name: 'Kelas 5A - Eco Guardians',
+    name: 'Kelas 5A',
     grade: 5,
     waliKelas: 'Ibu Rahmawati, S.Pd',
     totalStudents: 32,
@@ -178,7 +178,7 @@ export const INITIAL_CLASSES: SchoolClass[] = [
   },
   {
     id: 'c-4b',
-    name: 'Kelas 4B - Tunas Rindang',
+    name: 'Kelas 4B',
     grade: 4,
     waliKelas: 'Bapak Hartono, M.Pd',
     totalStudents: 30,
@@ -195,7 +195,7 @@ export const INITIAL_CLASSES: SchoolClass[] = [
   },
   {
     id: 'c-6a',
-    name: 'Kelas 6A - Pahlawan Bumi',
+    name: 'Kelas 6A',
     grade: 6,
     waliKelas: 'Ibu Marlina, S.Si',
     totalStudents: 34,
@@ -212,7 +212,7 @@ export const INITIAL_CLASSES: SchoolClass[] = [
   },
   {
     id: 'c-5b',
-    name: 'Kelas 5B - Relawan Hijau',
+    name: 'Kelas 5B',
     grade: 5,
     waliKelas: 'Bapak Kurniawan, S.Pd',
     totalStudents: 31,
@@ -229,7 +229,7 @@ export const INITIAL_CLASSES: SchoolClass[] = [
   },
   {
     id: 'c-4a',
-    name: 'Kelas 4A - Sobat Alam',
+    name: 'Kelas 4A',
     grade: 4,
     waliKelas: 'Ibu Dewi Lestari, S.Pd',
     totalStudents: 28,
@@ -246,7 +246,7 @@ export const INITIAL_CLASSES: SchoolClass[] = [
   },
   {
     id: 'c-6b',
-    name: 'Kelas 6B - Generasi Lestari',
+    name: 'Kelas 6B',
     grade: 6,
     waliKelas: 'Bapak Ahmad Faisal, S.Pd',
     totalStudents: 33,
