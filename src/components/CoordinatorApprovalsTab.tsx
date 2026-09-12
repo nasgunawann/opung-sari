@@ -68,9 +68,9 @@ export const CoordinatorApprovalsTab: React.FC<CoordinatorApprovalsTabProps> = (
   return (
     <div className="w-full max-w-5xl mx-auto py-5 px-3 sm:px-6 space-y-5">
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-amber-600 via-amber-500 to-emerald-700 text-white rounded-2xl p-4 sm:p-6 shadow-sm">
+      <div className="bg-stone-900 text-white rounded-2xl p-4 sm:p-6 border border-stone-800 shadow-sm">
         <div className="space-y-1">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-black/20 text-amber-100 text-xs font-bold">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-stone-800 text-amber-300 text-xs font-bold">
             <ClipboardCheck size={14} /> Two-Party Approval
           </div>
           <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white">

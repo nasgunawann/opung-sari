@@ -107,10 +107,10 @@ export const CoordinatorTab: React.FC<CoordinatorTabProps> = ({
   return (
     <div className="w-full max-w-5xl mx-auto py-5 px-3 sm:px-6 space-y-5">
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-emerald-700 via-emerald-600 to-teal-700 text-white rounded-2xl p-4 sm:p-6 shadow-sm">
+      <div className="bg-emerald-800 text-white rounded-2xl p-4 sm:p-6 border border-emerald-900 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-800/60 text-emerald-100 text-xs font-bold">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-900 text-emerald-200 text-xs font-bold">
               <Scale size={14} /> Pos Timbang Bank Sampah
             </div>
             <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white">
@@ -221,7 +221,7 @@ export const CoordinatorTab: React.FC<CoordinatorTabProps> = ({
                     <div className="pt-1.5 border-t border-stone-100 flex items-center justify-between">
                       <span className="text-[10px] text-stone-500 font-medium">Saldo Kas</span>
                       <span className="text-xs font-black text-emerald-800">
-                        Rp {cls.balanceRp.toLocaleString('id-ID')}
+                        Rp {(cls.balanceRp ?? 0).toLocaleString('id-ID')}
                       </span>
                     </div>
                   </button>
@@ -275,7 +275,7 @@ export const CoordinatorTab: React.FC<CoordinatorTabProps> = ({
                   <div className="truncate">
                     <span className="font-bold">{selectedStudent.name}</span>
                     <span className="text-[10px] text-amber-700 block">
-                      {selectedStudent.levelTitle}
+                      NIS: {selectedStudent.nis} • Level {selectedStudent.level}
                     </span>
                   </div>
                 </div>
@@ -428,7 +428,7 @@ export const CoordinatorTab: React.FC<CoordinatorTabProps> = ({
             </div>
 
             {/* Real-time Calculation Summary Card */}
-            <div className="p-4 rounded-2xl bg-gradient-to-br from-emerald-50 via-teal-50 to-emerald-100/60 border-2 border-emerald-300 space-y-2.5">
+            <div className="p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-200 space-y-2.5">
               <div className="text-xs font-bold uppercase tracking-wider text-emerald-800 flex items-center gap-1.5">
                 <Sparkles size={14} className="text-emerald-700" /> Ringkasan Nilai Setoran
               </div>

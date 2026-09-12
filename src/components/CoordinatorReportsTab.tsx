@@ -36,8 +36,8 @@ export const CoordinatorReportsTab: React.FC<CoordinatorReportsTabProps> = ({
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
 
   // Overall KPIs
-  const totalKgAllClasses = classes.reduce((sum, c) => sum + c.totalKg, 0);
-  const totalBalanceAllClasses = classes.reduce((sum, c) => sum + c.balanceRp, 0);
+  const totalKgAllClasses = classes.reduce((sum, c) => sum + (c.totalKg || 0), 0);
+  const totalBalanceAllClasses = classes.reduce((sum, c) => sum + (c.balanceRp || 0), 0);
   const totalApprovedWithdrawals = transactions
     .filter((t) => t.type === 'withdrawal' && t.status === 'berhasil')
     .reduce((sum, t) => sum + t.amountRp, 0);
@@ -68,10 +68,10 @@ export const CoordinatorReportsTab: React.FC<CoordinatorReportsTabProps> = ({
   return (
     <div className="w-full max-w-5xl mx-auto py-5 px-3 sm:px-6 space-y-5">
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-blue-700 via-blue-600 to-indigo-800 text-white rounded-2xl p-4 sm:p-6 shadow-sm">
+      <div className="bg-blue-900 text-white rounded-2xl p-4 sm:p-6 border border-blue-950 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-900/60 text-blue-100 text-xs font-bold">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-950 text-blue-200 text-xs font-bold">
               <BarChart3 size={14} /> FR-REP-01 Pelaporan Adiwiyata
             </div>
             <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white">
@@ -263,10 +263,10 @@ export const CoordinatorReportsTab: React.FC<CoordinatorReportsTabProps> = ({
                       {(cls.b3Kg || 0).toFixed(1)}
                     </td>
                     <td className="py-3 px-3 sm:px-4 text-right font-black text-emerald-800">
-                      {cls.totalKg.toFixed(1)} kg
+                      {(cls.totalKg || 0).toFixed(1)} kg
                     </td>
                     <td className="py-3 px-3 sm:px-4 text-right font-black text-stone-900">
-                      Rp {cls.balanceRp.toLocaleString('id-ID')}
+                      Rp {(cls.balanceRp ?? 0).toLocaleString('id-ID')}
                     </td>
                   </tr>
                 ))}
@@ -457,9 +457,9 @@ export const CoordinatorReportsTab: React.FC<CoordinatorReportsTabProps> = ({
                       <td className="p-2 text-right">{(cls.plasticKg || 0).toFixed(1)}</td>
                       <td className="p-2 text-right">{(cls.paperKg || 0).toFixed(1)}</td>
                       <td className="p-2 text-right">{(cls.b3Kg || 0).toFixed(1)}</td>
-                      <td className="p-2 text-right font-bold">{cls.totalKg.toFixed(1)} kg</td>
+                      <td className="p-2 text-right font-bold">{(cls.totalKg || 0).toFixed(1)} kg</td>
                       <td className="p-2 text-right font-bold">
-                        Rp {cls.balanceRp.toLocaleString('id-ID')}
+                        Rp {(cls.balanceRp ?? 0).toLocaleString('id-ID')}
                       </td>
                     </tr>
                   ))}

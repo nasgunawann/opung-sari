@@ -329,7 +329,7 @@ export const LeaderboardTab: React.FC<LeaderboardTabProps> = ({
             <div className="bg-gradient-to-b from-emerald-50/70 via-emerald-50/40 to-white rounded-3xl p-4 sm:p-5 border border-emerald-200/70 shadow-xs">
               <div className="text-center mb-4">
                 <h3 className="text-base sm:text-lg font-extrabold text-stone-900 mt-1">
-                  Top 3 Kelas Penggerak Lingkungan
+                  Top 3 Kelas Teraktif
                 </h3>
               </div>
 

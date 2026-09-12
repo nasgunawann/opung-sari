@@ -60,7 +60,17 @@ export default function App() {
       const saved = localStorage.getItem('ecokids_students');
       if (!saved) return INITIAL_STUDENTS;
       const parsed = JSON.parse(saved);
-      return Array.isArray(parsed) && parsed.length > 0 ? parsed : INITIAL_STUDENTS;
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed.map((s: Partial<Student> & { id: string }) => {
+          const match = INITIAL_STUDENTS.find((is) => is.id === s.id);
+          return {
+            ...match,
+            ...s,
+            levelTitle: `Level ${s.level || match?.level || 1}`,
+          } as Student;
+        });
+      }
+      return INITIAL_STUDENTS;
     } catch {
       return INITIAL_STUDENTS;
     }
@@ -75,7 +85,17 @@ export default function App() {
       const saved = localStorage.getItem('ecokids_classes');
       if (!saved) return INITIAL_CLASSES;
       const parsed = JSON.parse(saved);
-      return Array.isArray(parsed) && parsed.length > 0 ? parsed : INITIAL_CLASSES;
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed.map((cls: Partial<SchoolClass> & { id: string }) => {
+          const match = INITIAL_CLASSES.find((ic) => ic.id === cls.id);
+          return {
+            ...match,
+            ...cls,
+            balanceRp: typeof cls.balanceRp === 'number' ? cls.balanceRp : (match?.balanceRp ?? 0),
+          } as SchoolClass;
+        });
+      }
+      return INITIAL_CLASSES;
     } catch {
       return INITIAL_CLASSES;
     }
@@ -146,13 +166,6 @@ export default function App() {
         if (stu.id === currentStudent.id) {
           const newTotalPoints = stu.points + earnedPoints;
           const newLevel = Math.min(5, Math.floor(newTotalPoints / 100) + 1);
-          const levelTitles = [
-            'Tunas Hijau',
-            'Ksatria Tunas',
-            'Pendekar Hijau',
-            'Panglima Eco-Ranger',
-            'Duta Adiwiyata',
-          ];
 
           return {
             ...stu,
@@ -161,7 +174,7 @@ export default function App() {
             totalKg: Number((stu.totalKg + weightKg).toFixed(2)),
             sortCount: stu.sortCount + 1,
             level: newLevel,
-            levelTitle: levelTitles[newLevel - 1] || 'Duta Adiwiyata',
+            levelTitle: `Level ${newLevel}`,
           };
         }
         return stu;
@@ -253,21 +266,13 @@ export default function App() {
           if (stu.id === studentId) {
             const newTotalPoints = stu.points + earnedPoints;
             const newLevel = Math.min(5, Math.floor(newTotalPoints / 100) + 1);
-            const levelTitles = [
-              'Tunas Hijau',
-              'Ksatria Tunas',
-              'Pendekar Hijau',
-              'Panglima Eco-Ranger',
-              'Duta Adiwiyata',
-            ];
-
             return {
               ...stu,
               points: newTotalPoints,
               totalKg: Number((stu.totalKg + weightKg).toFixed(2)),
               sortCount: stu.sortCount + 1,
               level: newLevel,
-              levelTitle: levelTitles[newLevel - 1] || 'Duta Adiwiyata',
+              levelTitle: `Level ${newLevel}`,
             };
           }
           return stu;
@@ -362,7 +367,7 @@ export default function App() {
       setClasses((prev) =>
         prev.map((c) =>
           c.id === targetTrx.classId
-            ? { ...c, balanceRp: c.balanceRp + targetTrx.amountRp }
+            ? { ...c, balanceRp: (c.balanceRp || 0) + targetTrx.amountRp }
             : c
         )
       );

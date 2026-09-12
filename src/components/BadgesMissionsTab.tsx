@@ -160,7 +160,7 @@ export const BadgesMissionsTab: React.FC<BadgesMissionsTabProps> = ({
                 </h2>
               </div>
               <p className="text-xs text-emerald-100/85 font-medium truncate">
-                {currentStudent.levelTitle} • {currentStudent.className}
+                Level {currentStudent.level} • {currentStudent.className}
               </p>
             </div>
           </div>
