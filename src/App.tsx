@@ -45,6 +45,16 @@ export default function App() {
     }
   });
 
+  const [adminPersona, setAdminPersona] = useState<'kepsek' | 'dinas'>(() => {
+    try {
+      const saved = localStorage.getItem('opung_admin_persona') as 'kepsek' | 'dinas';
+      if (['kepsek', 'dinas'].includes(saved)) return saved;
+      return 'dinas';
+    } catch {
+      return 'dinas';
+    }
+  });
+
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
     try {
       const saved = localStorage.getItem('opung_is_auth');
@@ -430,12 +440,16 @@ export default function App() {
     setReceiptTrx(newTrx);
   };
 
-  const handleLogin = (role: UserRole, student?: Student) => {
+  const handleLogin = (role: UserRole, student?: Student, persona?: 'kepsek' | 'dinas') => {
     setUserRole(role);
     localStorage.setItem('opung_user_role', role);
     if (student) {
       setCurrentStudentId(student.id);
       localStorage.setItem('ecokids_current_student', student.id);
+    }
+    if (persona) {
+      setAdminPersona(persona);
+      localStorage.setItem('opung_admin_persona', persona);
     }
     setIsAuthenticated(true);
     localStorage.setItem('opung_is_auth', JSON.stringify(true));
@@ -581,7 +595,11 @@ export default function App() {
           {userRole === 'admin' && (
             <>
               {activeTab === 'admin_dashboard' && (
-                <BangBinaaTab classes={classes} transactions={transactions} />
+                <BangBinaaTab 
+                  classes={classes} 
+                  transactions={transactions} 
+                  currentSchoolId={adminPersona === 'kepsek' ? 'sch-1' : undefined}
+                />
               )}
               {activeTab === 'admin_classes' && (
                  <div className="py-12 text-center text-stone-500">

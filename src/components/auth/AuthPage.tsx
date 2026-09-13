@@ -9,7 +9,7 @@ import { LogIn, Sparkles, ShieldCheck, ArrowRight, HelpCircle } from 'lucide-rea
 
 interface AuthPageProps {
   studentsList: Student[];
-  onLogin: (role: UserRole, student?: Student) => void;
+  onLogin: (role: UserRole, student?: Student, adminPersona?: 'kepsek' | 'dinas') => void;
 }
 
 export const AuthPage: React.FC<AuthPageProps> = ({
@@ -113,8 +113,8 @@ export const AuthPage: React.FC<AuthPageProps> = ({
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {/* Demo Students */}
-              {studentsList.slice(0, 2).map((stu) => (
+              {/* 1. Demo Student */}
+              {studentsList.slice(0, 1).map((stu) => (
                 <button
                   key={stu.id}
                   type="button"
@@ -122,20 +122,20 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                   className="flex items-center gap-2 p-2.5 rounded-2xl border border-stone-200 bg-stone-50 hover:bg-emerald-50 hover:border-emerald-300 text-left transition-all group cursor-pointer"
                 >
                   <span className="text-xl p-1 bg-white rounded-xl shadow-xs border border-stone-200">
-                    {stu.avatar}
+                    👦
                   </span>
                   <div className="min-w-0">
                     <div className="text-xs font-bold text-stone-800 group-hover:text-emerald-800 truncate">
-                      {stu.name}
+                      Andi (Siswa)
                     </div>
                     <div className="text-[10px] text-stone-600 font-medium">
-                      Siswa / Kas {stu.className}
+                      Pengurus Kas {stu.className}
                     </div>
                   </div>
                 </button>
               ))}
 
-              {/* Demo Coordinator */}
+              {/* 2. Demo Coordinator */}
               <button
                 type="button"
                 onClick={() => onLogin('coordinator')}
@@ -154,21 +154,40 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                 </div>
               </button>
 
-              {/* Demo Admin */}
+              {/* 3. Demo Principal */}
               <button
                 type="button"
-                onClick={() => onLogin('admin')}
+                onClick={() => onLogin('admin', undefined, 'kepsek')}
                 className="flex items-center gap-2 p-2.5 rounded-2xl border border-stone-200 bg-stone-50 hover:bg-purple-50 hover:border-purple-300 text-left transition-all group cursor-pointer"
               >
                 <span className="text-xl p-1 bg-white rounded-xl shadow-xs border border-stone-200">
-                  🛡️
+                  👩‍💼
                 </span>
                 <div className="min-w-0">
                   <div className="text-xs font-bold text-stone-800 group-hover:text-purple-800 truncate">
                     Ibu Ratna
                   </div>
                   <div className="text-[10px] text-stone-600 font-medium">
-                    Admin / Kepala Sekolah
+                    Kepala Sekolah (SMPN 1)
+                  </div>
+                </div>
+              </button>
+
+              {/* 4. Demo Dinas */}
+              <button
+                type="button"
+                onClick={() => onLogin('admin', undefined, 'dinas')}
+                className="flex items-center gap-2 p-2.5 rounded-2xl border border-stone-200 bg-stone-50 hover:bg-amber-50 hover:border-amber-300 text-left transition-all group cursor-pointer"
+              >
+                <span className="text-xl p-1 bg-white rounded-xl shadow-xs border border-stone-200">
+                  🏢
+                </span>
+                <div className="min-w-0">
+                  <div className="text-xs font-bold text-stone-800 group-hover:text-amber-800 truncate">
+                    Bpk. Anwar
+                  </div>
+                  <div className="text-[10px] text-stone-600 font-medium">
+                    Dinas Lingkungan Hidup
                   </div>
                 </div>
               </button>
