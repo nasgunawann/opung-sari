@@ -89,11 +89,11 @@ export const getNavItemsForRole = (
     ];
   }
 
-  // Admin
+  // Admin (Dinas/Kabupaten) - Modul BANG
   return [
     {
       key: "admin_dashboard",
-      label: "Dashboard",
+      label: "Modul BANG",
       icon: Building2,
       accent: "text-purple-600",
     },

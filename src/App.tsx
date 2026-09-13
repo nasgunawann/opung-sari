@@ -23,7 +23,7 @@ import { BadgesMissionsTab } from './components/BadgesMissionsTab';
 import { CoordinatorTab } from './components/CoordinatorTab';
 import { CoordinatorApprovalsTab } from './components/CoordinatorApprovalsTab';
 import { CoordinatorReportsTab } from './components/CoordinatorReportsTab';
-import { AdminTab } from './components/AdminTab';
+import { BangBinaaTab } from './components/BangBinaaTab';
 import { WithdrawalModal } from './components/WithdrawalModal';
 import { ReceiptModal } from './components/ReceiptModal';
 import { Sidebar } from './components/layout/Sidebar';
@@ -153,14 +153,13 @@ export default function App() {
   const currentClass =
     classes.find((c) => c.id === currentStudent.classId) || classes[0] || INITIAL_CLASSES[0];
 
-  // Handler when waste is disposed in the IoT Smart Bin
+  // Handler when waste is disposed in the IoT Smart Bin (LISA habituation & Eco-Points)
   const handleWasteDisposed = (
     item: WasteItem,
     weightKg: number,
-    earnedRp: number,
     earnedPoints: number
   ) => {
-    // 1. Update Student
+    // 1. Update Student (Points, kg reduction, sorting count, level - NO direct cash)
     setStudents((prev) =>
       prev.map((stu) => {
         if (stu.id === currentStudent.id) {
@@ -170,7 +169,6 @@ export default function App() {
           return {
             ...stu,
             points: newTotalPoints,
-            balanceRp: stu.balanceRp + earnedRp,
             totalKg: Number((stu.totalKg + weightKg).toFixed(2)),
             sortCount: stu.sortCount + 1,
             level: newLevel,
@@ -181,13 +179,12 @@ export default function App() {
       })
     );
 
-    // 2. Update Student's Class in Leaderboard & Treasury Balance
+    // 2. Update Student's Class in Leaderboard & Ecological Metrics (NO monetary cash balance increment)
     setClasses((prev) => {
       const updated = prev.map((cls) => {
         if (cls.id === currentStudent.classId) {
           const newTotalKg = Number((cls.totalKg + weightKg).toFixed(2));
           const newTotalPoints = cls.totalPoints + earnedPoints;
-          const newBalanceRp = (cls.balanceRp || 0) + earnedRp;
 
           const categoryKey =
             item.category === 'organik'
@@ -202,7 +199,6 @@ export default function App() {
             ...cls,
             totalKg: newTotalKg,
             totalPoints: newTotalPoints,
-            balanceRp: newBalanceRp,
             [categoryKey]: Number(((cls[categoryKey] as number) + weightKg).toFixed(2)),
           };
         }
@@ -221,29 +217,8 @@ export default function App() {
       });
     });
 
-    // 3. Create Deposit Transaction Record
-    const now = new Date();
-    const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')} WIB`;
-
-    const newTrx: BankTransaction = {
-      id: `trx-${Date.now()}`,
-      studentId: currentStudent.id,
-      studentName: currentStudent.name,
-      classId: currentStudent.classId,
-      className: currentStudent.className,
-      type: 'deposit',
-      amountRp: earnedRp,
-      pointsEarned: earnedPoints,
-      wasteItemName: `${item.name}`,
-      weightKg: weightKg,
-      category: item.category,
-      description: `${currentStudent.name} setor ${item.name} ke Kas ${currentStudent.className}`,
-      timestamp: `Hari ini, ${timeStr}`,
-      referenceCode: `DEP-${Date.now().toString().slice(-6)}`,
-      status: 'berhasil',
-    };
-
-    setTransactions((prev) => [newTrx, ...prev]);
+    // Note: Mutasi Kas Rupiah (BankTransaction) resmi dicatat oleh Koordinator Bank Sampah
+    // saat kelas menyetorkan sampah fisik terpilah. Tong Pintar IoT murni mencatat telemetri LISA & Eco-Points.
   };
 
   const handleManualDeposit = (
@@ -606,7 +581,7 @@ export default function App() {
           {userRole === 'admin' && (
             <>
               {activeTab === 'admin_dashboard' && (
-                <AdminTab classes={classes} transactions={transactions} />
+                <BangBinaaTab classes={classes} transactions={transactions} />
               )}
               {activeTab === 'admin_classes' && (
                  <div className="py-12 text-center text-stone-500">
