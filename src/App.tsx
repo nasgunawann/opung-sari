@@ -24,6 +24,7 @@ import { CoordinatorTab } from './components/CoordinatorTab';
 import { CoordinatorApprovalsTab } from './components/CoordinatorApprovalsTab';
 import { CoordinatorReportsTab } from './components/CoordinatorReportsTab';
 import { BangBinaaTab } from './components/BangBinaaTab';
+import { AdminClassesTab } from './components/AdminClassesTab';
 import { WithdrawalModal } from './components/WithdrawalModal';
 import { ReceiptModal } from './components/ReceiptModal';
 import { Sidebar } from './components/layout/Sidebar';
@@ -602,10 +603,7 @@ export default function App() {
                 />
               )}
               {activeTab === 'admin_classes' && (
-                 <div className="py-12 text-center text-stone-500">
-                  <h3 className="font-medium text-stone-900 mb-2">Kelola Kelas</h3>
-                  <p className="text-sm">Fitur dalam pengembangan.</p>
-                </div>
+                <AdminClassesTab classes={classes} />
               )}
               {activeTab === 'admin_settings' && (
                  <div className="py-12 text-center text-stone-500">
