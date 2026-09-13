@@ -67,7 +67,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
               </Label>
               <Input
                 id="login-id"
-                placeholder="Contoh: 202405012, Zahra, atau Koordinator"
+                placeholder="Contoh: 202405012"
                 value={loginIdentifier}
                 onChange={(e) => setLoginIdentifier(e.target.value)}
                 className="rounded-xl border-stone-200 text-sm h-11 focus-visible:ring-emerald-500"

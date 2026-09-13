@@ -41,7 +41,6 @@ interface SmartBinIoTTabProps {
   onWasteDisposed: (
     item: WasteItem,
     weightKg: number,
-    earnedRp: number,
     earnedPoints: number
   ) => void;
 }
@@ -63,7 +62,6 @@ export const SmartBinIoTTab: React.FC<SmartBinIoTTabProps> = ({
   const [detectedCategory, setDetectedCategory] = useState<WasteCategory | null>(null);
   const [lastRewardInfo, setLastRewardInfo] = useState<{
     points: number;
-    rp: number;
     itemName: string;
     weight: number;
   } | null>(null);
@@ -77,12 +75,6 @@ export const SmartBinIoTTab: React.FC<SmartBinIoTTabProps> = ({
 
   const calculateTotalWeight = () => {
     return Number((itemWeightKg * itemCount).toFixed(3));
-  };
-
-  const calculateRewardRp = () => {
-    const totalKg = calculateTotalWeight();
-    const rate = WASTE_CATEGORIES[selectedItem.category].pricePerKg;
-    return Math.max(50, Math.round(totalKg * rate));
   };
 
   const calculateEarnedPoints = () => {
@@ -116,7 +108,6 @@ export const SmartBinIoTTab: React.FC<SmartBinIoTTabProps> = ({
         // Step 3: Weighing & Dropping into container
         setTimeout(() => {
           const totalKg = calculateTotalWeight();
-          const earnedRp = calculateRewardRp();
           const earnedPoints = calculateEarnedPoints();
 
           const comp = updatedCompartments[selectedItem.category];
@@ -138,11 +129,10 @@ export const SmartBinIoTTab: React.FC<SmartBinIoTTabProps> = ({
             compartments: updatedCompartments,
           });
 
-          onWasteDisposed(selectedItem, totalKg, earnedRp, earnedPoints);
+          onWasteDisposed(selectedItem, totalKg, earnedPoints);
 
           setLastRewardInfo({
             points: earnedPoints,
-            rp: earnedRp,
             itemName: `${itemCount}x ${selectedItem.name}`,
             weight: totalKg,
           });
@@ -527,15 +517,15 @@ export const SmartBinIoTTab: React.FC<SmartBinIoTTabProps> = ({
             </div>
             <div className="bg-emerald-50/80 p-2.5 rounded-2xl border border-emerald-200 text-center shadow-xs">
               <div className="text-[10px] font-bold text-emerald-800 uppercase tracking-wider">
-                Masuk Kas Kelas
+                Habituasi LISA
               </div>
               <div className="text-sm sm:text-base font-black text-emerald-800 mt-0.5">
-                Rp {calculateRewardRp().toLocaleString('id-ID')}
+                +1 Log Pilah
               </div>
             </div>
             <div className="bg-amber-50/80 p-2.5 rounded-2xl border border-amber-200 text-center shadow-xs">
               <div className="text-[10px] font-bold text-amber-800 uppercase tracking-wider">
-                Poin Pribadi
+                Poin LISA
               </div>
               <div className="text-sm sm:text-base font-black text-amber-900 mt-0.5">
                 +{calculateEarnedPoints()} Poin
@@ -544,12 +534,24 @@ export const SmartBinIoTTab: React.FC<SmartBinIoTTabProps> = ({
           </div>
         </div>
 
-        {/* Step 3: Fun Fact Memo */}
-        <div className="p-3 bg-amber-50/80 rounded-2xl border border-amber-200/80 text-xs text-amber-950 flex items-start gap-2.5 leading-relaxed">
-          <span className="text-base shrink-0">💡</span>
-          <div>
-            <span className="font-extrabold text-amber-950">Tahukah Kamu? </span>
-            <span className="text-amber-900">{selectedItem.funFact}</span>
+        {/* Step 3: Flow Information & Fun Fact Memo */}
+        <div className="space-y-2">
+          <div className="p-3 bg-blue-50/90 rounded-2xl border border-blue-200/80 text-xs text-blue-950 flex items-start gap-2.5 leading-relaxed">
+            <Info size={16} className="text-blue-700 shrink-0 mt-0.5" />
+            <div>
+              <span className="font-extrabold text-blue-950">Alur Opung Sari &amp; Bank Sampah: </span>
+              <span className="text-blue-900">
+                Tong Pintar IoT mendata volume &amp; habituasi LISA harian serta memberi Poin Kelas. Saldo Rupiah Kas Kelas diperoleh saat sampah terpilah disetor fisik ke <strong>Koordinator Bank Sampah Sekolah</strong>.
+              </span>
+            </div>
+          </div>
+
+          <div className="p-3 bg-amber-50/80 rounded-2xl border border-amber-200/80 text-xs text-amber-950 flex items-start gap-2.5 leading-relaxed">
+            <span className="text-base shrink-0">💡</span>
+            <div>
+              <span className="font-extrabold text-amber-950">Tahukah Kamu? </span>
+              <span className="text-amber-900">{selectedItem.funFact}</span>
+            </div>
           </div>
         </div>
 
@@ -568,7 +570,7 @@ export const SmartBinIoTTab: React.FC<SmartBinIoTTabProps> = ({
             {activeStep === 'idle' && (
               <>
                 <Zap size={16} />
-                <span>Buka Tutup Tong & Setor Sekarang</span>
+                <span>Buka Tutup Tong &amp; Catat LISA Sekarang</span>
               </>
             )}
             {activeStep === 'scanning_rfid' && (
@@ -594,7 +596,7 @@ export const SmartBinIoTTab: React.FC<SmartBinIoTTabProps> = ({
             {activeStep === 'success' && (
               <>
                 <CheckCircle2 size={16} className="text-emerald-300" />
-                <span>Sampah Berhasil Masuk & Ditimbang!</span>
+                <span>Sampah Berhasil Masuk &amp; Ditimbang!</span>
               </>
             )}
           </button>
@@ -605,16 +607,12 @@ export const SmartBinIoTTab: React.FC<SmartBinIoTTabProps> = ({
           <div className="p-4 bg-gradient-to-r from-emerald-600 to-teal-700 rounded-2xl text-white flex items-center justify-between gap-3 shadow-md animate-in fade-in zoom-in-95 duration-200">
             <div>
               <div className="text-sm font-black flex items-center gap-1.5">
-                <span>🎉 Hore! Setoran Berhasil Dicatat</span>
+                <span>🎉 Hore! Habituasi LISA Berhasil Dicatat</span>
               </div>
               <div className="text-xs text-emerald-100 mt-1 leading-tight">
-                {lastRewardInfo.itemName} ({lastRewardInfo.weight} kg) menghasilkan{' '}
-                <span className="font-extrabold text-white">
-                  Rp {lastRewardInfo.rp.toLocaleString('id-ID')}
-                </span>{' '}
-                untuk Kas Kelas &amp;{' '}
+                {lastRewardInfo.itemName} ({lastRewardInfo.weight} kg) tercatat pada Tong Cerdas! Menambah +1 log LISA kelas &amp;{' '}
                 <span className="font-extrabold text-amber-200">
-                  +{lastRewardInfo.points} Poin
+                  +{lastRewardInfo.points} Eco-Points
                 </span>{' '}
                 untukmu.
               </div>

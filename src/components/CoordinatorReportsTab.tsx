@@ -71,9 +71,6 @@ export const CoordinatorReportsTab: React.FC<CoordinatorReportsTabProps> = ({
       <div className="bg-blue-900 text-white rounded-2xl p-4 sm:p-6 border border-blue-950 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-950 text-blue-200 text-xs font-bold">
-              <BarChart3 size={14} /> FR-REP-01 Pelaporan Adiwiyata
-            </div>
             <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white">
               Rekapitulasi & Laporan Bulanan
             </h1>
