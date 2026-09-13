@@ -26,6 +26,7 @@ import { SchoolClass, BankTransaction } from '../types';
 interface BangBinaaTabProps {
   classes: SchoolClass[];
   transactions: BankTransaction[];
+  currentSchoolId?: string;
 }
 
 interface MockSchool {
@@ -226,7 +227,7 @@ const rankMedal = (rank: number) => {
   return `#${rank}`;
 };
 
-export const BangBinaaTab: React.FC<BangBinaaTabProps> = ({ classes, transactions }) => {
+export const BangBinaaTab: React.FC<BangBinaaTabProps> = ({ classes, transactions, currentSchoolId = 'sch-1' }) => {
   const [subTab, setSubTab] = useState<'leaderboard' | 'laporan' | 'peta'>('leaderboard');
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedReport, setExpandedReport] = useState<string | null>(null);
@@ -270,11 +271,8 @@ export const BangBinaaTab: React.FC<BangBinaaTabProps> = ({ classes, transaction
               🏫
             </div>
             <div className="min-w-0">
-              <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-purple-800 border border-purple-700 text-purple-200 text-[10px] font-bold mb-1">
-                <Globe size={10} /> FR-LEAD-03 · FR-REP-03 · Pembinaan Berjenjang
-              </div>
               <h2 className="text-base sm:text-lg font-extrabold text-white truncate tracking-tight">
-                Modul BANG — Pembinaan Berjenjang
+                Modul BANG (Pembinaan Berjenjang)
               </h2>
               <p className="text-xs text-purple-100/80 font-medium">
                 Transparansi &amp; benchmarking ekologis seluruh sekolah Kabupaten Deli Serdang
@@ -386,6 +384,9 @@ export const BangBinaaTab: React.FC<BangBinaaTabProps> = ({ classes, transaction
                     <div className="text-[10px] font-black text-stone-800 text-center leading-tight line-clamp-2 px-1">
                       {school.name.replace('Negeri', '').replace('SMP', 'SMP').trim()}
                     </div>
+                    {school.id === currentSchoolId && (
+                      <span className="bg-purple-100 text-purple-800 text-[8px] font-black px-1 py-0.5 rounded uppercase tracking-wider mb-0.5">Sekolah Anda</span>
+                    )}
                     <div className="text-[10px] font-bold text-stone-500">{school.totalKg.toFixed(0)} kg</div>
                     <div
                       className={`w-full rounded-t-2xl border-t-2 border-x-2 ${heights[podiumIdx]} ${bgColors[podiumIdx]} ${borderColors[podiumIdx]} flex items-end justify-center pb-2`}
@@ -412,7 +413,7 @@ export const BangBinaaTab: React.FC<BangBinaaTabProps> = ({ classes, transaction
                 const rank = sortedSchools.indexOf(school) + 1;
                 const cfg = adiwiyataConfig[school.adiwiyataStatus];
                 return (
-                  <div key={school.id} className="p-3 sm:p-4 hover:bg-stone-50/60 transition-colors">
+                  <div key={school.id} className={`p-3 sm:p-4 transition-colors ${school.id === currentSchoolId ? 'bg-purple-50/50' : 'hover:bg-stone-50/60'}`}>
                     <div className="flex items-start gap-3">
                       <div className="w-8 h-8 rounded-xl bg-stone-100 flex items-center justify-center text-sm font-black text-stone-700 shrink-0">
                         {rank <= 3 ? rankMedal(rank) : `#${rank}`}
@@ -420,8 +421,13 @@ export const BangBinaaTab: React.FC<BangBinaaTabProps> = ({ classes, transaction
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-2 flex-wrap">
                           <div>
-                            <div className="text-sm font-black text-stone-900 leading-tight">{school.name}</div>
-                            <div className="text-xs text-stone-500 font-medium">Kec. {school.kecamatan} · {school.koordinator}</div>
+                            <div className="flex items-center gap-2">
+                              <div className="text-sm font-black text-stone-900 leading-tight">{school.name}</div>
+                              {school.id === currentSchoolId && (
+                                <span className="bg-purple-100 text-purple-800 text-[9px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider">Sekolah Anda</span>
+                              )}
+                            </div>
+                            <div className="text-xs text-stone-500 font-medium mt-0.5">Kec. {school.kecamatan} · {school.koordinator}</div>
                           </div>
                           <span className={`text-[10px] font-black px-2 py-0.5 rounded-full border ${cfg.bg} ${cfg.color} ${cfg.border} shrink-0`}>
                             {school.adiwiyataStatus}
@@ -498,10 +504,10 @@ export const BangBinaaTab: React.FC<BangBinaaTabProps> = ({ classes, transaction
               const school = MOCK_SCHOOLS.find((s) => s.id === report.schoolId)!;
               const cfg = adiwiyataConfig[school.adiwiyataStatus];
               return (
-                <div key={report.id} className="bg-white rounded-2xl border border-stone-200 overflow-hidden">
+                <div key={report.id} className={`rounded-2xl border overflow-hidden ${report.schoolId === currentSchoolId ? 'bg-purple-50/30 border-purple-200' : 'bg-white border-stone-200'}`}>
                   <button
                     onClick={() => setExpandedReport(isExpanded ? null : report.id)}
-                    className="w-full p-4 text-left flex items-start gap-3 hover:bg-stone-50/60 transition-colors"
+                    className={`w-full p-4 text-left flex items-start gap-3 transition-colors ${report.schoolId === currentSchoolId ? 'hover:bg-purple-50' : 'hover:bg-stone-50/60'}`}
                   >
                     <div className="w-10 h-10 rounded-2xl bg-purple-100 border border-purple-200 flex items-center justify-center shrink-0">
                       <FileText size={18} className="text-purple-700" />
@@ -509,8 +515,13 @@ export const BangBinaaTab: React.FC<BangBinaaTabProps> = ({ classes, transaction
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2 flex-wrap">
                         <div>
-                          <div className="text-sm font-black text-stone-900">{report.schoolName}</div>
-                          <div className="text-xs text-stone-500 font-medium">Kec. {report.kecamatan} · Periode {report.periode}</div>
+                          <div className="flex items-center gap-2">
+                            <div className="text-sm font-black text-stone-900">{report.schoolName}</div>
+                            {report.schoolId === currentSchoolId && (
+                                <span className="bg-purple-100 text-purple-800 text-[9px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider">Sekolah Anda</span>
+                            )}
+                          </div>
+                          <div className="text-xs text-stone-500 font-medium mt-0.5">Kec. {report.kecamatan} · Periode {report.periode}</div>
                         </div>
                         <div className="flex items-center gap-1.5 shrink-0">
                           <span className={`text-[10px] font-black px-2 py-0.5 rounded-full border ${cfg.bg} ${cfg.color} ${cfg.border}`}>
@@ -574,10 +585,15 @@ export const BangBinaaTab: React.FC<BangBinaaTabProps> = ({ classes, transaction
             </div>
             <div className="space-y-1.5">
               {MOCK_SCHOOLS.filter((s) => !s.laporanPublished).map((school) => (
-                <div key={school.id} className="flex items-center justify-between bg-white rounded-xl px-3 py-2 border border-amber-200">
+                <div key={school.id} className={`flex items-center justify-between rounded-xl px-3 py-2 border ${school.id === currentSchoolId ? 'bg-purple-50 border-purple-200' : 'bg-white border-amber-200'}`}>
                   <div>
-                    <div className="text-xs font-black text-stone-900">{school.name}</div>
-                    <div className="text-[10px] text-stone-500">Laporan terakhir: {school.bulanLaporan}</div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="text-xs font-black text-stone-900">{school.name}</div>
+                      {school.id === currentSchoolId && (
+                        <span className="bg-purple-200 text-purple-900 text-[8px] font-black px-1 py-0.5 rounded uppercase tracking-wider">Sekolah Anda</span>
+                      )}
+                    </div>
+                    <div className="text-[10px] text-stone-500 mt-0.5">Laporan terakhir: {school.bulanLaporan}</div>
                   </div>
                   <span className={`text-[10px] font-black px-2 py-0.5 rounded-full border ${adiwiyataConfig[school.adiwiyataStatus].bg} ${adiwiyataConfig[school.adiwiyataStatus].color} ${adiwiyataConfig[school.adiwiyataStatus].border}`}>
                     {school.adiwiyataStatus}
@@ -617,7 +633,7 @@ export const BangBinaaTab: React.FC<BangBinaaTabProps> = ({ classes, transaction
           {MOCK_SCHOOLS.filter((s) => s.binaan.length > 0).map((mentor) => {
             const cfgMentor = adiwiyataConfig[mentor.adiwiyataStatus];
             return (
-              <div key={mentor.id} className="bg-white rounded-2xl border border-stone-200 overflow-hidden">
+              <div key={mentor.id} className={`rounded-2xl border overflow-hidden ${mentor.id === currentSchoolId ? 'bg-purple-50/30 border-purple-200' : 'bg-white border-stone-200'}`}>
                 {/* Mentor Header */}
                 <div className="p-4 flex items-start gap-3">
                   <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 ${cfgMentor.bg} border ${cfgMentor.border}`}>
@@ -626,8 +642,13 @@ export const BangBinaaTab: React.FC<BangBinaaTabProps> = ({ classes, transaction
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2 flex-wrap">
                       <div>
-                        <div className="text-sm font-black text-stone-900">{mentor.name}</div>
-                        <div className="text-xs text-stone-500 font-medium">Kec. {mentor.kecamatan} · {mentor.koordinator}</div>
+                        <div className="flex items-center gap-2">
+                          <div className="text-sm font-black text-stone-900">{mentor.name}</div>
+                          {mentor.id === currentSchoolId && (
+                            <span className="bg-purple-100 text-purple-800 text-[9px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider">Sekolah Anda</span>
+                          )}
+                        </div>
+                        <div className="text-xs text-stone-500 font-medium mt-0.5">Kec. {mentor.kecamatan} · {mentor.koordinator}</div>
                       </div>
                       <span className={`text-[10px] font-black px-2 py-0.5 rounded-full border ${cfgMentor.bg} ${cfgMentor.color} ${cfgMentor.border} shrink-0`}>
                         {mentor.adiwiyataStatus}
@@ -655,13 +676,18 @@ export const BangBinaaTab: React.FC<BangBinaaTabProps> = ({ classes, transaction
                       return (
                         <div key={binaanId} className="relative">
                           <div className="absolute -left-5 top-1/2 -translate-y-1/2 w-4 border-t-2 border-dashed border-stone-300" />
-                          <div className={`rounded-2xl border ${cfgBinaan.border} ${cfgBinaan.bg} p-3 flex items-center gap-3`}>
+                          <div className={`rounded-2xl border ${cfgBinaan.border} ${binaanSchool.id === currentSchoolId ? 'bg-purple-50 border-purple-200' : cfgBinaan.bg} p-3 flex items-center gap-3`}>
                             <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 bg-white border ${cfgBinaan.border}`}>
                               <Building2 size={14} className={cfgBinaan.color} />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <div className={`text-xs font-black ${cfgBinaan.color} leading-tight`}>{binaanSchool.name}</div>
-                              <div className="text-[10px] text-stone-500 font-medium">Kec. {binaanSchool.kecamatan}</div>
+                              <div className="flex items-center gap-1.5">
+                                <div className={`text-xs font-black ${cfgBinaan.color} leading-tight`}>{binaanSchool.name}</div>
+                                {binaanSchool.id === currentSchoolId && (
+                                  <span className="bg-purple-200 text-purple-900 text-[8px] font-black px-1 py-0.5 rounded uppercase tracking-wider">Sekolah Anda</span>
+                                )}
+                              </div>
+                              <div className="text-[10px] text-stone-500 font-medium mt-0.5">Kec. {binaanSchool.kecamatan}</div>
                               <div className="flex flex-wrap gap-1.5 mt-1">
                                 <span className="text-[10px] font-bold text-stone-500">{binaanSchool.totalKg.toFixed(1)} kg</span>
                                 <span className="text-[10px] text-stone-400">·</span>
@@ -697,10 +723,15 @@ export const BangBinaaTab: React.FC<BangBinaaTabProps> = ({ classes, transaction
               {MOCK_SCHOOLS.filter(
                 (s) => s.adiwiyataStatus === 'Rintisan' && !MOCK_SCHOOLS.some((m) => m.binaan.includes(s.id))
               ).map((school) => (
-                <div key={school.id} className="bg-white rounded-xl border border-stone-200 px-3 py-2 flex items-center justify-between">
+                <div key={school.id} className={`rounded-xl border ${school.id === currentSchoolId ? 'bg-purple-50 border-purple-200' : 'bg-white border-stone-200'} px-3 py-2 flex items-center justify-between`}>
                   <div>
-                    <div className="text-xs font-black text-stone-800">{school.name}</div>
-                    <div className="text-[10px] text-stone-500">Kec. {school.kecamatan}</div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="text-xs font-black text-stone-800">{school.name}</div>
+                      {school.id === currentSchoolId && (
+                        <span className="bg-purple-200 text-purple-900 text-[8px] font-black px-1 py-0.5 rounded uppercase tracking-wider">Sekolah Anda</span>
+                      )}
+                    </div>
+                    <div className="text-[10px] text-stone-500 mt-0.5">Kec. {school.kecamatan}</div>
                   </div>
                   <span className={`text-[10px] font-black px-2 py-0.5 rounded-full border ${adiwiyataConfig[school.adiwiyataStatus].bg} ${adiwiyataConfig[school.adiwiyataStatus].color} ${adiwiyataConfig[school.adiwiyataStatus].border}`}>
                     Rintisan
