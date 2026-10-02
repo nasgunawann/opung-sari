@@ -31,7 +31,7 @@ function DialogOverlay({
     <DialogPrimitive.Backdrop
       data-slot="dialog-overlay"
       className={cn(
-        "fixed inset-0 isolate z-50 bg-black/40 duration-100 backdrop-blur-xs data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
+        "fixed inset-0 isolate z-50 bg-overlay/40 duration-100 backdrop-blur-xs data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
         className
       )}
       {...props}
@@ -65,13 +65,13 @@ function DialogContent({
             render={
               <Button
                 variant="ghost"
-                className="absolute top-2.5 right-2.5 rounded-full h-8 w-8 text-stone-500 hover:text-stone-900 hover:bg-stone-100"
+                className="absolute top-2.5 right-2.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted"
                 size="icon-sm"
               />
             }
           >
-            <XIcon className="w-4 h-4" />
-            <span className="sr-only">Close</span>
+            <XIcon className="w-4 h-4" aria-hidden="true" />
+            <span className="sr-only">Tutup</span>
           </DialogPrimitive.Close>
         )}
       </DialogPrimitive.Popup>

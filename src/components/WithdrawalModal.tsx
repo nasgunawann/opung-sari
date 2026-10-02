@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import {
   Wallet,
-  ArrowRight,
   AlertCircle,
   Check,
   Info,
 } from 'lucide-react';
 import { BankTransaction, SchoolClass, Student, WithdrawalDestination } from '../types';
 import { WITHDRAWAL_DESTINATIONS } from '../data/initialData';
+import { DestinationIcon } from '../lib/appIcons';
 import confetti from 'canvas-confetti';
 
 import {
@@ -92,7 +92,7 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({
         particleCount: 60,
         spread: 70,
         origin: { y: 0.6 },
-        colors: ['#10B981', '#F59E0B', '#60A5FA'],
+        colors: ['#10B981', '#F59E0B', '#34D399'],
       });
 
       onClose();
@@ -101,16 +101,16 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-md w-full max-w-[calc(100vw-2rem)] p-4 sm:p-5 bg-white rounded-2xl gap-0 max-h-[calc(100dvh-2rem)] overflow-y-auto overflow-x-hidden min-w-0">
-        <DialogHeader className="flex flex-row items-center gap-2.5 pb-3 mb-3 border-b pr-8 w-full min-w-0">
-          <div className="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center justify-center shrink-0">
-            <Wallet size={16} />
+      <DialogContent className="sm:max-w-md w-full max-w-[calc(100vw-2rem)] p-4 sm:p-5 bg-card rounded-2xl gap-0 max-h-[calc(100dvh-2rem)] overflow-y-auto overflow-x-hidden min-w-0">
+        <DialogHeader className="flex flex-row items-center gap-2.5 pb-3 mb-3 border-b border-border pr-8 w-full min-w-0">
+          <div className="w-8 h-8 rounded-lg bg-secondary border border-border text-primary flex items-center justify-center shrink-0">
+            <Wallet size={16} aria-hidden="true" />
           </div>
           <div className="flex flex-col items-start gap-0.5 min-w-0">
-            <DialogTitle className="text-sm font-bold text-stone-900 truncate max-w-full">
+            <DialogTitle className="text-sm font-bold text-foreground truncate max-w-full">
               Pengajuan Pencairan Kas Kelas
             </DialogTitle>
-            <DialogDescription className="text-xs text-stone-500 truncate max-w-full">
+            <DialogDescription className="text-xs text-muted-foreground truncate max-w-full">
               Kas bersama {currentClass?.name?.split(' - ')[0] || currentStudent.className} & izin Wali Kelas
             </DialogDescription>
           </div>
@@ -118,21 +118,21 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({
 
         {/* Notice Wali Kelas / Kas Kelas */}
         <div className="p-2.5 mb-3 bg-amber-50 rounded-xl border border-amber-200 text-amber-900 flex items-start gap-2">
-          <Info size={15} className="text-amber-700 shrink-0 mt-0.5" />
+          <Info size={15} className="text-amber-700 shrink-0 mt-0.5" aria-hidden="true" />
           <div className="text-[11px] leading-tight">
             <strong>Kas Bersama:</strong> Saldo ini milik kas kelas. Pengajuan akan tercatat dan wajib diverifikasi oleh <strong>Wali Kelas ({currentClass?.waliKelas || 'Pemegang Kas'})</strong> sebelum pencairan dana fisik.
           </div>
         </div>
 
         {/* Current Balance Reminder */}
-        <div className="p-3 mb-4 bg-emerald-900 text-white rounded-xl border border-emerald-950 flex items-center justify-between gap-2 w-full min-w-0">
+        <div className="p-3 mb-4 bg-primary-active text-primary-foreground rounded-xl border border-primary-active flex items-center justify-between gap-2 w-full min-w-0">
           <div className="min-w-0">
-            <div className="text-[10px] text-emerald-300 font-medium">Saldo Kas Kelas Tersedia</div>
-          <div className="text-base font-extrabold text-white truncate">
+            <div className="text-[10px] text-primary-foreground/80 font-medium">Saldo Kas Kelas Tersedia</div>
+          <div className="text-base font-extrabold text-primary-foreground truncate">
             Rp {availableBalance.toLocaleString('id-ID')}
           </div>
           </div>
-          <span className="text-[10px] bg-emerald-800 text-emerald-100 px-2 py-1 rounded-md font-medium shrink-0">
+          <span className="text-[10px] bg-primary text-primary-foreground px-2 py-1 rounded-md font-medium shrink-0">
             Pemohon: {currentStudent.nickname} ({currentStudent.className})
           </span>
         </div>
@@ -141,10 +141,10 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({
           {/* Destination Selection (Guidance) */}
           <div className="space-y-1.5 w-full min-w-0">
             <div className="flex items-center justify-between">
-              <Label className="text-xs font-bold text-stone-700">1. Bisa Dipakai untuk Apa Saja?</Label>
-              <span className="text-[10px] text-stone-500">Pilih keperluan kas</span>
+              <p id="withdrawal-destination-label" className="text-xs font-bold text-foreground">1. Bisa Dipakai untuk Apa Saja?</p>
+              <span className="text-[10px] text-muted-foreground">Pilih keperluan kas</span>
             </div>
-            <div className="grid grid-cols-2 gap-2 w-full min-w-0">
+            <div role="group" aria-labelledby="withdrawal-destination-label" className="grid grid-cols-2 gap-2 w-full min-w-0">
               {WITHDRAWAL_DESTINATIONS.map((dest) => {
                 const isSelected = selectedDest.id === dest.id;
                 return (
@@ -157,29 +157,29 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({
                         setAmount(dest.minAmount);
                       }
                     }}
-                    className={`w-full p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between gap-1.5 min-w-0 cursor-pointer active:scale-[0.99] ${
+                    className={`w-full p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between gap-1.5 min-w-0 cursor-pointer active:scale-[0.99] outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                       isSelected
-                        ? 'bg-emerald-50/90 border-emerald-600 text-emerald-950 ring-1.5 ring-emerald-500/30 shadow-xs'
-                        : 'bg-white border-stone-200 hover:bg-stone-50 hover:border-stone-300 text-stone-700'
+                        ? 'bg-secondary border-primary text-foreground ring-2 ring-primary/30 shadow-xs'
+                        : 'bg-card border-border hover:bg-muted hover:border-primary/40 text-foreground'
                     }`}
                   >
                     <div className="flex items-center justify-between w-full">
-                      <div className="w-8 h-8 rounded-lg bg-stone-100 border border-stone-200/70 flex items-center justify-center text-base shrink-0">
-                        {dest.icon}
+                      <div className="w-8 h-8 rounded-lg bg-muted border border-border flex items-center justify-center text-base shrink-0">
+                        <DestinationIcon destinationId={dest.id} size={16} />
                       </div>
                       <div className={`w-4 h-4 rounded-full flex items-center justify-center border transition-colors shrink-0 ${
                         isSelected
-                          ? 'bg-emerald-600 border-emerald-600 text-white'
-                          : 'border-stone-300 bg-white text-transparent'
+                          ? 'bg-primary border-primary text-primary-foreground'
+                          : 'border-border bg-card text-transparent'
                       }`}>
-                        <Check size={10} strokeWidth={3} />
+                        <Check size={10} strokeWidth={3} aria-hidden="true" />
                       </div>
                     </div>
                     <div className="min-w-0 w-full">
                       <div className="text-xs font-bold leading-tight truncate">
                         {dest.name}
                       </div>
-                      <div className="text-[10px] font-bold text-emerald-800 mt-0.5 truncate">
+                      <div className="text-[10px] font-bold text-primary mt-0.5 truncate">
                         Min Rp {dest.minAmount.toLocaleString('id-ID')}
                       </div>
                     </div>
@@ -191,7 +191,7 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({
 
           {/* Amount Selection */}
           <div className="space-y-2 w-full min-w-0">
-            <Label className="text-xs font-semibold">2. Nominal Kas yang Ditarik:</Label>
+            <Label htmlFor="withdrawal-amount" className="text-xs font-semibold">2. Nominal Kas yang Ditarik:</Label>
             
             <div className="grid grid-cols-3 sm:grid-cols-5 gap-1.5 w-full min-w-0">
               {quickAmounts.map((q) => (
@@ -199,10 +199,10 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({
                   key={q}
                   type="button"
                   onClick={() => setAmount(q)}
-                  className={`w-full py-1.5 px-1 rounded-lg text-[11px] font-mono text-center transition-colors truncate ${
+                  className={`w-full h-10 px-1 rounded-lg text-[11px] font-mono text-center transition-colors truncate outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                     amount === q
-                      ? 'bg-stone-900 text-white font-bold shadow-xs'
-                      : 'bg-stone-100 text-stone-700 hover:bg-stone-200 font-bold'
+                      ? 'bg-primary text-primary-foreground font-bold shadow-xs'
+                      : 'bg-muted text-foreground hover:bg-muted/80 font-bold'
                   }`}
                 >
                   Rp {q.toLocaleString('id-ID')}
@@ -211,10 +211,11 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({
             </div>
 
             <div className="relative w-full min-w-0">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-stone-500">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-muted-foreground">
                 Rp
               </span>
               <Input
+                id="withdrawal-amount"
                 type="number"
                 min={selectedDest.minAmount}
                 max={availableBalance}
@@ -230,10 +231,11 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({
 
           {/* Notes for Homeroom Teacher / Wali Kelas */}
           <div className="space-y-1.5 w-full min-w-0">
-            <Label className="text-[11px] font-medium text-stone-700">
+            <Label htmlFor="withdrawal-notes" className="text-[11px] font-medium text-foreground">
               3. Catatan Izin untuk Wali Kelas (Keperluan Kas):
             </Label>
             <Input
+              id="withdrawal-notes"
               type="text"
               placeholder={`Contoh: Beli perlengkapan di ${selectedDest.name} untuk kelas`}
               value={notes}
@@ -243,8 +245,8 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({
           </div>
 
           {errorMsg && (
-            <div className="p-2.5 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-2 text-xs text-rose-700 w-full min-w-0">
-              <AlertCircle size={14} className="shrink-0" />
+            <div className="p-2.5 bg-destructive/10 border border-destructive/30 rounded-xl flex items-center gap-2 text-xs text-destructive w-full min-w-0">
+              <AlertCircle size={14} className="shrink-0" aria-hidden="true" />
               <span className="truncate">{errorMsg}</span>
             </div>
           )}
@@ -252,15 +254,12 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({
           <Button
             type="submit"
             disabled={isProcessing || availableBalance < selectedDest.minAmount}
-            className="w-full h-11 rounded-xl font-bold text-sm cursor-pointer shadow-sm bg-emerald-800 hover:bg-emerald-900 text-white"
+            className="w-full h-11 rounded-xl font-bold text-sm cursor-pointer shadow-sm bg-primary hover:bg-primary-active text-primary-foreground"
           >
             {isProcessing ? (
               <span>Mengajukan Permintaan...</span>
             ) : (
-              <>
-                <span>Ajukan Izin Tarik Kas Rp {amount.toLocaleString('id-ID')}</span>
-                <ArrowRight size={14} className="ml-2" />
-              </>
+              <span>Ajukan Izin Tarik Kas Rp {amount.toLocaleString('id-ID')}</span>
             )}
           </Button>
         </form>

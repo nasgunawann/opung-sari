@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   Award,
-  Sparkles,
   TreePine,
   Droplets,
   Wind,
@@ -20,6 +19,7 @@ import {
 } from 'lucide-react';
 import { BadgeAchievement, Student } from '../types';
 import { BADGES_LIST } from '../data/initialData';
+import { BadgeIcon, StudentAvatar } from '../lib/appIcons';
 import confetti from 'canvas-confetti';
 
 interface BadgesMissionsTabProps {
@@ -120,7 +120,7 @@ export const BadgesMissionsTab: React.FC<BadgesMissionsTabProps> = ({
       particleCount: 70,
       spread: 70,
       origin: { y: 0.6 },
-      colors: ['#10B981', '#F59E0B', '#3B82F6', '#8B5CF6'],
+      colors: ['#10B981', '#F59E0B', '#34D399', '#059669'],
     });
   };
 
@@ -137,58 +137,55 @@ export const BadgesMissionsTab: React.FC<BadgesMissionsTabProps> = ({
   return (
     <div className="w-full min-w-0 max-w-4xl mx-auto space-y-4 pb-24 pt-1 md:px-2">
       {/* SECTION 0: Hero Level & Student Identity Card */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 text-white shadow-md p-4 sm:p-5">
-        {/* Ambient Glows */}
-        <div className="pointer-events-none absolute -right-6 -top-6 w-36 h-36 rounded-full bg-white/10 blur-xl" />
-        <div className="pointer-events-none absolute -left-8 -bottom-8 w-32 h-32 rounded-full bg-emerald-400/15 blur-lg" />
-
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-primary to-primary-active text-primary-foreground shadow-md p-4 sm:p-5">
         {/* Top Bar: Profile, Level, and Piagam Action */}
         <div className="relative flex items-center justify-between gap-3 flex-wrap sm:flex-nowrap">
           <div className="flex items-center gap-3 min-w-0">
             <div className="relative shrink-0">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-3xl border border-white/25 shadow-inner">
-                {currentStudent.avatar || '🌱'}
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-primary-foreground/20 flex items-center justify-center text-3xl border border-primary-foreground/25 shadow-inner">
+                <StudentAvatar name={currentStudent?.name ?? 'Siswa'} size={26} />
               </div>
-              <span className="absolute -bottom-1 -right-1 px-2 py-0.5 bg-amber-400 text-amber-950 rounded-full text-[10px] font-black shadow-xs border border-white/80">
+              <span className="absolute -bottom-1 -right-1 px-2 py-0.5 bg-secondary text-secondary-foreground rounded-full text-[10px] font-black shadow-xs border border-primary-foreground/80">
                 Lv.{currentStudent.level}
               </span>
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-2 min-w-0">
-                <h2 className="text-sm sm:text-base font-extrabold text-white truncate tracking-tight">
+                <h2 className="text-sm sm:text-base font-extrabold text-primary-foreground truncate tracking-tight">
                   {currentStudent.name}
                 </h2>
               </div>
-              <p className="text-xs text-emerald-100/85 font-medium truncate">
+              <p className="text-xs text-primary-foreground/85 font-medium truncate">
                 Level {currentStudent.level} • {currentStudent.className}
               </p>
             </div>
           </div>
 
           <button
+            type="button"
             onClick={() => setShowCertificate(true)}
-            className="flex items-center gap-1.5 bg-white hover:bg-emerald-50 active:scale-95 text-emerald-950 font-extrabold text-xs px-3.5 py-2 rounded-xl shadow-xs transition-all cursor-pointer shrink-0"
+            className="flex items-center gap-1.5 h-10 bg-card hover:bg-secondary active:scale-95 text-primary font-extrabold text-xs px-3.5 rounded-xl shadow-xs transition-all cursor-pointer shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            <FileCheck size={14} className="text-emerald-700" />
+            <FileCheck size={14} className="text-primary" aria-hidden="true" />
             <span>Piagam Duta Adiwiyata</span>
           </button>
         </div>
 
         {/* Level XP Progress Bar */}
         <div className="relative mt-4 space-y-2">
-          <div className="flex items-center justify-between text-xs font-bold text-emerald-100">
+          <div className="flex items-center justify-between text-xs font-bold text-primary-foreground">
             <span>Kemajuan Menuju Level {currentStudent.level + 1}</span>
-            <span className="text-white font-extrabold">
+            <span className="text-primary-foreground font-extrabold">
               {currentStudent.points} / {nextLevelPoints} XP ({progressPercent}%)
             </span>
           </div>
-          <div className="w-full bg-black/20 h-3 rounded-full overflow-hidden p-0.5 border border-white/20">
+          <div className="w-full bg-overlay/20 h-3 rounded-full overflow-hidden p-0.5 border border-primary-foreground/20">
             <div
-              className="bg-amber-400 h-full rounded-full transition-all duration-700"
+              className="bg-amber-400 h-full rounded-full transition-[width] duration-700"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
-          <p className="text-[11px] text-emerald-100/75">
+          <p className="text-[11px] text-primary-foreground/75">
             Kumpulkan {Math.max(0, nextLevelPoints - currentStudent.points)} XP lagi dari pemilahan sampah &amp; kuis untuk naik pangkat!
           </p>
         </div>
@@ -198,50 +195,50 @@ export const BadgesMissionsTab: React.FC<BadgesMissionsTabProps> = ({
       <div className="space-y-2.5">
         <div className="flex items-center justify-between px-1">
           <div className="flex items-center gap-2">
-            <TreePine size={16} className="text-emerald-700" />
-            <h3 className="text-sm font-extrabold text-stone-900">
+            <TreePine size={16} className="text-primary" aria-hidden="true" />
+            <h3 className="text-sm font-extrabold text-foreground">
               Dampak Lingkungan Nyata Kamu
             </h3>
           </div>
-          <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+          <span className="text-xs font-bold text-primary bg-secondary px-2.5 py-1 rounded-full border border-border">
             Total {currentStudent.totalKg.toFixed(1)} kg Terpilah
           </span>
         </div>
 
         <div className="grid grid-cols-3 gap-2 sm:gap-3">
-          <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-2xl p-2.5 sm:p-3.5 text-center shadow-xs flex flex-col items-center justify-center">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-emerald-100/90 text-emerald-700 flex items-center justify-center mb-1 sm:mb-2">
-              <TreePine size={16} className="sm:w-5 sm:h-5" />
+          <div className="bg-secondary border border-border rounded-2xl p-2.5 sm:p-3.5 text-center shadow-xs flex flex-col items-center justify-center">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-accent text-primary flex items-center justify-center mb-1 sm:mb-2">
+              <TreePine size={16} className="sm:w-5 sm:h-5" aria-hidden="true" />
             </div>
-            <div className="text-sm sm:text-xl font-black text-emerald-950 truncate w-full">
+            <div className="text-sm sm:text-xl font-black text-foreground truncate w-full">
               {treesSaved}
             </div>
-            <div className="text-[10px] sm:text-xs font-extrabold text-emerald-900 mt-0.5 leading-tight">
+            <div className="text-[10px] sm:text-xs font-extrabold text-foreground mt-0.5 leading-tight">
               Pohon Terjaga
             </div>
-            <p className="hidden sm:block text-[11px] text-emerald-700/85 mt-1 leading-tight">
+            <p className="hidden sm:block text-[11px] text-muted-foreground mt-1 leading-tight">
               Dari kertas yang kamu tabung
             </p>
           </div>
 
-          <div className="bg-blue-50/70 border border-blue-200/80 rounded-2xl p-2.5 sm:p-3.5 text-center shadow-xs flex flex-col items-center justify-center">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-blue-100/90 text-blue-700 flex items-center justify-center mb-1 sm:mb-2">
-              <Droplets size={16} className="sm:w-5 sm:h-5" />
+          <div className="bg-secondary border border-border rounded-2xl p-2.5 sm:p-3.5 text-center shadow-xs flex flex-col items-center justify-center">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-accent text-primary flex items-center justify-center mb-1 sm:mb-2">
+              <Droplets size={16} className="sm:w-5 sm:h-5" aria-hidden="true" />
             </div>
-            <div className="text-sm sm:text-xl font-black text-blue-950 truncate w-full">
+            <div className="text-sm sm:text-xl font-black text-foreground truncate w-full">
               {waterSavedLiters} L
             </div>
-            <div className="text-[10px] sm:text-xs font-extrabold text-blue-900 mt-0.5 leading-tight">
+            <div className="text-[10px] sm:text-xs font-extrabold text-foreground mt-0.5 leading-tight">
               Air Terhemat
             </div>
-            <p className="hidden sm:block text-[11px] text-blue-700/85 mt-1 leading-tight">
+            <p className="hidden sm:block text-[11px] text-muted-foreground mt-1 leading-tight">
               Daur ulang sirkular ramah
             </p>
           </div>
 
           <div className="bg-amber-50/70 border border-amber-200/80 rounded-2xl p-2.5 sm:p-3.5 text-center shadow-xs flex flex-col items-center justify-center">
             <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-amber-100/90 text-amber-700 flex items-center justify-center mb-1 sm:mb-2">
-              <Wind size={16} className="sm:w-5 sm:h-5" />
+              <Wind size={16} className="sm:w-5 sm:h-5" aria-hidden="true" />
             </div>
             <div className="text-sm sm:text-xl font-black text-amber-950 truncate w-full">
               {co2PreventedKg} kg
@@ -257,20 +254,20 @@ export const BadgesMissionsTab: React.FC<BadgesMissionsTabProps> = ({
       </div>
 
       {/* SECTION 2: Misi Tantangan Adiwiyata & LISA */}
-      <div className="bg-white rounded-3xl p-4 sm:p-5 border border-stone-200 shadow-xs space-y-4">
+      <div className="bg-card rounded-3xl p-4 sm:p-5 border border-border shadow-xs space-y-4">
         <div className="flex items-center justify-between gap-2 flex-wrap">
           <div className="flex items-center gap-2">
-            <Target size={16} className="text-emerald-700" />
+            <Target size={16} className="text-primary" aria-hidden="true" />
             <div>
-              <h3 className="text-sm font-extrabold text-stone-900">
+              <h3 className="text-sm font-extrabold text-foreground">
                 Misi LISA Adiwiyata Pekan Ini
               </h3>
-              <p className="text-xs text-stone-500">
+              <p className="text-xs text-muted-foreground">
                 Selesaikan misi mingguan untuk mengumpulkan poin dan menaikkan level.
               </p>
             </div>
           </div>
-          <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+          <span className="text-xs font-bold text-primary bg-secondary px-3 py-1 rounded-full border border-border">
             {completedMissionsCount} / {missions.length} Selesai
           </span>
         </div>
@@ -281,21 +278,21 @@ export const BadgesMissionsTab: React.FC<BadgesMissionsTabProps> = ({
               key={mission.id}
               className={`p-3.5 sm:p-4 rounded-2xl border transition-all flex flex-col justify-between gap-3 ${
                 mission.claimed
-                  ? 'bg-stone-50/80 border-stone-200 opacity-85'
+                  ? 'bg-muted border-border opacity-85'
                   : mission.done
-                  ? 'bg-emerald-50/70 border-emerald-300 shadow-xs ring-1 ring-emerald-300/60'
-                  : 'bg-white border-stone-200 hover:border-stone-300'
+                  ? 'bg-secondary border-border shadow-xs ring-1 ring-primary/20'
+                  : 'bg-card border-border hover:border-primary/40'
               }`}
             >
               <div className="flex items-start gap-2.5 min-w-0">
                 <div className="mt-0.5 shrink-0">
                   {mission.done ? (
-                    <div className="w-7 h-7 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-xs">
-                      <CheckCircle2 size={16} strokeWidth={2.5} />
+                    <div className="w-7 h-7 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-xs">
+                      <CheckCircle2 size={16} strokeWidth={2.5} aria-hidden="true" />
                     </div>
                   ) : (
-                    <div className="w-7 h-7 rounded-xl bg-stone-100 border-2 border-stone-300 text-stone-400 flex items-center justify-center">
-                      <Target size={14} />
+                    <div className="w-7 h-7 rounded-xl bg-muted border-2 border-border text-muted-foreground flex items-center justify-center">
+                      <Target size={14} aria-hidden="true" />
                     </div>
                   )}
                 </div>
@@ -303,31 +300,31 @@ export const BadgesMissionsTab: React.FC<BadgesMissionsTabProps> = ({
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <h4 className={`text-xs sm:text-sm font-extrabold leading-tight ${
-                      mission.claimed ? 'text-stone-700' : 'text-stone-900'
+                      mission.claimed ? 'text-muted-foreground' : 'text-foreground'
                     }`}>
                       {mission.title}
                     </h4>
                     <span className="text-[10px] font-extrabold text-amber-800 bg-amber-100/90 px-2 py-0.5 rounded-full shrink-0">
                       +{mission.rewardPoints} XP
                     </span>
-                    <span className="text-[10px] font-bold text-stone-500 bg-stone-100 px-2 py-0.5 rounded-full shrink-0">
+                    <span className="text-[10px] font-bold text-muted-foreground bg-muted px-2 py-0.5 rounded-full shrink-0">
                       {mission.category}
                     </span>
                   </div>
-                  <p className="text-xs text-stone-600 mt-1 leading-relaxed">
+                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
                     {mission.desc}
                   </p>
 
                   {/* Micro progress bar if incomplete */}
                   {!mission.done && (
                     <div className="mt-2.5 flex items-center gap-2">
-                      <div className="w-24 bg-stone-100 h-2 rounded-full overflow-hidden border border-stone-200">
+                      <div className="w-24 bg-muted h-2 rounded-full overflow-hidden border border-border">
                         <div
-                          className="bg-emerald-500 h-full rounded-full transition-all"
+                          className="bg-primary h-full rounded-full transition-[width]"
                           style={{ width: `${mission.progressPercent}%` }}
                         />
                       </div>
-                      <span className="text-[11px] font-bold text-stone-500">
+                      <span className="text-[11px] font-bold text-muted-foreground">
                         {mission.progressText}
                       </span>
                     </div>
@@ -336,23 +333,24 @@ export const BadgesMissionsTab: React.FC<BadgesMissionsTabProps> = ({
               </div>
 
               {/* Action / Status Pill */}
-              <div className="pt-2 border-t border-stone-100/80 flex items-center justify-between gap-2">
-                <span className="text-[11px] font-bold text-stone-400">Target Mingguan</span>
+              <div className="pt-2 border-t border-border flex items-center justify-between gap-2">
+                <span className="text-[11px] font-bold text-muted-foreground">Target Mingguan</span>
                 {mission.claimed ? (
-                  <span className="text-xs font-bold text-emerald-700 bg-emerald-100/80 px-2.5 py-1 rounded-xl flex items-center gap-1">
-                    <Check size={12} strokeWidth={3} />
+                  <span className="text-xs font-bold text-primary bg-accent px-2.5 py-1 rounded-xl flex items-center gap-1">
+                    <Check size={12} strokeWidth={3} aria-hidden="true" />
                     <span>Selesai</span>
                   </span>
                 ) : mission.done ? (
                   <button
+                    type="button"
                     onClick={() => handleClaimReward(mission.id, mission.rewardPoints)}
-                    className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-extrabold text-xs px-3.5 py-1.5 rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer border-b-2 border-emerald-800 animate-pulse"
+                    className="h-10 bg-primary hover:bg-primary-active active:scale-95 text-primary-foreground font-extrabold text-xs px-3.5 rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer border-b-2 border-primary-active outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
-                    <Gift size={13} />
+                    <Gift size={13} aria-hidden="true" />
                     <span>Klaim +{mission.rewardPoints} XP</span>
                   </button>
                 ) : (
-                  <span className="text-xs font-bold text-stone-500 bg-stone-100 px-2.5 py-1 rounded-xl">
+                  <span className="text-xs font-bold text-muted-foreground bg-muted px-2.5 py-1 rounded-xl">
                     {mission.progressText}
                   </span>
                 )}
@@ -363,20 +361,20 @@ export const BadgesMissionsTab: React.FC<BadgesMissionsTabProps> = ({
       </div>
 
       {/* SECTION 3: Lemari Lencana Prestasi (Trophy Showcase) */}
-      <div className="bg-white rounded-3xl p-4 sm:p-5 border border-stone-200 shadow-xs space-y-4">
+      <div className="bg-card rounded-3xl p-4 sm:p-5 border border-border shadow-xs space-y-4">
         <div className="flex items-center justify-between gap-2 flex-wrap">
           <div className="flex items-center gap-2">
-            <Medal size={16} className="text-emerald-700" />
+            <Medal size={16} className="text-primary" aria-hidden="true" />
             <div>
-              <h3 className="text-sm font-extrabold text-stone-900">
+              <h3 className="text-sm font-extrabold text-foreground">
                 Lemari Lencana Adiwiyata
               </h3>
-              <p className="text-xs text-stone-500">
+              <p className="text-xs text-muted-foreground">
                 Koleksi medali penghargaan atas pencapaian pelestarian lingkunganmu.
               </p>
             </div>
           </div>
-          <span className="text-xs font-bold text-stone-700 bg-stone-100 px-3 py-1 rounded-full border border-stone-200">
+          <span className="text-xs font-bold text-foreground bg-muted px-3 py-1 rounded-full border border-border">
             {unlockedCount} dari {totalBadges} Terbuka
           </span>
         </div>
@@ -390,11 +388,12 @@ export const BadgesMissionsTab: React.FC<BadgesMissionsTabProps> = ({
           ].map((tab) => (
             <button
               key={tab.id}
+              type="button"
               onClick={() => setBadgeFilter(tab.id as typeof badgeFilter)}
-              className={`text-xs font-extrabold px-3 py-1.5 rounded-full transition-all shrink-0 cursor-pointer ${
+              className={`h-10 text-xs font-extrabold px-3 rounded-full transition-all shrink-0 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                 badgeFilter === tab.id
-                  ? 'bg-emerald-700 text-white shadow-xs'
-                  : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                  ? 'bg-primary text-primary-foreground shadow-xs'
+                  : 'bg-muted text-muted-foreground hover:bg-muted/80'
               }`}
             >
               {tab.label}
@@ -408,57 +407,58 @@ export const BadgesMissionsTab: React.FC<BadgesMissionsTabProps> = ({
             const isUnlocked = badge.unlocked;
 
             return (
-              <div
+              <button
+                type="button"
                 key={badge.id}
                 onClick={() => setSelectedBadge(badge)}
-                className={`p-3 sm:p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between ${
+                className={`w-full text-left p-3 sm:p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                   isUnlocked
-                    ? 'bg-emerald-50/40 border-emerald-200 hover:border-emerald-400 hover:bg-emerald-50/70 shadow-xs'
-                    : 'bg-stone-50/60 border-stone-200 opacity-75 hover:opacity-90'
+                    ? 'bg-secondary border-border hover:border-primary hover:bg-accent shadow-xs'
+                    : 'bg-muted border-border opacity-75 hover:opacity-90'
                 }`}
               >
                 <div>
                   <div className="flex items-center justify-between gap-1 mb-1.5 sm:mb-2">
-                    <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-white flex items-center justify-center text-xl sm:text-2xl shadow-xs border border-stone-100 shrink-0">
-                      {badge.icon}
+                    <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-card flex items-center justify-center text-xl sm:text-2xl shadow-xs border border-border shrink-0">
+                      <BadgeIcon badgeId={badge.id} size={24} />
                     </div>
                     {isUnlocked ? (
-                      <span className="inline-flex items-center gap-0.5 sm:gap-1 text-[9px] sm:text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-200 px-1.5 sm:px-2 py-0.5 rounded-full shrink-0">
-                        <CheckCircle2 size={10} strokeWidth={3} />
+                      <span className="inline-flex items-center gap-0.5 sm:gap-1 text-[9px] sm:text-[10px] font-black bg-accent text-primary border border-border px-1.5 sm:px-2 py-0.5 rounded-full shrink-0">
+                        <CheckCircle2 size={10} strokeWidth={3} aria-hidden="true" />
                         <span>Terbuka</span>
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-0.5 sm:gap-1 text-[9px] sm:text-[10px] font-bold bg-stone-200/80 text-stone-600 px-1.5 sm:px-2 py-0.5 rounded-full shrink-0">
-                        <Lock size={9} />
+                      <span className="inline-flex items-center gap-0.5 sm:gap-1 text-[9px] sm:text-[10px] font-bold bg-muted text-muted-foreground px-1.5 sm:px-2 py-0.5 rounded-full shrink-0">
+                        <Lock size={9} aria-hidden="true" />
                         <span>Terkunci</span>
                       </span>
                     )}
                   </div>
 
-                  <h4 className="text-xs sm:text-sm font-extrabold text-stone-900 leading-tight truncate">
+                  <h4 className="text-xs sm:text-sm font-extrabold text-foreground leading-tight truncate">
                     {badge.title}
                   </h4>
-                  <p className="text-[10px] sm:text-xs text-stone-500 mt-1 line-clamp-2 leading-relaxed">
+                  <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 line-clamp-2 leading-relaxed">
                     {badge.description}
                   </p>
                 </div>
 
-                <div className="mt-2.5 sm:mt-3 pt-2 border-t border-stone-200/60">
+                <div className="mt-2.5 sm:mt-3 pt-2 border-t border-border">
                   {isUnlocked ? (
-                    <div className="text-[10px] sm:text-[11px] font-bold text-emerald-800 truncate">
+                    <div className="text-[10px] sm:text-[11px] font-bold text-primary truncate">
                       {badge.unlockedDate || 'Tercapai'}
                     </div>
                   ) : (
                     <div className="space-y-1">
-                      <div className="flex items-center justify-between text-[9px] sm:text-[10px] font-bold text-stone-500">
+                      <div className="flex items-center justify-between text-[9px] sm:text-[10px] font-bold text-muted-foreground">
                         <span>Progres</span>
                         <span>
                           {badge.currentValue}/{badge.targetValue}
                         </span>
                       </div>
-                      <div className="w-full bg-stone-200 h-1.5 rounded-full overflow-hidden">
+                      <div className="w-full bg-muted h-1.5 rounded-full overflow-hidden">
                         <div
-                          className="bg-emerald-600 h-full rounded-full"
+                          className="bg-primary h-full rounded-full"
                           style={{
                             width: `${Math.min(100, Math.round((badge.currentValue / badge.targetValue) * 100))}%`,
                           }}
@@ -467,7 +467,7 @@ export const BadgesMissionsTab: React.FC<BadgesMissionsTabProps> = ({
                     </div>
                   )}
                 </div>
-              </div>
+              </button>
             );
           })}
         </div>
@@ -475,56 +475,58 @@ export const BadgesMissionsTab: React.FC<BadgesMissionsTabProps> = ({
 
       {/* MODAL: Piagam Penghargaan Adiwiyata */}
       {showCertificate && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-stone-950/50 backdrop-blur-xs animate-in fade-in duration-150">
-          <div className="bg-white w-full max-w-[calc(100vw-2rem)] sm:max-w-md max-h-[calc(100dvh-2rem)] overflow-y-auto overflow-x-hidden min-w-0 rounded-3xl border-2 border-emerald-600 shadow-2xl p-5 sm:p-6 space-y-4 text-center relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-overlay/50 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="bg-card w-full max-w-[calc(100vw-2rem)] sm:max-w-md max-h-[calc(100dvh-2rem)] overflow-y-auto overflow-x-hidden min-w-0 rounded-3xl border-2 border-primary shadow-2xl p-5 sm:p-6 space-y-4 text-center relative">
             <button
+              type="button"
               onClick={() => setShowCertificate(false)}
-              className="absolute top-4 right-4 text-stone-400 hover:text-stone-700 w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center cursor-pointer transition-colors"
+              aria-label="Tutup"
+              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground size-10 rounded-full bg-muted flex items-center justify-center cursor-pointer transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <X size={16} />
+              <X size={16} aria-hidden="true" />
             </button>
 
             {/* Certificate Header Emblem */}
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 text-white flex items-center justify-center mx-auto text-3xl shadow-md border-4 border-amber-200">
-              🏅
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 text-primary-foreground flex items-center justify-center mx-auto shadow-md border-4 border-amber-200">
+              <Award size={30} aria-hidden="true" />
             </div>
 
             <div>
-              <div className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-800">
+              <div className="text-[10px] font-extrabold tracking-widest text-primary">
                 Pemerintah Kabupaten Deli Serdang
               </div>
-              <h3 className="text-base sm:text-lg font-black text-stone-900 mt-0.5">
+              <h3 className="text-base sm:text-lg font-black text-foreground mt-0.5">
                 Piagam Duta Sadar Lingkungan
               </h3>
-              <p className="text-xs text-stone-500 mt-0.5">
+              <p className="text-xs text-muted-foreground mt-0.5">
                 Program Adiwiyata &amp; Bank Sampah Sekolah
               </p>
             </div>
 
             {/* Certificate Body */}
-            <div className="p-4 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl border border-emerald-200 text-center space-y-2">
-              <div className="text-xs text-stone-600">Diberikan dengan bangga kepada:</div>
-              <div className="text-base sm:text-lg font-black text-emerald-950 tracking-tight">
+            <div className="p-4 bg-gradient-to-br from-secondary to-accent rounded-2xl border border-border text-center space-y-2">
+              <div className="text-xs text-muted-foreground">Diberikan dengan bangga kepada:</div>
+              <div className="text-base sm:text-lg font-black text-foreground tracking-tight">
                 {currentStudent.name}
               </div>
-              <div className="inline-flex items-center gap-2 bg-white/90 px-3 py-1 rounded-full text-xs font-bold text-stone-700 border border-emerald-200">
+              <div className="inline-flex items-center gap-2 bg-card/90 px-3 py-1 rounded-full text-xs font-bold text-foreground border border-border">
                 <span>{currentStudent.className}</span>
                 <span>•</span>
-                <span className="text-emerald-800">Kontribusi {currentStudent.totalKg.toFixed(1)} kg Sampah</span>
+                <span className="text-primary">Kontribusi {currentStudent.totalKg.toFixed(1)} kg Sampah</span>
               </div>
-              <p className="text-[11px] text-stone-600 leading-relaxed pt-1">
+              <p className="text-[11px] text-muted-foreground leading-relaxed pt-1">
                 Atas keteladanan aktif memilah sampah dari sumbernya, menjaga kebersihan ruang kelas, dan menginspirasi budaya ramah lingkungan sekolah.
               </p>
             </div>
 
             {/* Official Stamp & Sign */}
-            <div className="pt-2 flex items-center justify-between text-left border-t border-stone-200/80 px-2">
+            <div className="pt-2 flex items-center justify-between text-left border-t border-border px-2">
               <div>
-                <div className="text-[10px] text-stone-500 font-bold">Terverifikasi:</div>
-                <div className="text-xs font-extrabold text-stone-900">Bank Sampah Sekolah</div>
-                <div className="text-[10px] text-emerald-700 font-bold">Status: Duta Aktif 2026</div>
+                <div className="text-[10px] text-muted-foreground font-bold">Terverifikasi:</div>
+                <div className="text-xs font-extrabold text-foreground">Bank Sampah Sekolah</div>
+                <div className="text-[10px] text-primary font-bold">Status: Duta Aktif 2026</div>
               </div>
-              <div className="w-12 h-12 rounded-full border-2 border-dashed border-emerald-600 flex items-center justify-center text-emerald-800 text-[9px] font-black uppercase text-center leading-tight rotate-[-8deg] bg-emerald-50">
+              <div className="w-12 h-12 rounded-full border-2 border-dashed border-primary flex items-center justify-center text-primary text-[9px] font-black uppercase text-center leading-tight rotate-[-8deg] bg-secondary">
                 Sah Adiwiyata
               </div>
             </div>
@@ -532,17 +534,19 @@ export const BadgesMissionsTab: React.FC<BadgesMissionsTabProps> = ({
             {/* Action Buttons */}
             <div className="grid grid-cols-2 gap-2 pt-1">
               <button
+                type="button"
                 onClick={() => {
                   window.print();
                 }}
-                className="py-2.5 px-3 bg-stone-100 hover:bg-stone-200 active:scale-95 text-stone-800 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                className="h-10 px-3 bg-muted hover:bg-muted/80 active:scale-95 text-foreground text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
-                <Download size={14} />
+                <Download size={14} aria-hidden="true" />
                 <span>Simpan Piagam</span>
               </button>
               <button
+                type="button"
                 onClick={() => setShowCertificate(false)}
-                className="py-2.5 px-3 bg-emerald-700 hover:bg-emerald-800 active:scale-95 text-white text-xs font-extrabold rounded-xl transition-all cursor-pointer shadow-xs"
+                className="h-10 px-3 bg-primary hover:bg-primary-active active:scale-95 text-primary-foreground text-xs font-extrabold rounded-xl transition-all cursor-pointer shadow-xs outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 Tutup
               </button>
@@ -553,45 +557,48 @@ export const BadgesMissionsTab: React.FC<BadgesMissionsTabProps> = ({
 
       {/* MODAL: Detail Lencana Pop-up */}
       {selectedBadge && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/40 backdrop-blur-xs animate-in fade-in duration-150">
-          <div className="bg-white w-full max-w-[calc(100vw-2rem)] sm:max-w-sm rounded-3xl border border-stone-200 p-5 text-center space-y-3.5 shadow-xl relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-overlay/40 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="bg-card w-full max-w-[calc(100vw-2rem)] sm:max-w-sm rounded-3xl border border-border p-5 text-center space-y-3.5 shadow-xl relative">
             <button
+              type="button"
               onClick={() => setSelectedBadge(null)}
-              className="absolute top-3.5 right-3.5 text-stone-400 hover:text-stone-700 w-7 h-7 rounded-full bg-stone-100 flex items-center justify-center cursor-pointer"
+              aria-label="Tutup"
+              className="absolute top-3.5 right-3.5 text-muted-foreground hover:text-foreground size-10 rounded-full bg-muted flex items-center justify-center cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <X size={14} />
+              <X size={14} aria-hidden="true" />
             </button>
 
-            <div className="w-16 h-16 rounded-3xl bg-emerald-50 border-2 border-emerald-200 flex items-center justify-center text-4xl mx-auto shadow-xs">
-              {selectedBadge.icon}
+            <div className="w-16 h-16 rounded-3xl bg-secondary border-2 border-border flex items-center justify-center text-4xl mx-auto shadow-xs">
+              <BadgeIcon badgeId={selectedBadge.id} size={36} />
             </div>
 
             <div>
-              <div className="text-[10px] font-bold uppercase tracking-wider text-emerald-800">
+              <div className="text-[10px] font-bold tracking-wider text-primary">
                 {selectedBadge.unlocked ? 'Lencana Berhasil Diraih' : 'Lencana Sedang Diperjuangkan'}
               </div>
-              <h3 className="text-base font-extrabold text-stone-900 mt-0.5">
+              <h3 className="text-base font-extrabold text-foreground mt-0.5">
                 {selectedBadge.title}
               </h3>
-              <p className="text-xs text-stone-600 mt-1 leading-relaxed">
+              <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
                 {selectedBadge.description}
               </p>
             </div>
 
-            <div className="p-3 bg-stone-50 rounded-2xl border border-stone-200/80 text-xs font-bold text-stone-700 space-y-1">
+            <div className="p-3 bg-muted rounded-2xl border border-border text-xs font-bold text-foreground space-y-1">
               <div className="flex items-center justify-between">
-                <span className="text-stone-500 font-medium">Syarat Target:</span>
+                <span className="text-muted-foreground font-medium">Syarat Target:</span>
                 <span>{selectedBadge.targetValue} {selectedBadge.requiredMetric}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-stone-500 font-medium">Capaian Saat Ini:</span>
-                <span className="text-emerald-800">{selectedBadge.currentValue} {selectedBadge.requiredMetric}</span>
+                <span className="text-muted-foreground font-medium">Capaian Saat Ini:</span>
+                <span className="text-primary">{selectedBadge.currentValue} {selectedBadge.requiredMetric}</span>
               </div>
             </div>
 
             <button
+              type="button"
               onClick={() => setSelectedBadge(null)}
-              className="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 active:scale-95 text-white text-xs font-extrabold rounded-xl transition-all cursor-pointer shadow-xs"
+              className="w-full h-10 bg-primary hover:bg-primary-active active:scale-95 text-primary-foreground text-xs font-extrabold rounded-xl transition-all cursor-pointer shadow-xs outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               Mengerti
             </button>

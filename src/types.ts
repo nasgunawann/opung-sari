@@ -8,7 +8,6 @@ export interface WasteCategoryInfo {
   bgColor: string;
   borderColor: string;
   textColor: string;
-  icon: string;
   description: string;
   pricePerKg: number;
   examples: string[];
@@ -17,7 +16,6 @@ export interface WasteCategoryInfo {
 export interface WasteItem {
   id: string;
   name: string;
-  icon: string;
   category: WasteCategory;
   defaultWeightKg: number;
   points: number;
@@ -33,7 +31,6 @@ export interface Student {
   nis: string;
   classId: string;
   className: string;
-  avatar: string;
   points: number;
   balanceRp: number;
   totalKg: number;
@@ -111,7 +108,6 @@ export interface WithdrawalDestination {
   id: string;
   name: string;
   category: 'kantin' | 'koperasi' | 'tabungan' | 'ewallet';
-  icon: string;
   description: string;
   minAmount: number;
   fee: number;
@@ -135,7 +131,6 @@ export interface BadgeAchievement {
   id: string;
   title: string;
   description: string;
-  icon: string;
   requiredMetric: string;
   targetValue: number;
   currentValue: number;
@@ -155,6 +150,12 @@ export interface EducationModule {
   content?: string[];
   videoUrl?: string;
   author?: string;
+  quranVerse?: {
+    surah: string;
+    arabic: string;
+    translation: string;
+    tafsirEco: string;
+  };
 }
 
 

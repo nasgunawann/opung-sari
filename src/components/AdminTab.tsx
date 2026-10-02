@@ -29,14 +29,14 @@ export const AdminTab: React.FC<AdminTabProps> = ({ classes, transactions }) => 
       <div className="w-full py-6 px-4 md:px-8 space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-2">
         <div>
-          <h2 className="text-2xl font-bold text-stone-900 flex items-center gap-2">
-            <Building2 className="text-purple-600" />
-            Dashboard Kabupaten
+          <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
+            <Building2 className="text-primary" aria-hidden="true" />
+            Dasbor Kabupaten
           </h2>
-          <p className="text-stone-500">Agregasi performa ekologis tingkat instansi/sekolah.</p>
+          <p className="text-muted-foreground">Agregasi performa ekologis tingkat instansi/sekolah.</p>
         </div>
         <Button variant="outline" className="gap-2">
-          <Download size={16} />
+          <Download size={16} aria-hidden="true" />
           Unduh Laporan Bulanan
         </Button>
       </div>
@@ -46,13 +46,13 @@ export const AdminTab: React.FC<AdminTabProps> = ({ classes, transactions }) => 
         <Card>
           <CardHeader className="pb-2">
             <CardDescription>Total Sampah Tereduksi</CardDescription>
-            <CardTitle className="text-3xl text-stone-900 flex items-center gap-2">
-              {totalKg.toFixed(1)} <span className="text-lg text-stone-500 font-normal">kg</span>
+            <CardTitle className="text-3xl text-foreground flex items-center gap-2">
+              {totalKg.toFixed(1)} <span className="text-lg text-muted-foreground font-normal">kg</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center gap-1 text-xs text-emerald-600 font-medium mt-1">
-              <TrendingUp size={14} /> +12% dari bulan lalu
+            <div className="flex items-center gap-1 text-xs text-primary font-medium mt-1">
+              <TrendingUp size={14} aria-hidden="true" /> +12% dari bulan lalu
             </div>
           </CardContent>
         </Card>
@@ -60,12 +60,12 @@ export const AdminTab: React.FC<AdminTabProps> = ({ classes, transactions }) => 
         <Card>
           <CardHeader className="pb-2">
             <CardDescription>Partisipasi Siswa</CardDescription>
-            <CardTitle className="text-3xl text-stone-900">
+            <CardTitle className="text-3xl text-foreground">
               {Math.round((activeStudents / totalStudents) * 100)}%
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xs text-stone-500 mt-1">
+            <div className="text-xs text-muted-foreground mt-1">
               {activeStudents} dari {totalStudents} siswa aktif menyetor
             </div>
           </CardContent>
@@ -74,12 +74,12 @@ export const AdminTab: React.FC<AdminTabProps> = ({ classes, transactions }) => 
         <Card>
           <CardHeader className="pb-2">
             <CardDescription>Total Kas Sekolah</CardDescription>
-            <CardTitle className="text-3xl text-emerald-700">
+            <CardTitle className="text-3xl text-primary">
               Rp {(totalBalance / 1000).toFixed(0)}k
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xs text-stone-500 mt-1">
+            <div className="text-xs text-muted-foreground mt-1">
               Akumulasi dari {classes.length} kelas terdaftar
             </div>
           </CardContent>
@@ -88,13 +88,13 @@ export const AdminTab: React.FC<AdminTabProps> = ({ classes, transactions }) => 
         <Card>
           <CardHeader className="pb-2">
             <CardDescription>Rasio Pemilahan</CardDescription>
-            <CardTitle className="text-3xl text-stone-900 flex items-center gap-2">
-              <Leaf className="text-emerald-500" />
+            <CardTitle className="text-3xl text-foreground flex items-center gap-2">
+              <Leaf className="text-primary" aria-hidden="true" />
               {Math.round((organicKg / (totalKg || 1)) * 100)}%
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-xs text-stone-500 mt-1">
+            <div className="text-xs text-muted-foreground mt-1">
               Didominasi sampah organik
             </div>
           </CardContent>
@@ -105,15 +105,15 @@ export const AdminTab: React.FC<AdminTabProps> = ({ classes, transactions }) => 
       <Card>
         <CardHeader>
           <CardTitle className="text-lg flex items-center gap-2">
-            <BarChart3 size={18} />
-            Benchmarking Performa Kelas
+            <BarChart3 size={18} aria-hidden="true" />
+            Tolok Ukur Performa Kelas
           </CardTitle>
           <CardDescription>Perbandingan aktivitas pengelolaan sampah antar kelas</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left">
-              <thead className="text-xs text-stone-500 uppercase bg-stone-50">
+              <thead className="text-xs text-muted-foreground bg-muted">
                 <tr>
                   <th className="px-4 py-3 rounded-tl-lg">Kelas</th>
                   <th className="px-4 py-3">Wali Kelas</th>
@@ -126,22 +126,22 @@ export const AdminTab: React.FC<AdminTabProps> = ({ classes, transactions }) => 
               </thead>
               <tbody>
                 {[...classes].sort((a,b) => b.totalKg - a.totalKg).map((cls) => (
-                  <tr key={cls.id} className="border-b border-stone-100 last:border-0 hover:bg-stone-50/50">
-                    <td className="px-4 py-3 font-semibold text-stone-900">{cls.name}</td>
-                    <td className="px-4 py-3 text-stone-600">{cls.waliKelas}</td>
+                  <tr key={cls.id} className="border-b border-border last:border-0 hover:bg-muted/50">
+                    <td className="px-4 py-3 font-semibold text-foreground">{cls.name}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{cls.waliKelas}</td>
                     <td className="px-4 py-3 text-right font-mono font-medium">{cls.totalKg.toFixed(1)}</td>
-                    <td className="px-4 py-3 text-right font-mono text-stone-500">{cls.organicKg.toFixed(1)}</td>
-                    <td className="px-4 py-3 text-right font-mono text-stone-500">{cls.plasticKg.toFixed(1)}</td>
+                    <td className="px-4 py-3 text-right font-mono text-muted-foreground">{cls.organicKg.toFixed(1)}</td>
+                    <td className="px-4 py-3 text-right font-mono text-muted-foreground">{cls.plasticKg.toFixed(1)}</td>
                     <td className="px-4 py-3 text-right">
-                      <span className="text-xs text-stone-600">
+                      <span className="text-xs text-muted-foreground">
                         {Math.round((cls.activeStudents / cls.totalStudents) * 100)}%
                       </span>
                     </td>
                     <td className="px-4 py-3">
                       {cls.totalKg > 15 ? (
-                        <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-200 border-0">Aktif</Badge>
+                        <Badge className="bg-primary text-primary-foreground hover:bg-primary-active border-0">Aktif</Badge>
                       ) : (
-                        <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-200 border-0">Perlu Binbingan</Badge>
+                        <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-200 border-0">Perlu Bimbingan</Badge>
                       )}
                     </td>
                   </tr>

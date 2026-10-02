@@ -6,8 +6,8 @@ import {
   Radio,
   CheckCircle2,
   AlertTriangle,
-  Sparkles,
-  Zap,
+  Activity,
+  Recycle,
   QrCode,
   Layers,
   Scale,
@@ -19,6 +19,8 @@ import {
   Minus,
   ArrowRight,
   Info,
+  Lightbulb,
+  PartyPopper,
   Trash2,
 } from 'lucide-react';
 import { Card, CardContent } from './ui/card';
@@ -31,6 +33,7 @@ import {
   WasteItem,
 } from '../types';
 import { WASTE_CATEGORIES, WASTE_ITEMS } from '../data/initialData';
+import { WasteCategoryIcon, WasteItemIcon } from '../lib/appIcons';
 import confetti from 'canvas-confetti';
 
 interface SmartBinIoTTabProps {
@@ -171,47 +174,43 @@ export const SmartBinIoTTab: React.FC<SmartBinIoTTabProps> = ({
     : WASTE_ITEMS.filter((item) => item.category === activeCategoryFilter);
 
   const getStatusLabel = (comp: BinCompartment) => {
-    if (comp.fillPercent >= 90) return { label: 'Penuh!', bg: 'bg-rose-100 text-rose-800 border-rose-200' };
+    if (comp.fillPercent >= 90) return { label: 'Penuh!', bg: 'bg-destructive/10 text-destructive border-destructive/20' };
     if (comp.fillPercent >= 70) return { label: 'Hampir Penuh', bg: 'bg-amber-100 text-amber-800 border-amber-200' };
-    return { label: 'Normal', bg: 'bg-emerald-100 text-emerald-800 border-emerald-200' };
+    return { label: 'Normal', bg: 'bg-secondary text-primary border-border' };
   };
 
   return (
     <div className="w-full min-w-0 max-w-4xl mx-auto space-y-4 pb-24 pt-1 md:px-2">
       {/* SECTION 0: Hero IoT Smart Bin Station Card */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 text-white shadow-md p-4 sm:p-5">
-        {/* Subtle background ambient glows */}
-        <div className="pointer-events-none absolute -right-6 -top-6 w-36 h-36 rounded-full bg-white/10 blur-xl" />
-        <div className="pointer-events-none absolute -left-8 -bottom-8 w-32 h-32 rounded-full bg-emerald-400/15 blur-lg" />
-
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-primary to-primary-active text-primary-foreground shadow-md p-4 sm:p-5">
         {/* Top Bar: Station identity & Live Status */}
         <div className="relative flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
           <div className="flex items-center gap-3 min-w-0">
             <div className="relative shrink-0">
-              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl border border-white/25 shadow-inner">
-                ♻️
+              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-primary-active flex items-center justify-center border border-primary-foreground/25 shadow-inner">
+                <Recycle size={24} className="text-primary-foreground" aria-hidden="true" />
               </div>
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-2 min-w-0">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-300 animate-pulse shrink-0" />
-                <h2 className="text-sm sm:text-base font-extrabold text-white truncate tracking-tight">
+                <span className="w-2.5 h-2.5 rounded-full bg-primary-foreground/70 shrink-0" />
+                <h2 className="text-sm sm:text-base font-extrabold text-primary-foreground truncate tracking-tight">
                   {iotBin.binName}
                 </h2>
               </div>
-              <p className="text-xs text-emerald-100/85 font-medium truncate">
+              <p className="text-xs text-primary-foreground/80 font-medium truncate">
                 {currentClass?.name?.split(' - ')[0] || currentStudent.className} • Terhubung IoT Otomatis
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            <div className="inline-flex items-center gap-1.5 bg-black/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/15 text-xs font-bold text-white">
-              <Wifi size={13} className="text-emerald-300" />
+            <div className="inline-flex items-center gap-1.5 bg-overlay/20 px-3 py-1 rounded-full border border-primary-foreground/15 text-xs font-bold text-primary-foreground">
+              <Wifi size={13} className="text-primary-foreground/80" aria-hidden="true" />
               <span>Sinyal Kuat</span>
             </div>
-            <div className="hidden sm:inline-flex items-center gap-1.5 bg-black/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/15 text-xs font-bold text-emerald-100">
-              <Thermometer size={13} className="text-amber-300" />
+            <div className="hidden sm:inline-flex items-center gap-1.5 bg-overlay/20 px-3 py-1 rounded-full border border-primary-foreground/15 text-xs font-bold text-primary-foreground/90">
+              <Thermometer size={13} className="text-primary-foreground/80" aria-hidden="true" />
               <span>{iotBin.temperatureC}°C</span>
             </div>
           </div>
@@ -219,10 +218,10 @@ export const SmartBinIoTTab: React.FC<SmartBinIoTTabProps> = ({
 
         {/* Headline */}
         <div className="relative mt-4">
-          <div className="text-base sm:text-lg font-extrabold text-white">
+          <div className="text-base sm:text-lg font-extrabold text-primary-foreground">
             Status Keterisian 4 Tong Kelas
           </div>
-          <p className="text-xs text-emerald-100/80 mt-0.5">
+          <p className="text-xs text-primary-foreground/80 mt-0.5">
             Sensor digital memantau kapasitas tong agar kelas tetap bersih, rapi, dan siap ditimbang.
           </p>
         </div>
@@ -238,36 +237,36 @@ export const SmartBinIoTTab: React.FC<SmartBinIoTTabProps> = ({
             return (
               <div
                 key={cat}
-                className="bg-white/95 backdrop-blur-md rounded-2xl p-3 border border-white/50 text-stone-900 shadow-xs flex flex-col justify-between relative transition-all"
+                className="bg-card rounded-2xl p-3 border border-border text-foreground shadow-xs flex flex-col justify-between relative transition-all"
               >
                 {/* Lid Open Animated Badge */}
                 {comp.isOpen && (
-                  <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full shadow-md animate-bounce tracking-wide shrink-0 whitespace-nowrap z-10">
-                    TUTUP TERBUKA
+                  <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-[10px] font-black px-2.5 py-0.5 rounded-full shadow-md tracking-wide shrink-0 whitespace-nowrap z-10">
+                    Terbuka
                   </div>
                 )}
 
                 {/* Top Info */}
                 <div>
                   <div className="flex items-center justify-between gap-1">
-                    <span className="text-2xl drop-shadow-xs">{catInfo.icon}</span>
+                    <WasteCategoryIcon category={catInfo.id} size={24} aria-hidden="true" />
                     <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${statusInfo.bg}`}>
                       {statusInfo.label}
                     </span>
                   </div>
-                  <div className="font-extrabold text-xs text-stone-900 mt-2 truncate">
+                  <div className="font-extrabold text-xs text-foreground mt-2 truncate">
                     {catInfo.name}
                   </div>
-                  <div className="text-[11px] font-semibold text-stone-500">
+                  <div className="text-[11px] font-semibold text-muted-foreground">
                     Tong {catInfo.colorName}
                   </div>
                 </div>
 
                 {/* Rounded Progress Bar */}
                 <div className="mt-3 space-y-1.5">
-                  <div className="w-full bg-stone-100 h-3 rounded-full overflow-hidden p-0.5 border border-stone-200">
+                  <div className="w-full bg-muted h-3 rounded-full overflow-hidden p-0.5 border border-border">
                     <div
-                      className="h-full rounded-full transition-all duration-700"
+                      className="h-full rounded-full transition-[width] duration-700"
                       style={{
                         width: `${Math.max(6, comp.fillPercent)}%`,
                         backgroundColor: comp.color,
@@ -275,10 +274,10 @@ export const SmartBinIoTTab: React.FC<SmartBinIoTTabProps> = ({
                     />
                   </div>
                   <div className="flex items-center justify-between text-[11px]">
-                    <span className="font-bold text-stone-700">
+                    <span className="font-bold text-foreground">
                       {comp.fillPercent}%
                     </span>
-                    <span className="font-medium text-stone-500">
+                    <span className="font-medium text-muted-foreground">
                       {comp.currentKg} / {comp.maxKg} kg
                     </span>
                   </div>
@@ -287,11 +286,12 @@ export const SmartBinIoTTab: React.FC<SmartBinIoTTabProps> = ({
                 {/* Empty Bin Action if Full */}
                 {isFull && (
                   <button
+                    type="button"
                     onClick={() => handleEmptyBin(cat)}
-                    className="mt-2.5 w-full text-[11px] bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-extrabold py-1.5 px-2 rounded-xl transition-all flex items-center justify-center gap-1 cursor-pointer shadow-xs"
+                    className="mt-2.5 w-full h-10 text-[11px] bg-destructive hover:bg-destructive/90 active:scale-95 text-destructive-foreground font-extrabold px-2 rounded-xl transition-all flex items-center justify-center gap-1 cursor-pointer shadow-xs outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     title="Kosongkan Tong"
                   >
-                    <Trash2 size={12} />
+                    <Trash2 size={12} aria-hidden="true" />
                     <span>Kosongkan</span>
                   </button>
                 )}
@@ -305,8 +305,8 @@ export const SmartBinIoTTab: React.FC<SmartBinIoTTabProps> = ({
       <div className="space-y-2.5">
         <div className="flex items-center justify-between px-1">
           <div className="flex items-center gap-2">
-            <Sparkles size={16} className="text-emerald-700" />
-            <h3 className="text-sm font-extrabold text-stone-900">
+            <Activity size={16} className="text-primary" aria-hidden="true" />
+            <h3 className="text-sm font-extrabold text-foreground">
               Panduan Tong & Nilai Kas Kelas
             </h3>
           </div>
@@ -316,81 +316,82 @@ export const SmartBinIoTTab: React.FC<SmartBinIoTTabProps> = ({
           {[
             {
               cat: 'organik',
-              bg: 'bg-emerald-50/70 hover:bg-emerald-50',
-              border: 'border-emerald-200',
-              accent: 'text-emerald-800',
-              pill: 'bg-emerald-100/90 text-emerald-900 border-emerald-300',
+              bg: 'bg-secondary/70 hover:bg-secondary',
+              border: 'border-border',
+              accent: 'text-primary',
+              pill: 'bg-secondary text-secondary-foreground border-border',
             },
             {
               cat: 'plastik',
-              bg: 'bg-amber-50/70 hover:bg-amber-50',
-              border: 'border-amber-200',
-              accent: 'text-amber-800',
-              pill: 'bg-amber-100/90 text-amber-900 border-amber-300',
+              bg: 'bg-muted/70 hover:bg-muted',
+              border: 'border-border',
+              accent: 'text-foreground',
+              pill: 'bg-muted text-muted-foreground border-border',
             },
             {
               cat: 'kertas',
-              bg: 'bg-blue-50/70 hover:bg-blue-50',
-              border: 'border-blue-200',
-              accent: 'text-blue-800',
-              pill: 'bg-blue-100/90 text-blue-900 border-blue-300',
+              bg: 'bg-accent/70 hover:bg-accent',
+              border: 'border-border',
+              accent: 'text-accent-foreground',
+              pill: 'bg-accent text-accent-foreground border-border',
             },
             {
               cat: 'logam_b3',
-              bg: 'bg-rose-50/70 hover:bg-rose-50',
-              border: 'border-rose-200',
-              accent: 'text-rose-800',
-              pill: 'bg-rose-100/90 text-rose-900 border-rose-300',
+              bg: 'bg-destructive/10 hover:bg-destructive/15',
+              border: 'border-destructive/20',
+              accent: 'text-destructive',
+              pill: 'bg-destructive/10 text-destructive border-destructive/20',
             },
           ].map((style) => {
             const data = WASTE_CATEGORIES[style.cat as keyof typeof WASTE_CATEGORIES];
             return (
-              <div
+              <button
+                type="button"
                 key={style.cat}
                 onClick={() => setActiveCategoryFilter(style.cat)}
-                className={`${style.bg} border ${style.border} rounded-2xl p-3 sm:p-3.5 shadow-xs transition-all flex flex-col justify-between cursor-pointer hover:shadow-sm`}
+                className={`${style.bg} border ${style.border} rounded-2xl p-3 sm:p-3.5 shadow-xs transition-all flex flex-col justify-between text-left w-full cursor-pointer hover:shadow-sm outline-none focus-visible:ring-2 focus-visible:ring-ring`}
               >
                 <div>
                   <div className="flex items-center justify-between gap-1">
-                    <span className="text-xl sm:text-2xl drop-shadow-xs">{data.icon}</span>
-                    <span className={`text-[9px] sm:text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${style.pill} truncate max-w-[85px] sm:max-w-none`}>
+                    <WasteCategoryIcon category={data.id} size={24} aria-hidden="true" />
+                    <span className={`text-[9px] sm:text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${style.pill} truncate max-w-[110px] sm:max-w-none`}>
                       Tong {data.colorName}
                     </span>
                   </div>
-                  <h4 className="font-extrabold text-xs sm:text-sm text-stone-900 mt-1.5 sm:mt-2 truncate">
+                  <h4 className="font-extrabold text-xs sm:text-sm text-foreground mt-1.5 sm:mt-2 truncate">
                     {data.name}
                   </h4>
-                  <p className="text-[10px] sm:text-xs text-stone-600 mt-0.5 sm:mt-1 line-clamp-2 leading-tight">
+                  <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1 line-clamp-2 leading-tight">
                     {data.examples.join(', ')}
                   </p>
                 </div>
 
-                <div className="mt-2.5 sm:mt-3 pt-2 sm:pt-2.5 border-t border-stone-200/60 flex items-center justify-between">
-                  <span className="text-[10px] sm:text-[11px] font-bold text-stone-500">Nilai</span>
+                <div className="mt-2.5 sm:mt-3 pt-2 sm:pt-2.5 border-t border-border flex items-center justify-between">
+                  <span className="text-[10px] sm:text-[11px] font-bold text-muted-foreground">Nilai</span>
                   <div className="flex items-baseline gap-0.5 sm:gap-1">
                     <span className={`text-xs sm:text-sm font-black ${style.accent}`}>
                       Rp {data.pricePerKg.toLocaleString('id-ID')}
                     </span>
-                    <span className="text-[9px] sm:text-[10px] font-bold text-stone-400">/kg</span>
+                    <span className="text-[9px] sm:text-[10px] font-bold text-muted-foreground">/kg</span>
                   </div>
                 </div>
-              </div>
+              </button>
             );
           })}
         </div>
       </div>
 
       {/* SECTION 2: Simulator Setor Sampah Siswa */}
-      <div className="bg-white rounded-3xl p-4 sm:p-5 border border-stone-200 shadow-xs space-y-4">
+      <div className="bg-card rounded-3xl p-4 sm:p-5 border border-border shadow-xs space-y-4">
         {/* Simulator Header */}
         <div className="flex items-center justify-between gap-2 flex-wrap">
           <div className="flex items-center gap-2">
-            <Radio size={16} className="text-emerald-700" />
+            <Radio size={16} className="text-primary" aria-hidden="true" />
             <div>
-              <h3 className="text-sm font-extrabold text-stone-900">
+              <h3 className="text-sm font-extrabold text-foreground">
                 Simulasi Setor Sampah
               </h3>
-              <p className="text-xs text-stone-500">
+              <p className="text-xs text-muted-foreground">
                 Pilih sampah untuk mencoba interaksi sensor timbang otomatis.
               </p>
             </div>
@@ -400,9 +401,9 @@ export const SmartBinIoTTab: React.FC<SmartBinIoTTabProps> = ({
         {/* Step 1: Filter & Item Grid */}
         <div className="space-y-2.5">
           <div className="flex items-center justify-between flex-wrap gap-2">
-            <label className="text-xs font-extrabold text-stone-900">
+            <p className="text-xs font-extrabold text-foreground">
               1. Pilih Sampah yang Hendak Disetor:
-            </label>
+            </p>
             {/* Category Filter Pills */}
             <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full">
               {[
@@ -414,11 +415,12 @@ export const SmartBinIoTTab: React.FC<SmartBinIoTTabProps> = ({
               ].map((f) => (
                 <button
                   key={f.id}
+                  type="button"
                   onClick={() => setActiveCategoryFilter(f.id)}
-                  className={`text-[11px] font-extrabold px-3 py-1 rounded-full transition-all shrink-0 cursor-pointer ${
+                  className={`text-[11px] font-extrabold px-3 h-10 inline-flex items-center rounded-full transition-all shrink-0 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                     activeCategoryFilter === f.id
-                      ? 'bg-emerald-700 text-white shadow-xs'
-                      : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                      ? 'bg-primary text-primary-foreground shadow-xs'
+                      : 'bg-muted text-muted-foreground hover:bg-accent hover:text-foreground'
                   }`}
                 >
                   {f.label}
@@ -436,28 +438,29 @@ export const SmartBinIoTTab: React.FC<SmartBinIoTTabProps> = ({
                 <button
                   key={item.id}
                   id={`select-waste-${item.id}`}
+                  type="button"
                   disabled={isSimulating}
                   onClick={() => handleSelectItem(item)}
-                  className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex flex-col justify-between ${
+                  className={`p-3 rounded-2xl border-2 text-left transition-all cursor-pointer flex flex-col justify-between outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                     isSelected
-                      ? 'bg-emerald-50/80 border-emerald-600 shadow-sm'
-                      : 'bg-white border-stone-200 hover:border-emerald-300 hover:bg-stone-50'
+                      ? 'bg-secondary/80 border-primary shadow-sm'
+                      : 'bg-card border-border hover:border-primary/50 hover:bg-muted'
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-2xl drop-shadow-xs">{item.icon}</span>
-                    <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-stone-100 text-stone-700">
+                    <WasteItemIcon itemId={item.id} size={24} aria-hidden="true" />
+                    <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
                       Tong {catData.colorName}
                     </span>
                   </div>
 
                   <div className="mt-2.5">
-                    <div className="text-xs font-extrabold text-stone-900 leading-tight truncate">
+                    <div className="text-xs font-extrabold text-foreground leading-tight truncate">
                       {item.name}
                     </div>
-                    <div className="flex items-center justify-between text-[11px] text-stone-500 mt-1">
-                      <span className="font-bold text-amber-700">+{item.points} Poin</span>
-                      <span className="font-semibold text-stone-400">{item.defaultWeightKg} kg</span>
+                    <div className="flex items-center justify-between text-[11px] text-muted-foreground mt-1">
+                      <span className="font-bold text-primary">+{item.points} Poin</span>
+                      <span className="font-semibold text-muted-foreground">{item.defaultWeightKg} kg</span>
                     </div>
                   </div>
                 </button>
@@ -467,67 +470,71 @@ export const SmartBinIoTTab: React.FC<SmartBinIoTTabProps> = ({
         </div>
 
         {/* Step 2: Quantity Stepper & Live Summary Cards */}
-        <div className="bg-stone-50 rounded-2xl p-3.5 sm:p-4 border border-stone-200/90 space-y-3">
+        <div className="bg-muted/50 rounded-2xl p-3.5 sm:p-4 border border-border space-y-3">
           <div className="flex items-center justify-between flex-wrap gap-2">
             <div className="flex items-center gap-2">
-              <Scale size={16} className="text-emerald-700" />
+              <Scale size={16} className="text-primary" aria-hidden="true" />
               <div>
-                <div className="text-xs font-extrabold text-stone-900">
+                <div className="text-xs font-extrabold text-foreground">
                   {selectedItem.name}
                 </div>
-                <div className="text-[11px] font-medium text-stone-500">
+                <div className="text-[11px] font-medium text-muted-foreground">
                   Kategori: {WASTE_CATEGORIES[selectedItem.category].name}
                 </div>
               </div>
             </div>
 
             {/* Tactile Big Stepper */}
-            <div className="flex items-center gap-2 bg-white px-2.5 py-1.5 rounded-2xl border border-stone-200 shadow-xs">
+            <div className="flex items-center gap-2 bg-card px-2.5 py-1.5 rounded-2xl border border-border shadow-xs">
               <button
+                type="button"
                 disabled={itemCount <= 1 || isSimulating}
                 onClick={() => setItemCount((prev) => Math.max(1, prev - 1))}
-                className="w-8 h-8 rounded-xl bg-stone-100 hover:bg-stone-200 active:scale-95 text-stone-700 font-black flex items-center justify-center text-sm disabled:opacity-40 cursor-pointer transition-all"
+                className="size-10 rounded-xl bg-muted hover:bg-accent active:scale-95 text-foreground font-black flex items-center justify-center text-sm disabled:opacity-40 cursor-pointer transition-all outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 title="Kurangi Jumlah"
+                aria-label="Kurangi jumlah"
               >
-                <Minus size={14} />
+                <Minus size={14} aria-hidden="true" />
               </button>
-              <div className="text-sm font-black text-stone-900 min-w-[36px] text-center">
+              <div className="text-sm font-black text-foreground min-w-[36px] text-center">
                 {itemCount}
               </div>
               <button
+                type="button"
                 disabled={itemCount >= 10 || isSimulating}
                 onClick={() => setItemCount((prev) => Math.min(10, prev + 1))}
-                className="w-8 h-8 rounded-xl bg-emerald-100 hover:bg-emerald-200 active:scale-95 text-emerald-800 font-black flex items-center justify-center text-sm disabled:opacity-40 cursor-pointer transition-all"
+                className="size-10 rounded-xl bg-secondary hover:bg-accent active:scale-95 text-primary font-black flex items-center justify-center text-sm disabled:opacity-40 cursor-pointer transition-all outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 title="Tambah Jumlah"
+                aria-label="Tambah jumlah"
               >
-                <Plus size={14} />
+                <Plus size={14} aria-hidden="true" />
               </button>
             </div>
           </div>
 
           {/* Real-time Calculation Cards (Friendly Sans Nunito) */}
           <div className="grid grid-cols-3 gap-2 pt-1">
-            <div className="bg-white p-2.5 rounded-2xl border border-stone-200/80 text-center shadow-xs">
-              <div className="text-[10px] font-bold text-stone-500 uppercase tracking-wider">
+            <div className="bg-card p-2.5 rounded-2xl border border-border text-center shadow-xs">
+              <div className="text-[10px] font-bold text-muted-foreground tracking-wider">
                 Total Berat
               </div>
-              <div className="text-sm sm:text-base font-black text-stone-900 mt-0.5">
+              <div className="text-sm sm:text-base font-black text-foreground mt-0.5">
                 {calculateTotalWeight()} kg
               </div>
             </div>
-            <div className="bg-emerald-50/80 p-2.5 rounded-2xl border border-emerald-200 text-center shadow-xs">
-              <div className="text-[10px] font-bold text-emerald-800 uppercase tracking-wider">
+            <div className="bg-secondary/80 p-2.5 rounded-2xl border border-border text-center shadow-xs">
+              <div className="text-[10px] font-bold text-primary tracking-wider">
                 Habituasi LISA
               </div>
-              <div className="text-sm sm:text-base font-black text-emerald-800 mt-0.5">
+              <div className="text-sm sm:text-base font-black text-primary mt-0.5">
                 +1 Log Pilah
               </div>
             </div>
-            <div className="bg-amber-50/80 p-2.5 rounded-2xl border border-amber-200 text-center shadow-xs">
-              <div className="text-[10px] font-bold text-amber-800 uppercase tracking-wider">
+            <div className="bg-muted/80 p-2.5 rounded-2xl border border-border text-center shadow-xs">
+              <div className="text-[10px] font-bold text-foreground tracking-wider">
                 Poin LISA
               </div>
-              <div className="text-sm sm:text-base font-black text-amber-900 mt-0.5">
+              <div className="text-sm sm:text-base font-black text-foreground mt-0.5">
                 +{calculateEarnedPoints()} Poin
               </div>
             </div>
@@ -536,21 +543,21 @@ export const SmartBinIoTTab: React.FC<SmartBinIoTTabProps> = ({
 
         {/* Step 3: Flow Information & Fun Fact Memo */}
         <div className="space-y-2">
-          <div className="p-3 bg-blue-50/90 rounded-2xl border border-blue-200/80 text-xs text-blue-950 flex items-start gap-2.5 leading-relaxed">
-            <Info size={16} className="text-blue-700 shrink-0 mt-0.5" />
+          <div className="p-3 bg-muted/60 rounded-2xl border border-border text-xs text-foreground flex items-start gap-2.5 leading-relaxed">
+            <Info size={16} className="text-primary shrink-0 mt-0.5" aria-hidden="true" />
             <div>
-              <span className="font-extrabold text-blue-950">Alur Opung Sari &amp; Bank Sampah: </span>
-              <span className="text-blue-900">
+              <span className="font-extrabold text-foreground">Alur Opung Sari &amp; Bank Sampah: </span>
+              <span className="text-muted-foreground">
                 Tong Pintar IoT mendata volume &amp; habituasi LISA harian serta memberi Poin Kelas. Saldo Rupiah Kas Kelas diperoleh saat sampah terpilah disetor fisik ke <strong>Koordinator Bank Sampah Sekolah</strong>.
               </span>
             </div>
           </div>
 
-          <div className="p-3 bg-amber-50/80 rounded-2xl border border-amber-200/80 text-xs text-amber-950 flex items-start gap-2.5 leading-relaxed">
-            <span className="text-base shrink-0">💡</span>
+          <div className="p-3 bg-secondary/60 rounded-2xl border border-border text-xs text-foreground flex items-start gap-2.5 leading-relaxed">
+            <Lightbulb size={16} className="text-primary shrink-0 mt-0.5" aria-hidden="true" />
             <div>
-              <span className="font-extrabold text-amber-950">Tahukah Kamu? </span>
-              <span className="text-amber-900">{selectedItem.funFact}</span>
+              <span className="font-extrabold text-foreground">Tahukah Kamu? </span>
+              <span className="text-muted-foreground">{selectedItem.funFact}</span>
             </div>
           </div>
         </div>
@@ -559,35 +566,36 @@ export const SmartBinIoTTab: React.FC<SmartBinIoTTabProps> = ({
         <div>
           <button
             id="btn-trigger-iot-disposal"
+            type="button"
             disabled={isSimulating}
             onClick={handleStartDisposal}
-            className={`w-full py-4 px-5 rounded-2xl font-black text-sm flex items-center justify-center gap-2.5 transition-all shadow-md active:translate-y-1 ${
+            className={`w-full py-4 px-5 rounded-2xl font-black text-sm flex items-center justify-center gap-2.5 transition-all shadow-md active:translate-y-1 outline-none focus-visible:ring-2 focus-visible:ring-ring ${
               isSimulating
-                ? 'bg-stone-700 border-b-4 border-stone-900 text-white cursor-wait'
-                : 'bg-emerald-600 hover:bg-emerald-700 active:border-b-0 border-b-4 border-emerald-800 text-white cursor-pointer'
+                ? 'bg-muted border-b-4 border-border text-muted-foreground cursor-wait'
+                : 'bg-primary hover:bg-primary/90 active:border-b-0 border-b-4 border-primary-active text-primary-foreground cursor-pointer'
             }`}
           >
             {activeStep === 'idle' && (
               <>
-                <Zap size={16} />
+                <Activity size={16} aria-hidden="true" />
                 <span>Buka Tutup Tong &amp; Catat LISA Sekarang</span>
               </>
             )}
             {activeStep === 'scanning_rfid' && (
               <>
-                <QrCode size={16} className="animate-spin text-amber-300" />
+                <QrCode size={16} className="text-primary-foreground/80" aria-hidden="true" />
                 <span>Memindai Kartu Siswa {currentStudent.name}...</span>
               </>
             )}
             {activeStep === 'sensor_detecting' && (
               <>
-                <Cpu size={16} className="animate-pulse text-cyan-300" />
+                <Cpu size={16} className="text-primary-foreground/80" aria-hidden="true" />
                 <span>Sensor Mengenali: {selectedItem.name}...</span>
               </>
             )}
             {activeStep === 'lid_opening' && (
               <>
-                <Layers size={16} className="animate-bounce text-emerald-300" />
+                <Layers size={16} className="text-primary-foreground/80" aria-hidden="true" />
                 <span>
                   Tutup Tong {WASTE_CATEGORIES[selectedItem.category].name} Terbuka...
                 </span>
@@ -595,7 +603,7 @@ export const SmartBinIoTTab: React.FC<SmartBinIoTTabProps> = ({
             )}
             {activeStep === 'success' && (
               <>
-                <CheckCircle2 size={16} className="text-emerald-300" />
+                <CheckCircle2 size={16} className="text-primary-foreground/80" aria-hidden="true" />
                 <span>Sampah Berhasil Masuk &amp; Ditimbang!</span>
               </>
             )}
@@ -604,22 +612,24 @@ export const SmartBinIoTTab: React.FC<SmartBinIoTTabProps> = ({
 
         {/* Success Celebration Card */}
         {lastRewardInfo && activeStep === 'success' && (
-          <div className="p-4 bg-gradient-to-r from-emerald-600 to-teal-700 rounded-2xl text-white flex items-center justify-between gap-3 shadow-md animate-in fade-in zoom-in-95 duration-200">
+          <div className="p-4 bg-gradient-to-r from-primary to-primary-active rounded-2xl text-primary-foreground flex items-center justify-between gap-3 shadow-md animate-in fade-in zoom-in-95 duration-200">
             <div>
               <div className="text-sm font-black flex items-center gap-1.5">
-                <span>🎉 Hore! Habituasi LISA Berhasil Dicatat</span>
+                <PartyPopper size={16} className="text-primary-foreground/80 shrink-0" aria-hidden="true" />
+                <span>Hore! Habituasi LISA Berhasil Dicatat</span>
               </div>
-              <div className="text-xs text-emerald-100 mt-1 leading-tight">
+              <div className="text-xs text-primary-foreground/85 mt-1 leading-tight">
                 {lastRewardInfo.itemName} ({lastRewardInfo.weight} kg) tercatat pada Tong Cerdas! Menambah +1 log LISA kelas &amp;{' '}
-                <span className="font-extrabold text-amber-200">
-                  +{lastRewardInfo.points} Eco-Points
+                <span className="font-extrabold text-primary-foreground">
+                  +{lastRewardInfo.points} Poin LISA
                 </span>{' '}
                 untukmu.
               </div>
             </div>
             <button
+              type="button"
               onClick={() => setActiveStep('idle')}
-              className="text-xs font-black bg-white text-emerald-900 px-3.5 py-2 rounded-xl hover:bg-emerald-50 active:scale-95 transition-all shrink-0 cursor-pointer shadow-xs"
+              className="text-xs font-black bg-card text-primary px-3.5 py-2 rounded-xl hover:bg-secondary active:scale-95 transition-all shrink-0 cursor-pointer shadow-xs outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               Setor Lagi
             </button>

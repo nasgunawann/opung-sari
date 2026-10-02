@@ -4,7 +4,6 @@ import {
   Building2,
   User,
   CheckCircle2,
-  Sparkles,
   ArrowRight,
   TrendingUp,
   Wallet,
@@ -17,6 +16,7 @@ import {
 } from 'lucide-react';
 import { SchoolClass, Student, WasteCategory, WasteCategoryInfo } from '../types';
 import { WASTE_CATEGORIES } from '../data/initialData';
+import { WasteCategoryIcon, StudentAvatar } from '../lib/appIcons';
 
 interface CoordinatorTabProps {
   classes: SchoolClass[];
@@ -107,16 +107,16 @@ export const CoordinatorTab: React.FC<CoordinatorTabProps> = ({
   return (
     <div className="w-full max-w-5xl mx-auto py-5 px-3 sm:px-6 space-y-5">
       {/* Header Banner */}
-      <div className="bg-emerald-800 text-white rounded-2xl p-4 sm:p-6 border border-emerald-900 shadow-sm">
+      <div className="bg-primary text-primary-foreground rounded-2xl p-4 sm:p-6 border border-border shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-900 text-emerald-200 text-xs font-bold">
-              <Scale size={14} /> Pos Timbang Bank Sampah
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary-active text-primary-foreground text-xs font-bold">
+              <Scale size={14} aria-hidden="true" /> Pos Timbang Bank Sampah
             </div>
-            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white">
+            <h2 className="text-xl sm:text-2xl font-black tracking-tight text-primary-foreground">
               Pencatatan Setor Sampah Fisik
-            </h1>
-            <p className="text-xs sm:text-sm text-emerald-100/90 max-w-xl">
+            </h2>
+            <p className="text-xs sm:text-sm text-primary-foreground/90 max-w-xl">
               Timbang sampah terpilah dari kelas. Nilai rupiah langsung masuk ke buku kas kelas
               dan menambah rekor poin Adiwiyata kelas tersebut.
             </p>
@@ -124,12 +124,13 @@ export const CoordinatorTab: React.FC<CoordinatorTabProps> = ({
 
           {pendingApprovalsCount > 0 && onNavigateToApprovals && (
             <button
+              type="button"
               onClick={onNavigateToApprovals}
-              className="self-start sm:self-center inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-stone-900 text-xs font-bold shadow transition-all active:scale-95"
+              className="self-start sm:self-center inline-flex items-center gap-2 min-h-10 px-3.5 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-foreground text-xs font-bold shadow transition-all active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
+              <span className="w-2 h-2 rounded-full bg-destructive" />
               <span>{pendingApprovalsCount} Permohonan Kas Menunggu</span>
-              <ArrowRight size={14} />
+              <ArrowRight size={14} aria-hidden="true" />
             </button>
           )}
         </div>
@@ -137,18 +138,18 @@ export const CoordinatorTab: React.FC<CoordinatorTabProps> = ({
 
       {/* Success Notification Alert */}
       {isSuccess && lastSuccessData && (
-        <div className="p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-500 text-emerald-950 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm animate-in fade-in slide-in-from-top-2">
+        <div className="p-4 rounded-2xl bg-secondary border-2 border-primary text-secondary-foreground flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm animate-in fade-in slide-in-from-top-2">
           <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0">
-              <CheckCircle2 size={22} />
+            <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shrink-0">
+              <CheckCircle2 size={22} aria-hidden="true" />
             </div>
             <div>
-              <div className="font-black text-sm sm:text-base text-emerald-900">
+              <div className="font-black text-sm sm:text-base text-primary">
                 Setoran Berhasil Dicatat ke {lastSuccessData.className}!
               </div>
-              <div className="text-xs text-emerald-800 mt-0.5">
+              <div className="text-xs text-primary/90 mt-0.5">
                 +{lastSuccessData.weightKg} kg {lastSuccessData.categoryName} • Masuk Kas{' '}
-                <span className="font-extrabold text-emerald-900">
+                <span className="font-extrabold text-primary">
                   +Rp {lastSuccessData.amountRp.toLocaleString('id-ID')}
                 </span>
                 {lastSuccessData.studentName && (
@@ -157,7 +158,7 @@ export const CoordinatorTab: React.FC<CoordinatorTabProps> = ({
               </div>
             </div>
           </div>
-          <span className="text-xs font-bold text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full self-start sm:self-center">
+          <span className="text-xs font-bold text-primary bg-secondary px-3 py-1 rounded-full self-start sm:self-center">
             Tersimpan di Buku Kas
           </span>
         </div>
@@ -168,20 +169,20 @@ export const CoordinatorTab: React.FC<CoordinatorTabProps> = ({
         {/* Left Column: Select Class & Representative (5 cols) */}
         <div className="lg:col-span-5 space-y-4">
           {/* Step 1: Pilih Kelas */}
-          <div className="bg-white rounded-2xl p-4 sm:p-5 border border-stone-200 shadow-sm space-y-3.5">
+          <div className="bg-card rounded-2xl p-4 sm:p-5 border border-border shadow-sm space-y-3.5">
             <div className="flex items-center justify-between border-b pb-2.5">
               <div className="flex items-center gap-2">
-                <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold flex items-center justify-center">
+                <span className="w-6 h-6 rounded-full bg-secondary text-primary text-xs font-extrabold flex items-center justify-center">
                   1
                 </span>
-                <h2 className="text-sm font-bold text-stone-900">Pilih Kelas Penyetor</h2>
+                <h2 className="text-sm font-bold text-foreground">Pilih Kelas Penyetor</h2>
               </div>
-              <span className="text-xs text-stone-500 font-medium">
+              <span className="text-xs text-muted-foreground font-medium">
                 {classes.length} Kelas Terdaftar
               </span>
             </div>
 
-            <p className="text-xs text-stone-500">
+            <p className="text-xs text-muted-foreground">
               Uang rupiah dari hasil timbangan akan ditambahkan langsung ke saldo kas kelas ini.
             </p>
 
@@ -197,30 +198,30 @@ export const CoordinatorTab: React.FC<CoordinatorTabProps> = ({
                       setSelectedClassId(cls.id);
                       setSelectedStudentId(''); // reset representative when class changes
                     }}
-                    className={`p-3 rounded-xl border text-left transition-all relative flex flex-col justify-between ${
+                    className={`p-3 rounded-xl border text-left transition-all relative flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                       isSelected
-                        ? 'border-emerald-600 bg-emerald-50/70 ring-2 ring-emerald-500 shadow-xs'
-                        : 'border-stone-200 hover:border-emerald-300 hover:bg-stone-50/70 bg-white'
+                        ? 'border-primary bg-secondary ring-2 ring-primary shadow-xs'
+                        : 'border-border hover:border-primary/40 hover:bg-muted/50 bg-card'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-1 mb-1">
-                      <span className="font-black text-sm text-stone-900">{cls.name}</span>
+                      <span className="font-black text-sm text-foreground">{cls.name}</span>
                       {isSelected ? (
-                        <div className="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0">
-                          <Check size={10} strokeWidth={3} />
+                        <div className="w-4 h-4 rounded-full bg-primary text-primary-foreground flex items-center justify-center shrink-0">
+                          <Check size={10} strokeWidth={3} aria-hidden="true" />
                         </div>
                       ) : (
-                        <span className="text-[10px] font-bold text-stone-400">#{cls.rank}</span>
+                        <span className="text-[10px] font-bold text-muted-foreground">#{cls.rank}</span>
                       )}
                     </div>
 
-                    <div className="text-[11px] text-stone-500 truncate leading-tight mb-2">
+                    <div className="text-[11px] text-muted-foreground truncate leading-tight mb-2">
                       {cls.waliKelas.split(',')[0]}
                     </div>
 
-                    <div className="pt-1.5 border-t border-stone-100 flex items-center justify-between">
-                      <span className="text-[10px] text-stone-500 font-medium">Saldo Kas</span>
-                      <span className="text-xs font-black text-emerald-800">
+                    <div className="pt-1.5 border-t border-border flex items-center justify-between">
+                      <span className="text-[10px] text-muted-foreground font-medium">Saldo Kas</span>
+                      <span className="text-xs font-black text-primary">
                         Rp {(cls.balanceRp ?? 0).toLocaleString('id-ID')}
                       </span>
                     </div>
@@ -231,33 +232,37 @@ export const CoordinatorTab: React.FC<CoordinatorTabProps> = ({
           </div>
 
           {/* Step 2: Perwakilan Siswa (Opsional) */}
-          <div className="bg-white rounded-2xl p-4 sm:p-5 border border-stone-200 shadow-sm space-y-3">
+          <div className="bg-card rounded-2xl p-4 sm:p-5 border border-border shadow-sm space-y-3">
             <div className="flex items-center justify-between border-b pb-2.5">
               <div className="flex items-center gap-2">
-                <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold flex items-center justify-center">
+                <span className="w-6 h-6 rounded-full bg-secondary text-primary text-xs font-extrabold flex items-center justify-center">
                   2
                 </span>
-                <h2 className="text-sm font-bold text-stone-900">Perwakilan Siswa (Opsional)</h2>
+                <h2 className="text-sm font-bold text-foreground">Perwakilan Siswa (Opsional)</h2>
               </div>
-              <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md">
+              <span className="text-[11px] font-semibold text-primary bg-secondary px-2 py-0.5 rounded-md">
                 Bonus XP
               </span>
             </div>
 
-            <p className="text-xs text-stone-500">
+            <p className="text-xs text-muted-foreground">
               Jika ada siswa yang mengantar langsung, pilih namanya agar ia memperoleh poin XP
               keaktifan Adiwiyata.
             </p>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-stone-700 flex items-center gap-1.5">
-                <User size={13} className="text-stone-400" />
+              <label
+                htmlFor="coordinator-student-select"
+                className="text-xs font-semibold text-foreground flex items-center gap-1.5"
+              >
+                <User size={13} className="text-muted-foreground" aria-hidden="true" />
                 Nama Siswa Pengantar ({selectedClass?.name || 'Kelas'})
               </label>
               <select
+                id="coordinator-student-select"
                 value={selectedStudentId}
                 onChange={(e) => setSelectedStudentId(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-xl border border-stone-300 bg-stone-50/50 text-xs sm:text-sm font-medium text-stone-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white"
+                className="w-full px-3 py-2.5 rounded-xl border border-border bg-muted/50 text-xs sm:text-sm font-medium text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:bg-card"
               >
                 <option value="">-- Tanpa Perwakilan Khusus (Atas Nama Kelas) --</option>
                 {classStudents.map((s) => (
@@ -269,17 +274,17 @@ export const CoordinatorTab: React.FC<CoordinatorTabProps> = ({
             </div>
 
             {selectedStudent && (
-              <div className="p-2.5 rounded-xl bg-amber-50/80 border border-amber-200/80 flex items-center justify-between text-xs text-amber-900">
+              <div className="p-2.5 rounded-xl bg-secondary border border-border flex items-center justify-between text-xs text-secondary-foreground">
                 <div className="flex items-center gap-2 truncate">
-                  <span className="text-lg">{selectedStudent.avatar}</span>
+                  <StudentAvatar name={selectedStudent.name} size={24} />
                   <div className="truncate">
                     <span className="font-bold">{selectedStudent.name}</span>
-                    <span className="text-[10px] text-amber-700 block">
+                    <span className="text-[10px] text-primary block">
                       NIS: {selectedStudent.nis} • Level {selectedStudent.level}
                     </span>
                   </div>
                 </div>
-                <span className="font-bold shrink-0 bg-amber-200/70 text-amber-900 px-2 py-0.5 rounded-md text-[11px]">
+                <span className="font-bold shrink-0 bg-primary/15 text-primary px-2 py-0.5 rounded-md text-[11px]">
                   +{calculatedPoints} XP saat setor
                 </span>
               </div>
@@ -291,18 +296,18 @@ export const CoordinatorTab: React.FC<CoordinatorTabProps> = ({
         <div className="lg:col-span-7">
           <form
             onSubmit={handleSubmit}
-            className="bg-white rounded-2xl p-4 sm:p-6 border border-stone-200 shadow-sm space-y-5"
+            className="bg-card rounded-2xl p-4 sm:p-6 border border-border shadow-sm space-y-5"
           >
             {/* Step 3: Kategori Sampah */}
             <div className="space-y-3">
               <div className="flex items-center justify-between border-b pb-2.5">
                 <div className="flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold flex items-center justify-center">
+                  <span className="w-6 h-6 rounded-full bg-secondary text-primary text-xs font-extrabold flex items-center justify-center">
                     3
                   </span>
-                  <h2 className="text-sm font-bold text-stone-900">Pilih Kategori Sampah</h2>
+                  <h2 className="text-sm font-bold text-foreground">Pilih Kategori Sampah</h2>
                 </div>
-                <span className="text-xs text-emerald-800 font-bold">
+                <span className="text-xs text-primary font-bold">
                   Tarif: Rp {selectedCategory.pricePerKg.toLocaleString('id-ID')}/kg
                 </span>
               </div>
@@ -316,22 +321,22 @@ export const CoordinatorTab: React.FC<CoordinatorTabProps> = ({
                       key={cat.id}
                       type="button"
                       onClick={() => setSelectedCategory(cat)}
-                      className={`p-3 rounded-xl border text-left transition-all flex flex-col gap-1.5 ${
+                      className={`p-3 rounded-xl border text-left transition-all flex flex-col gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                         isSelected
-                          ? 'border-emerald-600 bg-emerald-50/70 ring-2 ring-emerald-500 shadow-xs'
-                          : 'border-stone-200 hover:border-emerald-300 hover:bg-stone-50/70 bg-white'
+                          ? 'border-primary bg-secondary ring-2 ring-primary shadow-xs'
+                          : 'border-border hover:border-primary/40 hover:bg-muted/50 bg-card'
                       }`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-2xl">{cat.icon}</span>
-                        <span className="text-xs font-bold text-emerald-800 bg-emerald-100/70 px-2 py-0.5 rounded-md">
+                        <WasteCategoryIcon category={cat.id} size={24} />
+                        <span className="text-xs font-bold text-primary bg-secondary px-2 py-0.5 rounded-md">
                           Rp {cat.pricePerKg.toLocaleString('id-ID')}
                         </span>
                       </div>
-                      <div className="font-bold text-xs sm:text-sm text-stone-900 leading-tight">
+                      <div className="font-bold text-xs sm:text-sm text-foreground leading-tight">
                         {cat.name}
                       </div>
-                      <span className="text-[10px] text-stone-500 truncate">{cat.label}</span>
+                      <span className="text-[10px] text-muted-foreground truncate">{cat.label}</span>
                     </button>
                   );
                 })}
@@ -342,27 +347,28 @@ export const CoordinatorTab: React.FC<CoordinatorTabProps> = ({
             <div className="space-y-3">
               <div className="flex items-center justify-between border-b pb-2.5">
                 <div className="flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold flex items-center justify-center">
+                  <span className="w-6 h-6 rounded-full bg-secondary text-primary text-xs font-extrabold flex items-center justify-center">
                     4
                   </span>
-                  <h2 className="text-sm font-bold text-stone-900">Timbangan Aktual (Kg)</h2>
+                  <h2 className="text-sm font-bold text-foreground">Timbangan Aktual (Kg)</h2>
                 </div>
                 <button
                   type="button"
                   onClick={() => setWeightKg(1.0)}
-                  className="inline-flex items-center gap-1 text-[11px] font-semibold text-stone-500 hover:text-stone-800"
+                  className="inline-flex items-center gap-1 min-h-10 px-2 rounded-lg text-[11px] font-semibold text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
-                  <RotateCcw size={12} /> Reset (1 kg)
+                  <RotateCcw size={12} aria-hidden="true" /> Reset (1 kg)
                 </button>
               </div>
 
               {/* Main Stepper Control */}
-              <div className="flex items-center justify-between gap-3 p-3 bg-stone-50 rounded-2xl border border-stone-200">
+              <div className="flex items-center justify-between gap-3 p-3 bg-muted rounded-2xl border border-border">
                 <button
                   type="button"
                   onClick={() => handleAdjustWeight(-0.5)}
                   disabled={weightKg <= 0.1}
-                  className="w-11 h-11 rounded-xl bg-white border border-stone-300 text-stone-700 hover:bg-stone-100 active:scale-95 disabled:opacity-40 flex items-center justify-center shadow-xs transition-transform"
+                  aria-label="Kurangi berat 0,5 kg"
+                  className="w-11 h-11 rounded-xl bg-card border border-border text-foreground hover:bg-muted active:scale-95 disabled:opacity-40 flex items-center justify-center shadow-xs transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <Minus size={18} />
                 </button>
@@ -375,15 +381,16 @@ export const CoordinatorTab: React.FC<CoordinatorTabProps> = ({
                       min="0.05"
                       max="200"
                       value={weightKg}
+                      aria-label="Berat timbangan (kg)"
                       onChange={(e) => {
                         const val = parseFloat(e.target.value);
                         setWeightKg(isNaN(val) ? 0 : Number(val.toFixed(2)));
                       }}
-                      className="w-24 sm:w-28 text-center text-3xl sm:text-4xl font-black text-stone-900 bg-transparent border-b-2 border-emerald-500 focus:outline-none"
+                      className="w-24 sm:w-28 text-center text-3xl sm:text-4xl font-black text-foreground bg-transparent border-b-2 border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     />
-                    <span className="text-sm sm:text-base font-bold text-stone-500">kg</span>
+                    <span className="text-sm sm:text-base font-bold text-muted-foreground">kg</span>
                   </div>
-                  <span className="text-[11px] text-stone-400 font-medium mt-0.5">
+                  <span className="text-[11px] text-muted-foreground font-medium mt-0.5">
                     Minimal 0.05 kg
                   </span>
                 </div>
@@ -391,7 +398,8 @@ export const CoordinatorTab: React.FC<CoordinatorTabProps> = ({
                 <button
                   type="button"
                   onClick={() => handleAdjustWeight(0.5)}
-                  className="w-11 h-11 rounded-xl bg-white border border-stone-300 text-stone-700 hover:bg-stone-100 active:scale-95 flex items-center justify-center shadow-xs transition-transform"
+                  aria-label="Tambah berat 0,5 kg"
+                  className="w-11 h-11 rounded-xl bg-card border border-border text-foreground hover:bg-muted active:scale-95 flex items-center justify-center shadow-xs transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <Plus size={18} />
                 </button>
@@ -399,13 +407,13 @@ export const CoordinatorTab: React.FC<CoordinatorTabProps> = ({
 
               {/* Quick Weight Presets */}
               <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                <span className="text-[11px] font-semibold text-stone-500 mr-1">Tambah Cepat:</span>
+                <span className="text-[11px] font-semibold text-muted-foreground mr-1">Tambah Cepat:</span>
                 {[0.2, 0.5, 1.0, 2.5, 5.0].map((val) => (
                   <button
                     key={val}
                     type="button"
                     onClick={() => handleQuickAddWeight(val)}
-                    className="px-2.5 py-1 rounded-lg bg-stone-100 hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-300 border border-stone-200 text-xs font-bold text-stone-700 transition-all active:scale-95"
+                    className="inline-flex items-center justify-center h-10 px-3 rounded-lg bg-muted hover:bg-secondary hover:text-primary hover:border-primary/40 border border-border text-xs font-bold text-foreground transition-all active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     +{val} kg
                   </button>
@@ -415,42 +423,43 @@ export const CoordinatorTab: React.FC<CoordinatorTabProps> = ({
 
             {/* Step 5: Catatan Tambahan (Opsional) */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-stone-700">
+              <label htmlFor="coordinator-notes" className="text-xs font-semibold text-foreground">
                 Catatan Setoran (Opsional)
               </label>
               <input
+                id="coordinator-notes"
                 type="text"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Contoh: Dari piket kelas pagi, botol mineral bersih..."
-                className="w-full px-3.5 py-2 rounded-xl border border-stone-300 text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-border text-xs sm:text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               />
             </div>
 
             {/* Real-time Calculation Summary Card */}
-            <div className="p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-200 space-y-2.5">
-              <div className="text-xs font-bold uppercase tracking-wider text-emerald-800 flex items-center gap-1.5">
-                <Sparkles size={14} className="text-emerald-700" /> Ringkasan Nilai Setoran
+            <div className="p-4 rounded-2xl bg-secondary border-2 border-primary/20 space-y-2.5">
+              <div className="text-xs font-bold tracking-wider text-primary flex items-center gap-1.5">
+                <Info size={14} className="text-primary" aria-hidden="true" /> Ringkasan Nilai Setoran
               </div>
 
               <div className="grid grid-cols-2 gap-3 pt-1">
-                <div className="bg-white/80 backdrop-blur-xs p-3 rounded-xl border border-emerald-200/70">
-                  <span className="text-[11px] text-stone-600 block">Kas Masuk ke {selectedClass?.name}:</span>
-                  <span className="text-lg sm:text-xl font-black text-emerald-800">
+                <div className="bg-card p-3 rounded-xl border border-primary/20">
+                  <span className="text-[11px] text-muted-foreground block">Kas Masuk ke {selectedClass?.name}:</span>
+                  <span className="text-lg sm:text-xl font-black text-primary">
                     +Rp {calculatedRp.toLocaleString('id-ID')}
                   </span>
                 </div>
 
-                <div className="bg-white/80 backdrop-blur-xs p-3 rounded-xl border border-emerald-200/70">
-                  <span className="text-[11px] text-stone-600 block">Poin Adiwiyata:</span>
-                  <span className="text-lg sm:text-xl font-black text-teal-800">
+                <div className="bg-card p-3 rounded-xl border border-primary/20">
+                  <span className="text-[11px] text-muted-foreground block">Poin Adiwiyata:</span>
+                  <span className="text-lg sm:text-xl font-black text-primary">
                     +{calculatedPoints} XP
                   </span>
                 </div>
               </div>
 
-              <div className="text-[11px] text-emerald-900/80 pt-1 flex items-center gap-1">
-                <Info size={13} className="shrink-0 text-emerald-700" />
+              <div className="text-[11px] text-primary/80 pt-1 flex items-center gap-1">
+                <Info size={13} className="shrink-0 text-primary" aria-hidden="true" />
                 <span>
                   Hasil timbangan langsung terakumulasi ke klasemen Adiwiyata sekolah secara instan.
                 </span>
@@ -461,9 +470,9 @@ export const CoordinatorTab: React.FC<CoordinatorTabProps> = ({
             <button
               type="submit"
               disabled={weightKg <= 0}
-              className="w-full py-3.5 px-4 rounded-xl bg-emerald-700 hover:bg-emerald-800 active:scale-[0.99] disabled:opacity-50 text-white font-black text-sm sm:text-base shadow-sm transition-all flex items-center justify-center gap-2"
+              className="w-full py-3.5 px-4 rounded-xl bg-primary hover:bg-primary-active active:scale-[0.99] disabled:opacity-50 text-primary-foreground font-black text-sm sm:text-base shadow-sm transition-all flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <CheckCircle2 size={18} />
+              <CheckCircle2 size={18} aria-hidden="true" />
               <span>Simpan Setoran ke Kas {selectedClass?.name || 'Kelas'}</span>
             </button>
           </form>

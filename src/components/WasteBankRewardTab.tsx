@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {
   Wallet,
+  Landmark,
   ArrowDownRight,
   ArrowUpRight,
   Clock,
@@ -17,6 +18,7 @@ import {
 } from 'lucide-react';
 import { BankTransaction, SchoolClass, Student, WasteCategory } from '../types';
 import { WASTE_CATEGORIES, WITHDRAWAL_DESTINATIONS } from '../data/initialData';
+import { DestinationIcon } from '../lib/appIcons';
 import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
 
@@ -88,91 +90,88 @@ export const WasteBankRewardTab: React.FC<WasteBankRewardTabProps> = ({
   return (
     <div className="w-full min-w-0 max-w-4xl mx-auto space-y-4 pb-24 pt-1 md:px-2">
       {/* SECTION 0: Hero Fintech Wallet Card (Buku Kas Bersama) */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 text-white shadow-md p-4 sm:p-5">
-        {/* Subtle background ambient glows */}
-        <div className="pointer-events-none absolute -right-6 -top-6 w-36 h-36 rounded-full bg-white/10 blur-xl" />
-        <div className="pointer-events-none absolute -left-8 -bottom-8 w-32 h-32 rounded-full bg-emerald-400/15 blur-lg" />
-
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-primary to-primary-active text-primary-foreground shadow-md p-4 sm:p-5">
         {/* Top Bar: Class identity & Wali Kelas */}
         <div className="relative flex items-center justify-between gap-2">
           <div className="flex items-center gap-3 min-w-0">
             <div className="relative shrink-0">
-              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl border border-white/25 shadow-inner">
-                🏦
+              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-primary-active flex items-center justify-center border border-primary-foreground/25 shadow-inner">
+                <Landmark size={24} className="text-primary-foreground" aria-hidden="true" />
               </div>
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-1.5 min-w-0">
-                <h2 className="text-sm sm:text-base font-extrabold text-white truncate tracking-tight">
+                <h2 className="text-sm sm:text-base font-extrabold text-primary-foreground truncate tracking-tight">
                   Kas Bersama {currentClass?.name?.split(' - ')[0] || currentStudent?.className}
                 </h2>
               </div>
-              <p className="text-xs text-emerald-100/85 font-medium truncate">
+              <p className="text-xs text-primary-foreground/85 font-medium truncate">
                 Wali Kelas: {currentClass?.waliKelas || 'Guru Pembina'}
               </p>
             </div>
           </div>
-          <span className="hidden sm:inline-flex items-center text-[10px] font-semibold bg-white/15 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/20 text-emerald-100">
+          <span className="hidden sm:inline-flex items-center text-[10px] font-semibold bg-overlay/20 px-2.5 py-1 rounded-full border border-primary-foreground/20 text-primary-foreground/90">
             Buku Kas Kelas
           </span>
         </div>
 
         {/* Middle: Saldo Display */}
         <div className="relative mt-4">
-          <div className="flex items-center gap-1.5 text-emerald-100/90 text-[11px] font-bold uppercase tracking-wider">
-            <Wallet size={13} className="opacity-90" />
+          <div className="flex items-center gap-1.5 text-primary-foreground/90 text-[11px] font-bold tracking-wider">
+            <Wallet size={13} className="opacity-90" aria-hidden="true" />
             <span>Saldo Kas Kelas Terkumpul</span>
           </div>
-          <div className="text-2xl sm:text-3xl font-black tracking-tight text-white mt-1">
+          <div className="text-2xl sm:text-3xl font-black tracking-tight text-primary-foreground mt-1">
             {formatCurrency(currentClass?.balanceRp ?? currentStudent?.balanceRp ?? 0)}
           </div>
-          <p className="text-[11px] text-emerald-100/80 mt-0.5">
+          <p className="text-[11px] text-primary-foreground/80 mt-0.5">
             Akumulasi hasil pemilahan sampah siswa {currentClass?.name?.split(' - ')[0] || currentStudent.className}.
           </p>
         </div>
 
         {/* Mini Ledger Quick Stats */}
         <div className="relative mt-3.5 grid grid-cols-2 gap-2">
-          <div className="bg-black/15 backdrop-blur-md rounded-2xl p-2.5 border border-white/10">
-            <div className="flex items-center gap-1 text-[10px] font-semibold text-emerald-200">
-              <TrendingUp size={12} className="text-emerald-300" />
+          <div className="bg-overlay/20 rounded-2xl p-2.5 border border-primary-foreground/10">
+            <div className="flex items-center gap-1 text-[10px] font-semibold text-primary-foreground/90">
+              <TrendingUp size={12} className="text-primary-foreground/80" aria-hidden="true" />
               <span>Total Pemasukan</span>
             </div>
-            <div className="text-xs sm:text-sm font-extrabold text-white mt-0.5">
+            <div className="text-xs sm:text-sm font-extrabold text-primary-foreground mt-0.5">
               +{formatCurrency(totalIncome)}
             </div>
           </div>
 
-          <div className="bg-black/15 backdrop-blur-md rounded-2xl p-2.5 border border-white/10">
-            <div className="flex items-center gap-1 text-[10px] font-semibold text-amber-200">
-              <TrendingDown size={12} className="text-amber-300" />
+          <div className="bg-overlay/20 rounded-2xl p-2.5 border border-primary-foreground/10">
+            <div className="flex items-center gap-1 text-[10px] font-semibold text-primary-foreground/90">
+              <TrendingDown size={12} className="text-primary-foreground/80" aria-hidden="true" />
               <span>Total Dicairkan</span>
             </div>
-            <div className="text-xs sm:text-sm font-extrabold text-white mt-0.5">
+            <div className="text-xs sm:text-sm font-extrabold text-primary-foreground mt-0.5">
               -{formatCurrency(totalExpense)}
             </div>
           </div>
         </div>
 
         {/* Bottom Bar: Personal Contribution & Tarik Button */}
-        <div className="relative mt-4 pt-3 border-t border-white/15 flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
+        <div className="relative mt-4 pt-3 border-t border-primary-foreground/15 flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
           <div className="flex items-center gap-1.5 flex-wrap">
-            <div className="inline-flex items-center gap-1 bg-black/20 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10 text-xs font-bold text-white">
-              <Coins size={13} className="text-amber-300" />
-              <span>{currentStudent.points} <span className="text-emerald-200 text-[10px] font-semibold">poin</span></span>
+            <div className="inline-flex items-center gap-1 bg-overlay/20 px-2.5 py-1 rounded-full border border-primary-foreground/10 text-xs font-bold text-primary-foreground">
+              <Coins size={13} className="text-primary-foreground/80" aria-hidden="true" />
+              <span>{currentStudent.points} <span className="text-primary-foreground/80 text-[10px] font-semibold">poin</span></span>
             </div>
-            <div className="inline-flex items-center gap-1 bg-black/20 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10 text-xs font-bold text-white">
-              <Scale size={13} className="text-emerald-200" />
-              <span>{currentStudent.totalKg} <span className="text-emerald-200 text-[10px] font-semibold">kg</span></span>
+            <div className="inline-flex items-center gap-1 bg-overlay/20 px-2.5 py-1 rounded-full border border-primary-foreground/10 text-xs font-bold text-primary-foreground">
+              <Scale size={13} className="text-primary-foreground/80" aria-hidden="true" />
+              <span>{currentStudent.totalKg} <span className="text-primary-foreground/80 text-[10px] font-semibold">kg</span></span>
             </div>
           </div>
 
           <button
             id="btn-withdraw-main"
+            type="button"
             onClick={onOpenWithdrawModal}
-            className="flex items-center gap-1.5 bg-white hover:bg-emerald-50 active:scale-95 text-emerald-950 font-extrabold text-xs px-3.5 py-2 rounded-xl shadow-xs transition-all cursor-pointer shrink-0"
+            className="flex items-center gap-1.5 bg-card hover:bg-secondary active:scale-95 text-primary font-extrabold text-xs px-3.5 py-2 rounded-xl shadow-xs transition-all cursor-pointer shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            <ArrowUpRight size={14} className="text-emerald-700" />
+            <ArrowUpRight size={14} className="text-primary" aria-hidden="true" />
             <span>Ajukan Pencairan</span>
           </button>
         </div>
@@ -184,19 +183,19 @@ export const WasteBankRewardTab: React.FC<WasteBankRewardTabProps> = ({
           <button
             type="button"
             onClick={() => setIsDestinationsOpen((prev) => !prev)}
-            className="w-full p-3 flex items-center justify-between gap-3 text-left hover:bg-muted/40 transition-colors cursor-pointer select-none"
+            className="w-full p-3 flex items-center justify-between gap-3 text-left hover:bg-muted/40 transition-colors cursor-pointer select-none outline-none focus-visible:ring-2 focus-visible:ring-ring"
             aria-expanded={isDestinationsOpen}
           >
             <div className="flex items-center gap-2.5 min-w-0">
               <div className="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                <Gift size={16} />
+                <Gift size={16} aria-hidden="true" />
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5">
-                  <h2 className="text-xs sm:text-sm font-bold text-foreground truncate">
+                  <h3 className="text-xs sm:text-sm font-bold text-foreground truncate">
                     Pencairan Kas ke Mana Saja?
-                  </h2>
-                  <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 rounded-full shrink-0">
+                  </h3>
+                  <span className="text-[10px] font-semibold text-primary bg-secondary border border-border px-1.5 py-0.2 rounded-full shrink-0">
                     4 Pilihan
                   </span>
                 </div>
@@ -215,6 +214,7 @@ export const WasteBankRewardTab: React.FC<WasteBankRewardTabProps> = ({
                 className={`transition-transform duration-200 ${
                   isDestinationsOpen ? 'rotate-180 text-foreground' : ''
                 }`}
+                aria-hidden="true"
               />
             </div>
           </button>
@@ -226,41 +226,42 @@ export const WasteBankRewardTab: React.FC<WasteBankRewardTabProps> = ({
                   const getCardStyle = (id: string) => {
                     switch (id) {
                       case 'kebersihan':
-                        return 'bg-emerald-50/60 border-emerald-200/80 hover:border-emerald-400 hover:bg-emerald-50';
+                        return 'bg-secondary/60 border-border hover:border-primary/50 hover:bg-secondary';
                       case 'tanaman':
-                        return 'bg-teal-50/60 border-teal-200/80 hover:border-teal-400 hover:bg-teal-50';
+                        return 'bg-accent/60 border-border hover:border-primary/50 hover:bg-accent';
                       case 'kantin':
-                        return 'bg-amber-50/60 border-amber-200/80 hover:border-amber-400 hover:bg-amber-50';
+                        return 'bg-muted/60 border-border hover:border-primary/50 hover:bg-muted';
                       default:
-                        return 'bg-blue-50/60 border-blue-200/80 hover:border-blue-400 hover:bg-blue-50';
+                        return 'bg-muted/60 border-border hover:border-primary/50 hover:bg-muted';
                     }
                   };
 
                   return (
-                    <div
+                    <button
+                      type="button"
                       key={dest.id}
                       onClick={onOpenWithdrawModal}
                       className={`p-2.5 rounded-xl border ${getCardStyle(
                         dest.id
-                      )} cursor-pointer transition-all active:scale-[0.99] flex flex-col justify-between`}
+                      )} cursor-pointer transition-all active:scale-[0.99] flex flex-col justify-between text-left w-full outline-none focus-visible:ring-2 focus-visible:ring-ring`}
                     >
                       <div>
                         <div className="flex items-center justify-between gap-1">
-                          <div className="w-8 h-8 rounded-xl bg-white shadow-xs border border-border/80 flex items-center justify-center text-base shrink-0">
-                            {dest.icon}
+                          <div className="w-8 h-8 rounded-xl bg-card shadow-xs border border-border/80 flex items-center justify-center text-base shrink-0">
+                            <DestinationIcon destinationId={dest.id} size={16} aria-hidden="true" />
                           </div>
-                          <span className="text-[9px] font-bold text-emerald-900 bg-white/90 border border-emerald-200/80 px-1.5 py-0.5 rounded shrink-0 truncate max-w-[85px] sm:max-w-none">
+                          <span className="text-[9px] font-bold text-foreground bg-card/90 border border-border/80 px-1.5 py-0.5 rounded shrink-0 truncate max-w-[110px] sm:max-w-none">
                             Min Rp {dest.minAmount.toLocaleString('id-ID')}
                           </span>
                         </div>
-                        <h3 className="text-xs font-bold text-foreground truncate mt-1.5">
+                        <h4 className="text-xs font-bold text-foreground truncate mt-1.5">
                           {dest.name}
-                        </h3>
+                        </h4>
                         <p className="text-[10px] sm:text-[11px] text-muted-foreground mt-0.5 line-clamp-2 leading-tight">
                           {dest.description}
                         </p>
                       </div>
-                    </div>
+                    </button>
                   );
                 })}
               </div>
@@ -272,7 +273,7 @@ export const WasteBankRewardTab: React.FC<WasteBankRewardTabProps> = ({
                   size="sm"
                   className="w-full font-bold text-xs gap-1.5 cursor-pointer"
                 >
-                  <ArrowUpRight className="size-4" />
+                  <ArrowUpRight className="size-4" aria-hidden="true" />
                   <span>Ajukan Pencairan Kas Kelas</span>
                 </Button>
               </div>
@@ -285,10 +286,10 @@ export const WasteBankRewardTab: React.FC<WasteBankRewardTabProps> = ({
       <section className="space-y-2">
         <div className="flex items-center justify-between px-1">
           <div className="flex items-center gap-2">
-            <Receipt size={18} className="text-primary" />
-            <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">
+            <Receipt size={18} className="text-primary" aria-hidden="true" />
+            <h3 className="text-sm font-bold text-foreground tracking-wide">
               Arus Kas
-            </h2>
+            </h3>
           </div>
         </div>
 
@@ -297,8 +298,9 @@ export const WasteBankRewardTab: React.FC<WasteBankRewardTabProps> = ({
             {/* Filter Pills */}
             <div className="flex items-center gap-1 bg-muted/60 p-1 rounded-xl border border-border">
               <button
+                type="button"
                 onClick={() => setFilterType('all')}
-                className={`flex-1 py-1 text-xs font-bold rounded-lg transition-all ${
+                className={`flex-1 h-10 inline-flex items-center justify-center text-xs font-bold rounded-lg transition-all outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                   filterType === 'all'
                     ? 'bg-card text-foreground shadow-xs'
                     : 'text-muted-foreground hover:text-foreground'
@@ -307,8 +309,9 @@ export const WasteBankRewardTab: React.FC<WasteBankRewardTabProps> = ({
                 Semua
               </button>
               <button
+                type="button"
                 onClick={() => setFilterType('deposit')}
-                className={`flex-1 py-1 text-xs font-bold rounded-lg transition-all ${
+                className={`flex-1 h-10 inline-flex items-center justify-center text-xs font-bold rounded-lg transition-all outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                   filterType === 'deposit'
                     ? 'bg-card text-foreground shadow-xs'
                     : 'text-muted-foreground hover:text-foreground'
@@ -317,8 +320,9 @@ export const WasteBankRewardTab: React.FC<WasteBankRewardTabProps> = ({
                 Setoran Masuk
               </button>
               <button
+                type="button"
                 onClick={() => setFilterType('withdrawal')}
-                className={`flex-1 py-1 text-xs font-bold rounded-lg transition-all ${
+                className={`flex-1 h-10 inline-flex items-center justify-center text-xs font-bold rounded-lg transition-all outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                   filterType === 'withdrawal'
                     ? 'bg-card text-foreground shadow-xs'
                     : 'text-muted-foreground hover:text-foreground'
@@ -339,20 +343,21 @@ export const WasteBankRewardTab: React.FC<WasteBankRewardTabProps> = ({
                   const isDeposit = trx.type === 'deposit';
 
                   return (
-                    <div
+                    <button
+                      type="button"
                       key={trx.id}
                       onClick={() => onViewReceipt(trx)}
-                      className="p-2.5 sm:p-3 rounded-2xl border border-border hover:border-primary/50 hover:bg-muted/30 transition-all cursor-pointer flex items-center justify-between gap-2.5"
+                      className="w-full text-left p-2.5 sm:p-3 rounded-2xl border border-border hover:border-primary/50 hover:bg-muted/30 transition-all cursor-pointer flex items-center justify-between gap-2.5 outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
                       <div className="flex items-center gap-2.5 min-w-0 flex-1">
                         <div
                           className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
                             isDeposit
-                              ? 'bg-emerald-100 text-emerald-800'
-                              : 'bg-amber-100 text-amber-800'
+                              ? 'bg-secondary text-primary'
+                              : 'bg-destructive/10 text-destructive'
                           }`}
                         >
-                          {isDeposit ? <ArrowDownRight size={18} /> : <ArrowUpRight size={18} />}
+                          {isDeposit ? <ArrowDownRight size={18} aria-hidden="true" /> : <ArrowUpRight size={18} aria-hidden="true" />}
                         </div>
 
                         <div className="min-w-0 flex-1">
@@ -364,7 +369,7 @@ export const WasteBankRewardTab: React.FC<WasteBankRewardTabProps> = ({
                             </span>
                             {trx.status === 'diproses' && (
                               <span className="inline-flex items-center gap-1 text-[9px] bg-amber-100 text-amber-900 font-bold px-1.5 py-0.2 rounded-full border border-amber-200 shrink-0">
-                                <Clock size={9} /> Izin
+                                <Clock size={9} aria-hidden="true" /> Izin
                               </span>
                             )}
                           </div>
@@ -381,13 +386,13 @@ export const WasteBankRewardTab: React.FC<WasteBankRewardTabProps> = ({
                       <div className="text-right shrink-0">
                         <div
                           className={`text-xs sm:text-sm font-extrabold ${
-                            isDeposit ? 'text-emerald-700' : 'text-amber-700'
+                            isDeposit ? 'text-primary' : 'text-destructive'
                           }`}
                         >
                           {isDeposit ? '+' : '-'}Rp {trx.amountRp.toLocaleString('id-ID')}
                         </div>
                       </div>
-                    </div>
+                    </button>
                   );
                 })}
               </div>

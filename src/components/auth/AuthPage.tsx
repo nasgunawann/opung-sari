@@ -5,7 +5,16 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Card, CardContent } from '../ui/card';
-import { LogIn, Sparkles, ShieldCheck, ArrowRight, HelpCircle } from 'lucide-react';
+import {
+  ShieldCheck,
+  ArrowRight,
+  HelpCircle,
+  School,
+  UserRound,
+  Presentation,
+  Briefcase,
+  Building2,
+} from 'lucide-react';
 
 interface AuthPageProps {
   studentsList: Student[];
@@ -22,7 +31,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
   const handleManualLogin = (e: React.FormEvent) => {
     e.preventDefault();
     const query = loginIdentifier.trim().toLowerCase();
-    
+
     // Match by student name or NIS, else coordinator, else admin, else first student
     const matchedStudent = studentsList.find(
       (s) =>
@@ -42,27 +51,58 @@ export const AuthPage: React.FC<AuthPageProps> = ({
     }
   };
 
+  const demoButtons = [
+    {
+      key: 'student',
+      Icon: UserRound,
+      title: 'Andi',
+      subtitle: `Pengurus Kas ${studentsList[0]?.className ?? 'MTs'}`,
+      onClick: () => onLogin('student', studentsList[0]),
+    },
+    {
+      key: 'coordinator',
+      Icon: Presentation,
+      title: 'Pak Budi',
+      subtitle: 'Koordinator Bank Sampah',
+      onClick: () => onLogin('coordinator'),
+    },
+    {
+      key: 'principal',
+      Icon: Briefcase,
+      title: 'Ibu Ratna',
+      subtitle: 'Kepala Madrasah MTsN 2',
+      onClick: () => onLogin('admin', undefined, 'kepsek'),
+    },
+    {
+      key: 'dinas',
+      Icon: Building2,
+      title: 'Bpk. Anwar',
+      subtitle: 'Dinas Lingkungan Hidup',
+      onClick: () => onLogin('admin', undefined, 'dinas'),
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-stone-50 flex flex-col items-center justify-center p-4 sm:p-6 font-sans">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 sm:p-6 font-sans">
       {/* Brand Header */}
       <div className="text-center max-w-md mb-6 space-y-2">
-        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-emerald-600 text-white text-2xl shadow-md shadow-emerald-700/20 mb-1">
-          🏫
+        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary text-primary-foreground shadow-md shadow-primary/20 mb-1">
+          <School size={28} aria-hidden="true" />
         </div>
-        <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-stone-900">
+        <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
           Opung Sari Basah Bang 5.0
         </h1>
-        <p className="text-xs sm:text-sm text-stone-600 font-medium">
-          Sistem Terpadu Bank Sampah, Kas Kelas & IoT Cerdas Deli Serdang
+        <p className="text-xs sm:text-sm text-muted-foreground font-medium">
+          Sistem Terpadu Bank Sampah, Kas Kelas &amp; IoT Cerdas Deli Serdang
         </p>
       </div>
 
       {/* Main Login Card */}
-      <Card className="w-full max-w-lg border-2 border-stone-200/80 shadow-xl rounded-3xl overflow-hidden bg-white">
+      <Card className="w-full max-w-lg shadow-xl rounded-3xl overflow-hidden">
         <CardContent className="p-5 sm:p-6 space-y-5">
           <form onSubmit={handleManualLogin} className="space-y-4">
-            <div>
-              <Label htmlFor="login-id" className="text-xs font-bold text-stone-700">
+            <div className="space-y-1.5">
+              <Label htmlFor="login-id" className="text-xs font-bold text-foreground">
                 NIS / NIP / Nama Pengguna
               </Label>
               <Input
@@ -70,143 +110,80 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                 placeholder="Contoh: 202405012"
                 value={loginIdentifier}
                 onChange={(e) => setLoginIdentifier(e.target.value)}
-                className="rounded-xl border-stone-200 text-sm h-11 focus-visible:ring-emerald-500"
+                className="rounded-xl text-sm"
               />
             </div>
 
             <div className="space-y-1.5">
-              <div className="flex justify-between items-center">
-                <Label htmlFor="login-pass" className="text-xs font-bold text-stone-700">
-                  Kata Sandi
-                </Label>
-                <span className="text-[11px] text-stone-600 hover:text-emerald-700 cursor-pointer font-semibold">
-                  Lupa sandi?
-                </span>
-              </div>
+              <Label htmlFor="login-pass" className="text-xs font-bold text-foreground">
+                Kata Sandi
+              </Label>
               <Input
                 id="login-pass"
                 type="password"
                 placeholder="••••••••"
                 value={loginPassword}
                 onChange={(e) => setLoginPassword(e.target.value)}
-                className="rounded-xl border-stone-200 text-sm h-11 focus-visible:ring-emerald-500"
+                className="rounded-xl text-sm"
               />
             </div>
 
             <Button
               type="submit"
-              className="w-full h-11 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md cursor-pointer flex items-center justify-center gap-2"
+              className="w-full rounded-2xl text-sm font-bold gap-2"
             >
               <span>Masuk Sekarang</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </Button>
           </form>
 
           {/* Quick Demo Switcher / Preset Logins */}
-          <div className="pt-4 border-t border-stone-100 space-y-2.5">
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] font-extrabold uppercase tracking-wider text-stone-600 flex items-center gap-1">
-                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+          <div className="pt-4 border-t border-border space-y-2.5">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-[11px] font-extrabold tracking-wide text-muted-foreground flex items-center gap-1">
+                <ShieldCheck className="w-3.5 h-3.5 text-primary" aria-hidden="true" />
                 Pilih Akun Demo Cepat
               </span>
-              <span className="text-[10px] text-stone-600 font-medium">1-Klik Langsung Masuk</span>
+              <span className="text-[10px] text-muted-foreground font-medium">1-klik langsung masuk</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {/* 1. Demo Student */}
-              {studentsList.slice(0, 1).map((stu) => (
+              {demoButtons.map(({ key, Icon, title, subtitle, onClick }) => (
                 <button
-                  key={stu.id}
+                  key={key}
                   type="button"
-                  onClick={() => onLogin('student', stu)}
-                  className="flex items-center gap-2 p-2.5 rounded-2xl border border-stone-200 bg-stone-50 hover:bg-emerald-50 hover:border-emerald-300 text-left transition-all group cursor-pointer"
+                  onClick={onClick}
+                  className="flex items-center gap-2 p-2.5 rounded-2xl border border-border bg-muted/50 hover:bg-accent hover:border-primary/40 text-left transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer"
                 >
-                  <span className="text-xl p-1 bg-white rounded-xl shadow-xs border border-stone-200">
-                    👦
+                  <span className="p-1 rounded-xl bg-card border border-border text-primary">
+                    <Icon size={20} aria-hidden="true" />
                   </span>
                   <div className="min-w-0">
-                    <div className="text-xs font-bold text-stone-800 group-hover:text-emerald-800 truncate">
-                      Andi (Siswa)
+                    <div className="text-xs font-bold text-foreground truncate">
+                      {title}
                     </div>
-                    <div className="text-[10px] text-stone-600 font-medium">
-                      Pengurus Kas {stu.className}
+                    <div className="text-[10px] text-muted-foreground font-medium truncate">
+                      {subtitle}
                     </div>
                   </div>
                 </button>
               ))}
-
-              {/* 2. Demo Coordinator */}
-              <button
-                type="button"
-                onClick={() => onLogin('coordinator')}
-                className="flex items-center gap-2 p-2.5 rounded-2xl border border-stone-200 bg-stone-50 hover:bg-blue-50 hover:border-blue-300 text-left transition-all group cursor-pointer"
-              >
-                <span className="text-xl p-1 bg-white rounded-xl shadow-xs border border-stone-200">
-                  👨‍🏫
-                </span>
-                <div className="min-w-0">
-                  <div className="text-xs font-bold text-stone-800 group-hover:text-blue-800 truncate">
-                    Pak Budi
-                  </div>
-                  <div className="text-[10px] text-stone-600 font-medium">
-                    Koordinator Bank Sampah
-                  </div>
-                </div>
-              </button>
-
-              {/* 3. Demo Principal */}
-              <button
-                type="button"
-                onClick={() => onLogin('admin', undefined, 'kepsek')}
-                className="flex items-center gap-2 p-2.5 rounded-2xl border border-stone-200 bg-stone-50 hover:bg-purple-50 hover:border-purple-300 text-left transition-all group cursor-pointer"
-              >
-                <span className="text-xl p-1 bg-white rounded-xl shadow-xs border border-stone-200">
-                  👩‍💼
-                </span>
-                <div className="min-w-0">
-                  <div className="text-xs font-bold text-stone-800 group-hover:text-purple-800 truncate">
-                    Ibu Ratna
-                  </div>
-                  <div className="text-[10px] text-stone-600 font-medium">
-                    Kepala Sekolah (SMPN 1)
-                  </div>
-                </div>
-              </button>
-
-              {/* 4. Demo Dinas */}
-              <button
-                type="button"
-                onClick={() => onLogin('admin', undefined, 'dinas')}
-                className="flex items-center gap-2 p-2.5 rounded-2xl border border-stone-200 bg-stone-50 hover:bg-amber-50 hover:border-amber-300 text-left transition-all group cursor-pointer"
-              >
-                <span className="text-xl p-1 bg-white rounded-xl shadow-xs border border-stone-200">
-                  🏢
-                </span>
-                <div className="min-w-0">
-                  <div className="text-xs font-bold text-stone-800 group-hover:text-amber-800 truncate">
-                    Bpk. Anwar
-                  </div>
-                  <div className="text-[10px] text-stone-600 font-medium">
-                    Dinas Lingkungan Hidup
-                  </div>
-                </div>
-              </button>
             </div>
           </div>
 
           {/* Provisioning Notice (PRD FR-AUTH-03) */}
-          <div className="bg-stone-50 border border-stone-200 p-3 rounded-2xl flex items-start gap-2.5">
-            <HelpCircle className="w-4 h-4 text-stone-500 shrink-0 mt-0.5" />
-            <div className="text-[11px] text-stone-600 leading-relaxed">
-              <span className="font-bold text-stone-700">Akses Internal Sekolah:</span> Akun siswa, wali kelas, dan koordinator didaftarkan oleh administrator sekolah. Jika belum terdaftar atau lupa kata sandi, hubungi Koordinator Bank Sampah Sekolah.
+          <div className="bg-muted/50 border border-border p-3 rounded-2xl flex items-start gap-2.5">
+            <HelpCircle className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" aria-hidden="true" />
+            <div className="text-[11px] text-muted-foreground leading-relaxed">
+              <span className="font-bold text-foreground">Akses internal sekolah:</span> Akun siswa, wali kelas, dan koordinator didaftarkan oleh administrator sekolah. Jika belum terdaftar atau lupa kata sandi, hubungi Koordinator Bank Sampah Sekolah.
             </div>
           </div>
         </CardContent>
       </Card>
 
       {/* Footer Info */}
-      <div className="mt-6 text-center text-xs text-stone-600 font-medium">
-        Platform Inovasi Kolaborasi Sekolah Hijau & Dinas Pendidikan Deli Serdang
+      <div className="mt-6 text-center text-xs text-muted-foreground font-medium">
+        Platform Inovasi Kolaborasi Sekolah Hijau &amp; Dinas Pendidikan Deli Serdang
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import {
   INITIAL_CLASSES,
   INITIAL_IOT_BIN,
@@ -15,21 +15,53 @@ import {
   WasteCategory,
 } from './types';
 import { Header } from './components/Header';
-import { HomeEducationTab } from './components/HomeEducationTab';
-import { SmartBinIoTTab } from './components/SmartBinIoTTab';
-import { LeaderboardTab } from './components/LeaderboardTab';
-import { WasteBankRewardTab } from './components/WasteBankRewardTab';
-import { BadgesMissionsTab } from './components/BadgesMissionsTab';
-import { CoordinatorTab } from './components/CoordinatorTab';
-import { CoordinatorApprovalsTab } from './components/CoordinatorApprovalsTab';
-import { CoordinatorReportsTab } from './components/CoordinatorReportsTab';
-import { BangBinaaTab } from './components/BangBinaaTab';
-import { AdminClassesTab } from './components/AdminClassesTab';
-import { WithdrawalModal } from './components/WithdrawalModal';
-import { ReceiptModal } from './components/ReceiptModal';
 import { Sidebar } from './components/layout/Sidebar';
 import { MobileNav } from './components/layout/MobileNav';
 import { AuthPage } from './components/auth/AuthPage';
+
+const HomeEducationTab = lazy(() =>
+  import('./components/HomeEducationTab').then((m) => ({ default: m.HomeEducationTab })),
+);
+const SmartBinIoTTab = lazy(() =>
+  import('./components/SmartBinIoTTab').then((m) => ({ default: m.SmartBinIoTTab })),
+);
+const LeaderboardTab = lazy(() =>
+  import('./components/LeaderboardTab').then((m) => ({ default: m.LeaderboardTab })),
+);
+const WasteBankRewardTab = lazy(() =>
+  import('./components/WasteBankRewardTab').then((m) => ({ default: m.WasteBankRewardTab })),
+);
+const BadgesMissionsTab = lazy(() =>
+  import('./components/BadgesMissionsTab').then((m) => ({ default: m.BadgesMissionsTab })),
+);
+const CoordinatorTab = lazy(() =>
+  import('./components/CoordinatorTab').then((m) => ({ default: m.CoordinatorTab })),
+);
+const CoordinatorApprovalsTab = lazy(() =>
+  import('./components/CoordinatorApprovalsTab').then((m) => ({ default: m.CoordinatorApprovalsTab })),
+);
+const CoordinatorReportsTab = lazy(() =>
+  import('./components/CoordinatorReportsTab').then((m) => ({ default: m.CoordinatorReportsTab })),
+);
+const BangBinaaTab = lazy(() =>
+  import('./components/BangBinaaTab').then((m) => ({ default: m.BangBinaaTab })),
+);
+const AdminClassesTab = lazy(() =>
+  import('./components/AdminClassesTab').then((m) => ({ default: m.AdminClassesTab })),
+);
+const WithdrawalModal = lazy(() =>
+  import('./components/WithdrawalModal').then((m) => ({ default: m.WithdrawalModal })),
+);
+const ReceiptModal = lazy(() =>
+  import('./components/ReceiptModal').then((m) => ({ default: m.ReceiptModal })),
+);
+
+const TabFallback: React.FC = () => (
+  <div role="status" aria-live="polite" className="py-16 flex flex-col items-center gap-2 text-muted-foreground">
+    <span className="w-6 h-6 rounded-full border-2 border-border border-t-primary animate-spin" aria-hidden="true" />
+    <span className="text-xs font-medium">Memuat…</span>
+  </div>
+);
 
 export type UserRole = 'student' | 'coordinator' | 'admin';
 export type TabKey = 'beranda' | 'iot_bin' | 'leaderboard' | 'bank_sampah' | 'misi' | 'coordinator_input' | 'coordinator_approvals' | 'coordinator_reports' | 'coordinator_history' | 'admin_dashboard' | 'admin_classes' | 'admin_settings';
@@ -486,7 +518,7 @@ export default function App() {
   }
 
   return (
-    <div className={`min-h-screen bg-stone-100 flex selection:bg-emerald-100 selection:text-emerald-900`}>
+    <div className="min-h-screen bg-background flex selection:bg-primary/20 selection:text-foreground">
       {/* Universal Desktop Sidebar (md+) */}
       <Sidebar
         activeTab={activeTab}
@@ -502,7 +534,7 @@ export default function App() {
       />
 
       {/* Main Container */}
-      <div className="flex-1 min-w-0 w-full bg-stone-50/60 min-h-screen relative flex flex-col">
+      <div className="flex-1 min-w-0 w-full bg-muted/30 min-h-screen relative flex flex-col">
         {/* Sticky Header */}
         <Header
           userRole={userRole}
@@ -512,6 +544,7 @@ export default function App() {
 
         {/* Main Tab Content View */}
         <main className="flex-1 min-w-0 px-4 pt-3 pb-24 md:pb-8 w-full max-w-5xl mx-auto">
+          <Suspense fallback={<TabFallback />}>
           {userRole === 'student' && (
             <>
               {activeTab === 'beranda' && (
@@ -606,13 +639,14 @@ export default function App() {
                 <AdminClassesTab classes={classes} />
               )}
               {activeTab === 'admin_settings' && (
-                 <div className="py-12 text-center text-stone-500">
-                  <h3 className="font-medium text-stone-900 mb-2">Pengaturan</h3>
+                 <div className="py-12 text-center text-muted-foreground">
+                  <h2 className="font-medium text-foreground mb-2">Pengaturan</h2>
                   <p className="text-sm">Fitur dalam pengembangan.</p>
                 </div>
               )}
             </>
           )}
+          </Suspense>
         </main>
 
         {/* Mobile Navigation (All Roles) */}
@@ -630,18 +664,20 @@ export default function App() {
         />
 
         {/* Modals */}
-        <WithdrawalModal
-          isOpen={isWithdrawModalOpen}
-          onClose={() => setIsWithdrawModalOpen(false)}
-          currentStudent={currentStudent}
-          currentClass={currentClass}
-          onConfirmWithdrawal={handleConfirmWithdrawal}
-        />
+        <Suspense fallback={null}>
+          <WithdrawalModal
+            isOpen={isWithdrawModalOpen}
+            onClose={() => setIsWithdrawModalOpen(false)}
+            currentStudent={currentStudent}
+            currentClass={currentClass}
+            onConfirmWithdrawal={handleConfirmWithdrawal}
+          />
 
-        <ReceiptModal
-          transaction={receiptTrx}
-          onClose={() => setReceiptTrx(null)}
-        />
+          <ReceiptModal
+            transaction={receiptTrx}
+            onClose={() => setReceiptTrx(null)}
+          />
+        </Suspense>
       </div>
     </div>
   );
